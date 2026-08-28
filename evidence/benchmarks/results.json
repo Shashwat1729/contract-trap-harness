@@ -1,115 +1,4009 @@
 {
-  "timestamp": "2026-08-28T08:53:22Z",
-  "queries": [
-    "hello",
-    "edge case: empty",
-    "normal task",
-    "another query",
-    "stress test 5"
-  ],
-  "baseline": {
-    "variant": "baseline",
-    "base_url": "http://localhost:8000",
-    "success_rate": 0.8,
-    "mean_latency": 0.25,
-    "p95_latency": 0.25,
-    "edge_pass": 4,
-    "per_query": [
+  "results": {
+    "baseline": [
       {
-        "query": "hello",
-        "ok": true,
-        "latency": 0.25,
-        "body": {
-          "result": "baseline mock for hello"
+        "contract_id": "cuad_00",
+        "trap_count": 1,
+        "findings": [
+          {
+            "trap_id": "P-04",
+            "clause_type": "Uncapped Liability",
+            "risk": "High",
+            "span_text": "or otherwise identified in this Agreement; (9) A reference to conduct includes, without limitation, an omission, statement or undertaking, whether or not in writing; (10) A refer",
+            "page": 3,
+            "line": 7,
+            "evidence": {
+              "clause_type": "Uncapped Liability",
+              "span_text": "or otherwise identified in this Agreement; (9) A reference to conduct includes, without limitation, an omission, statement or undertaking, whether or not in writing; (10) A refer",
+              "page": 3,
+              "line": 7,
+              "start": 7043,
+              "end": 7061,
+              "confidence": 0.92,
+              "rule_id": "P-04",
+              "precedent": "GiantCo Services §9.4"
+            },
+            "proposed_change": "Liability capped at fees paid in 12 months preceding claim.",
+            "rationale": "Uncapped liability violates playbook cap = 12 months fees."
+          }
+        ]
+      },
+      {
+        "contract_id": "cuad_01",
+        "trap_count": 0,
+        "findings": []
+      },
+      {
+        "contract_id": "cuad_02",
+        "trap_count": 3,
+        "findings": [
+          {
+            "trap_id": "P-04",
+            "clause_type": "Uncapped Liability",
+            "risk": "High",
+            "span_text": "to Company all right, title and interest in and to any information (including, without limitation, business plans and/or business information), technology, know-how, materials,",
+            "page": 2,
+            "line": 13,
+            "evidence": {
+              "clause_type": "Uncapped Liability",
+              "span_text": "to Company all right, title and interest in and to any information (including, without limitation, business plans and/or business information), technology, know-how, materials,",
+              "page": 2,
+              "line": 13,
+              "start": 4410,
+              "end": 4428,
+              "confidence": 0.92,
+              "rule_id": "P-04",
+              "precedent": "GiantCo Services §9.4"
+            },
+            "proposed_change": "Liability capped at fees paid in 12 months preceding claim.",
+            "rationale": "Uncapped liability violates playbook cap = 12 months fees."
+          },
+          {
+            "trap_id": "P-01",
+            "clause_type": "Renewal Term",
+            "risk": "High",
+            "span_text": "mic.com PAGE 7\n\nADDENDUM TRAP-A INJECTION (curated for evaluation, documented):\nRenewal Term: This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate",
+            "page": 4,
+            "line": 16,
+            "evidence": {
+              "clause_type": "Renewal Term",
+              "span_text": "mic.com PAGE 7\n\nADDENDUM TRAP-A INJECTION (curated for evaluation, documented):\nRenewal Term: This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate",
+              "page": 4,
+              "line": 16,
+              "start": 8801,
+              "end": 8879,
+              "confidence": 0.78,
+              "rule_id": "P-01",
+              "precedent": "Acme MSA 2024-03 §8.2"
+            },
+            "proposed_change": "Initial Term 12 months, renewal Term 12 months.",
+            "rationale": "Auto-renewal >12 months without commensurate termination right is a trap."
+          },
+          {
+            "trap_id": "P-02",
+            "clause_type": "Notice Period to Terminate Renewal",
+            "risk": "High",
+            "span_text": "ally renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
+            "page": 4,
+            "line": 16,
+            "evidence": {
+              "clause_type": "Notice Period to Terminate Renewal",
+              "span_text": "ally renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
+              "page": 4,
+              "line": 16,
+              "start": 8925,
+              "end": 9009,
+              "confidence": 0.78,
+              "rule_id": "P-02",
+              "precedent": "Acme MSA 2024-03 §8.3"
+            },
+            "proposed_change": "90 days notice prior to renewal.",
+            "rationale": "Notice period <60 days when renewal is 12 months traps buyer."
+          }
+        ]
+      },
+      {
+        "contract_id": "cuad_03",
+        "trap_count": 0,
+        "findings": []
+      },
+      {
+        "contract_id": "cuad_04",
+        "trap_count": 0,
+        "findings": []
+      },
+      {
+        "contract_id": "cuad_05",
+        "trap_count": 2,
+        "findings": [
+          {
+            "trap_id": "P-01",
+            "clause_type": "Renewal Term",
+            "risk": "High",
+            "span_text": "F-1, 12/9/2019\n\nADDENDUM TRAP-A INJECTION (curated for evaluation, documented):\nRenewal Term: This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate",
+            "page": 4,
+            "line": 16,
+            "evidence": {
+              "clause_type": "Renewal Term",
+              "span_text": "F-1, 12/9/2019\n\nADDENDUM TRAP-A INJECTION (curated for evaluation, documented):\nRenewal Term: This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate",
+              "page": 4,
+              "line": 16,
+              "start": 8801,
+              "end": 8879,
+              "confidence": 0.78,
+              "rule_id": "P-01",
+              "precedent": "Acme MSA 2024-03 §8.2"
+            },
+            "proposed_change": "Initial Term 12 months, renewal Term 12 months.",
+            "rationale": "Auto-renewal >12 months without commensurate termination right is a trap."
+          },
+          {
+            "trap_id": "P-02",
+            "clause_type": "Notice Period to Terminate Renewal",
+            "risk": "High",
+            "span_text": "ally renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
+            "page": 4,
+            "line": 16,
+            "evidence": {
+              "clause_type": "Notice Period to Terminate Renewal",
+              "span_text": "ally renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
+              "page": 4,
+              "line": 16,
+              "start": 8925,
+              "end": 9009,
+              "confidence": 0.78,
+              "rule_id": "P-02",
+              "precedent": "Acme MSA 2024-03 §8.3"
+            },
+            "proposed_change": "90 days notice prior to renewal.",
+            "rationale": "Notice period <60 days when renewal is 12 months traps buyer."
+          }
+        ]
+      },
+      {
+        "contract_id": "cuad_06",
+        "trap_count": 3,
+        "findings": [
+          {
+            "trap_id": "P-04",
+            "clause_type": "Uncapped Liability",
+            "risk": "High",
+            "span_text": "avoidance of doubt shall not mean any other products of  Distributor, including without limitation the full paid version of Whitesmoke Writer or any version of Whitesmoke \"Transl",
+            "page": 2,
+            "line": 1,
+            "evidence": {
+              "clause_type": "Uncapped Liability",
+              "span_text": "avoidance of doubt shall not mean any other products of  Distributor, including without limitation the full paid version of Whitesmoke Writer or any version of Whitesmoke \"Transl",
+              "page": 2,
+              "line": 1,
+              "start": 2705,
+              "end": 2723,
+              "confidence": 0.92,
+              "rule_id": "P-04",
+              "precedent": "GiantCo Services §9.4"
+            },
+            "proposed_change": "Liability capped at fees paid in 12 months preceding claim.",
+            "rationale": "Uncapped liability violates playbook cap = 12 months fees."
+          },
+          {
+            "trap_id": "P-01",
+            "clause_type": "Renewal Term",
+            "risk": "High",
+            "span_text": "al\n\n\n\n  - 40 -\n\nADDENDUM TRAP-A INJECTION (curated for evaluation, documented):\nRenewal Term: This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate",
+            "page": 4,
+            "line": 68,
+            "evidence": {
+              "clause_type": "Renewal Term",
+              "span_text": "al\n\n\n\n  - 40 -\n\nADDENDUM TRAP-A INJECTION (curated for evaluation, documented):\nRenewal Term: This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate",
+              "page": 4,
+              "line": 68,
+              "start": 8801,
+              "end": 8879,
+              "confidence": 0.78,
+              "rule_id": "P-01",
+              "precedent": "Acme MSA 2024-03 §8.2"
+            },
+            "proposed_change": "Initial Term 12 months, renewal Term 12 months.",
+            "rationale": "Auto-renewal >12 months without commensurate termination right is a trap."
+          },
+          {
+            "trap_id": "P-02",
+            "clause_type": "Notice Period to Terminate Renewal",
+            "risk": "High",
+            "span_text": "ally renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
+            "page": 4,
+            "line": 68,
+            "evidence": {
+              "clause_type": "Notice Period to Terminate Renewal",
+              "span_text": "ally renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
+              "page": 4,
+              "line": 68,
+              "start": 8925,
+              "end": 9009,
+              "confidence": 0.78,
+              "rule_id": "P-02",
+              "precedent": "Acme MSA 2024-03 §8.3"
+            },
+            "proposed_change": "90 days notice prior to renewal.",
+            "rationale": "Notice period <60 days when renewal is 12 months traps buyer."
+          }
+        ]
+      },
+      {
+        "contract_id": "cuad_07",
+        "trap_count": 2,
+        "findings": [
+          {
+            "trap_id": "P-01",
+            "clause_type": "Renewal Term",
+            "risk": "High",
+            "span_text": "0-Q, 11/8/2018\n\nADDENDUM TRAP-A INJECTION (curated for evaluation, documented):\nRenewal Term: This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate",
+            "page": 4,
+            "line": 30,
+            "evidence": {
+              "clause_type": "Renewal Term",
+              "span_text": "0-Q, 11/8/2018\n\nADDENDUM TRAP-A INJECTION (curated for evaluation, documented):\nRenewal Term: This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate",
+              "page": 4,
+              "line": 30,
+              "start": 8801,
+              "end": 8879,
+              "confidence": 0.78,
+              "rule_id": "P-01",
+              "precedent": "Acme MSA 2024-03 §8.2"
+            },
+            "proposed_change": "Initial Term 12 months, renewal Term 12 months.",
+            "rationale": "Auto-renewal >12 months without commensurate termination right is a trap."
+          },
+          {
+            "trap_id": "P-02",
+            "clause_type": "Notice Period to Terminate Renewal",
+            "risk": "High",
+            "span_text": "ally renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
+            "page": 4,
+            "line": 30,
+            "evidence": {
+              "clause_type": "Notice Period to Terminate Renewal",
+              "span_text": "ally renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
+              "page": 4,
+              "line": 30,
+              "start": 8925,
+              "end": 9009,
+              "confidence": 0.78,
+              "rule_id": "P-02",
+              "precedent": "Acme MSA 2024-03 §8.3"
+            },
+            "proposed_change": "90 days notice prior to renewal.",
+            "rationale": "Notice period <60 days when renewal is 12 months traps buyer."
+          }
+        ]
+      },
+      {
+        "contract_id": "cuad_08",
+        "trap_count": 2,
+        "findings": [
+          {
+            "trap_id": "P-01",
+            "clause_type": "Renewal Term",
+            "risk": "High",
+            "span_text": "ture Agreement\n\nADDENDUM TRAP-A INJECTION (curated for evaluation, documented):\nRenewal Term: This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate",
+            "page": 4,
+            "line": 26,
+            "evidence": {
+              "clause_type": "Renewal Term",
+              "span_text": "ture Agreement\n\nADDENDUM TRAP-A INJECTION (curated for evaluation, documented):\nRenewal Term: This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate",
+              "page": 4,
+              "line": 26,
+              "start": 8323,
+              "end": 8401,
+              "confidence": 0.78,
+              "rule_id": "P-01",
+              "precedent": "Acme MSA 2024-03 §8.2"
+            },
+            "proposed_change": "Initial Term 12 months, renewal Term 12 months.",
+            "rationale": "Auto-renewal >12 months without commensurate termination right is a trap."
+          },
+          {
+            "trap_id": "P-02",
+            "clause_type": "Notice Period to Terminate Renewal",
+            "risk": "High",
+            "span_text": "ally renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
+            "page": 4,
+            "line": 26,
+            "evidence": {
+              "clause_type": "Notice Period to Terminate Renewal",
+              "span_text": "ally renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
+              "page": 4,
+              "line": 26,
+              "start": 8447,
+              "end": 8531,
+              "confidence": 0.78,
+              "rule_id": "P-02",
+              "precedent": "Acme MSA 2024-03 §8.3"
+            },
+            "proposed_change": "90 days notice prior to renewal.",
+            "rationale": "Notice period <60 days when renewal is 12 months traps buyer."
+          }
+        ]
+      },
+      {
+        "contract_id": "cuad_09",
+        "trap_count": 1,
+        "findings": [
+          {
+            "trap_id": "P-04",
+            "clause_type": "Uncapped Liability",
+            "risk": "High",
+            "span_text": "may from time to time be reasonably requested by the Trust, which shall include without limitation: (a) maintaining office facilities (which may be in the office of Domini or an",
+            "page": 1,
+            "line": 15,
+            "evidence": {
+              "clause_type": "Uncapped Liability",
+              "span_text": "may from time to time be reasonably requested by the Trust, which shall include without limitation: (a) maintaining office facilities (which may be in the office of Domini or an",
+              "page": 1,
+              "line": 15,
+              "start": 1396,
+              "end": 1414,
+              "confidence": 0.92,
+              "rule_id": "P-04",
+              "precedent": "GiantCo Services §9.4"
+            },
+            "proposed_change": "Liability capped at fees paid in 12 months preceding claim.",
+            "rationale": "Uncapped liability violates playbook cap = 12 months fees."
+          }
+        ]
+      },
+      {
+        "contract_id": "cuad_10",
+        "trap_count": 2,
+        "findings": [
+          {
+            "trap_id": "P-01",
+            "clause_type": "Renewal Term",
+            "risk": "High",
+            "span_text": "S GOLF\n\n    13\n\nADDENDUM TRAP-A INJECTION (curated for evaluation, documented):\nRenewal Term: This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate",
+            "page": 4,
+            "line": 40,
+            "evidence": {
+              "clause_type": "Renewal Term",
+              "span_text": "S GOLF\n\n    13\n\nADDENDUM TRAP-A INJECTION (curated for evaluation, documented):\nRenewal Term: This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate",
+              "page": 4,
+              "line": 40,
+              "start": 8801,
+              "end": 8879,
+              "confidence": 0.78,
+              "rule_id": "P-01",
+              "precedent": "Acme MSA 2024-03 §8.2"
+            },
+            "proposed_change": "Initial Term 12 months, renewal Term 12 months.",
+            "rationale": "Auto-renewal >12 months without commensurate termination right is a trap."
+          },
+          {
+            "trap_id": "P-02",
+            "clause_type": "Notice Period to Terminate Renewal",
+            "risk": "High",
+            "span_text": "ally renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
+            "page": 4,
+            "line": 40,
+            "evidence": {
+              "clause_type": "Notice Period to Terminate Renewal",
+              "span_text": "ally renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
+              "page": 4,
+              "line": 40,
+              "start": 8925,
+              "end": 9009,
+              "confidence": 0.78,
+              "rule_id": "P-02",
+              "precedent": "Acme MSA 2024-03 §8.3"
+            },
+            "proposed_change": "90 days notice prior to renewal.",
+            "rationale": "Notice period <60 days when renewal is 12 months traps buyer."
+          }
+        ]
+      },
+      {
+        "contract_id": "cuad_11",
+        "trap_count": 0,
+        "findings": []
+      },
+      {
+        "contract_id": "cuad_12",
+        "trap_count": 0,
+        "findings": []
+      },
+      {
+        "contract_id": "cuad_13",
+        "trap_count": 0,
+        "findings": []
+      },
+      {
+        "contract_id": "cuad_14",
+        "trap_count": 1,
+        "findings": [
+          {
+            "trap_id": "P-04",
+            "clause_type": "Uncapped Liability",
+            "risk": "High",
+            "span_text": "receive valuable specialized training and Confidential Information, including, without limitation, information regarding the operational, sales, promotional, and marketing metho",
+            "page": 1,
+            "line": 1,
+            "evidence": {
+              "clause_type": "Uncapped Liability",
+              "span_text": "receive valuable specialized training and Confidential Information, including, without limitation, information regarding the operational, sales, promotional, and marketing metho",
+              "page": 1,
+              "line": 1,
+              "start": 2354,
+              "end": 2372,
+              "confidence": 0.92,
+              "rule_id": "P-04",
+              "precedent": "GiantCo Services §9.4"
+            },
+            "proposed_change": "Liability capped at fees paid in 12 months preceding claim.",
+            "rationale": "Uncapped liability violates playbook cap = 12 months fees."
+          }
+        ]
+      },
+      {
+        "contract_id": "cuad_15",
+        "trap_count": 0,
+        "findings": []
+      },
+      {
+        "contract_id": "cuad_16",
+        "trap_count": 1,
+        "findings": [
+          {
+            "trap_id": "P-04",
+            "clause_type": "Uncapped Liability",
+            "risk": "High",
+            "span_text": "as individuals to all of the terms and conditions of this Agreement, including without limitation Section 9, Section 14, Section 17, and Section 25. 26.4. System Standards. Alth",
+            "page": 3,
+            "line": 5,
+            "evidence": {
+              "clause_type": "Uncapped Liability",
+              "span_text": "as individuals to all of the terms and conditions of this Agreement, including without limitation Section 9, Section 14, Section 17, and Section 25. 26.4. System Standards. Alth",
+              "page": 3,
+              "line": 5,
+              "start": 7044,
+              "end": 7062,
+              "confidence": 0.92,
+              "rule_id": "P-04",
+              "precedent": "GiantCo Services §9.4"
+            },
+            "proposed_change": "Liability capped at fees paid in 12 months preceding claim.",
+            "rationale": "Uncapped liability violates playbook cap = 12 months fees."
+          }
+        ]
+      },
+      {
+        "contract_id": "cuad_17",
+        "trap_count": 3,
+        "findings": [
+          {
+            "trap_id": "P-04",
+            "clause_type": "Uncapped Liability",
+            "risk": "High",
+            "span_text": "of one Party  or its Affiliates to the other Party or its Affiliates including, without limitation, the terms of this Agreement,  data, formulae, unpublished patent disclosures,",
+            "page": 2,
+            "line": 59,
+            "evidence": {
+              "clause_type": "Uncapped Liability",
+              "span_text": "of one Party  or its Affiliates to the other Party or its Affiliates including, without limitation, the terms of this Agreement,  data, formulae, unpublished patent disclosures,",
+              "page": 2,
+              "line": 59,
+              "start": 4880,
+              "end": 4898,
+              "confidence": 0.92,
+              "rule_id": "P-04",
+              "precedent": "GiantCo Services §9.4"
+            },
+            "proposed_change": "Liability capped at fees paid in 12 months preceding claim.",
+            "rationale": "Uncapped liability violates playbook cap = 12 months fees."
+          },
+          {
+            "trap_id": "P-01",
+            "clause_type": "Renewal Term",
+            "risk": "High",
+            "span_text": "-\n\n    , Maker\n\nADDENDUM TRAP-A INJECTION (curated for evaluation, documented):\nRenewal Term: This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate",
+            "page": 4,
+            "line": 16,
+            "evidence": {
+              "clause_type": "Renewal Term",
+              "span_text": "-\n\n    , Maker\n\nADDENDUM TRAP-A INJECTION (curated for evaluation, documented):\nRenewal Term: This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate",
+              "page": 4,
+              "line": 16,
+              "start": 8801,
+              "end": 8879,
+              "confidence": 0.78,
+              "rule_id": "P-01",
+              "precedent": "Acme MSA 2024-03 §8.2"
+            },
+            "proposed_change": "Initial Term 12 months, renewal Term 12 months.",
+            "rationale": "Auto-renewal >12 months without commensurate termination right is a trap."
+          },
+          {
+            "trap_id": "P-02",
+            "clause_type": "Notice Period to Terminate Renewal",
+            "risk": "High",
+            "span_text": "ally renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
+            "page": 4,
+            "line": 16,
+            "evidence": {
+              "clause_type": "Notice Period to Terminate Renewal",
+              "span_text": "ally renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
+              "page": 4,
+              "line": 16,
+              "start": 8925,
+              "end": 9009,
+              "confidence": 0.78,
+              "rule_id": "P-02",
+              "precedent": "Acme MSA 2024-03 §8.3"
+            },
+            "proposed_change": "90 days notice prior to renewal.",
+            "rationale": "Notice period <60 days when renewal is 12 months traps buyer."
+          }
+        ]
+      },
+      {
+        "contract_id": "cuad_18",
+        "trap_count": 0,
+        "findings": []
+      },
+      {
+        "contract_id": "cuad_19",
+        "trap_count": 0,
+        "findings": []
+      },
+      {
+        "contract_id": "cuad_20",
+        "trap_count": 1,
+        "findings": [
+          {
+            "trap_id": "P-04",
+            "clause_type": "Uncapped Liability",
+            "risk": "High",
+            "span_text": "and words of similar import when used in this Agreement shall mean \"including, without limitation,\" unless the context otherwise requires or unless otherwise specified. The word",
+            "page": 4,
+            "line": 1,
+            "evidence": {
+              "clause_type": "Uncapped Liability",
+              "span_text": "and words of similar import when used in this Agreement shall mean \"including, without limitation,\" unless the context otherwise requires or unless otherwise specified. The word",
+              "page": 4,
+              "line": 1,
+              "start": 7625,
+              "end": 7643,
+              "confidence": 0.92,
+              "rule_id": "P-04",
+              "precedent": "GiantCo Services §9.4"
+            },
+            "proposed_change": "Liability capped at fees paid in 12 months preceding claim.",
+            "rationale": "Uncapped liability violates playbook cap = 12 months fees."
+          }
+        ]
+      },
+      {
+        "contract_id": "cuad_21",
+        "trap_count": 0,
+        "findings": []
+      },
+      {
+        "contract_id": "cuad_22",
+        "trap_count": 2,
+        "findings": [
+          {
+            "trap_id": "P-01",
+            "clause_type": "Renewal Term",
+            "risk": "High",
+            "span_text": "Page -14-\n\nADDENDUM TRAP-A INJECTION (curated for evaluation, documented):\nRenewal Term: This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate",
+            "page": 4,
+            "line": 14,
+            "evidence": {
+              "clause_type": "Renewal Term",
+              "span_text": "Page -14-\n\nADDENDUM TRAP-A INJECTION (curated for evaluation, documented):\nRenewal Term: This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate",
+              "page": 4,
+              "line": 14,
+              "start": 8801,
+              "end": 8879,
+              "confidence": 0.78,
+              "rule_id": "P-01",
+              "precedent": "Acme MSA 2024-03 §8.2"
+            },
+            "proposed_change": "Initial Term 12 months, renewal Term 12 months.",
+            "rationale": "Auto-renewal >12 months without commensurate termination right is a trap."
+          },
+          {
+            "trap_id": "P-02",
+            "clause_type": "Notice Period to Terminate Renewal",
+            "risk": "High",
+            "span_text": "ally renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
+            "page": 4,
+            "line": 14,
+            "evidence": {
+              "clause_type": "Notice Period to Terminate Renewal",
+              "span_text": "ally renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
+              "page": 4,
+              "line": 14,
+              "start": 8925,
+              "end": 9009,
+              "confidence": 0.78,
+              "rule_id": "P-02",
+              "precedent": "Acme MSA 2024-03 §8.3"
+            },
+            "proposed_change": "90 days notice prior to renewal.",
+            "rationale": "Notice period <60 days when renewal is 12 months traps buyer."
+          }
+        ]
+      },
+      {
+        "contract_id": "cuad_23",
+        "trap_count": 0,
+        "findings": []
+      },
+      {
+        "contract_id": "cuad_24",
+        "trap_count": 2,
+        "findings": [
+          {
+            "trap_id": "P-01",
+            "clause_type": "Renewal Term",
+            "risk": "High",
+            "span_text": "Vice President\n\nADDENDUM TRAP-A INJECTION (curated for evaluation, documented):\nRenewal Term: This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate",
+            "page": 4,
+            "line": 22,
+            "evidence": {
+              "clause_type": "Renewal Term",
+              "span_text": "Vice President\n\nADDENDUM TRAP-A INJECTION (curated for evaluation, documented):\nRenewal Term: This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate",
+              "page": 4,
+              "line": 22,
+              "start": 8801,
+              "end": 8879,
+              "confidence": 0.78,
+              "rule_id": "P-01",
+              "precedent": "Acme MSA 2024-03 §8.2"
+            },
+            "proposed_change": "Initial Term 12 months, renewal Term 12 months.",
+            "rationale": "Auto-renewal >12 months without commensurate termination right is a trap."
+          },
+          {
+            "trap_id": "P-02",
+            "clause_type": "Notice Period to Terminate Renewal",
+            "risk": "High",
+            "span_text": "ally renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
+            "page": 4,
+            "line": 22,
+            "evidence": {
+              "clause_type": "Notice Period to Terminate Renewal",
+              "span_text": "ally renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
+              "page": 4,
+              "line": 22,
+              "start": 8925,
+              "end": 9009,
+              "confidence": 0.78,
+              "rule_id": "P-02",
+              "precedent": "Acme MSA 2024-03 §8.3"
+            },
+            "proposed_change": "90 days notice prior to renewal.",
+            "rationale": "Notice period <60 days when renewal is 12 months traps buyer."
+          }
+        ]
+      },
+      {
+        "contract_id": "cuad_25",
+        "trap_count": 2,
+        "findings": [
+          {
+            "trap_id": "P-01",
+            "clause_type": "Renewal Term",
+            "risk": "High",
+            "span_text": "Co-Trustee\n\n1\n\nADDENDUM TRAP-A INJECTION (curated for evaluation, documented):\nRenewal Term: This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate",
+            "page": 1,
+            "line": 18,
+            "evidence": {
+              "clause_type": "Renewal Term",
+              "span_text": "Co-Trustee\n\n1\n\nADDENDUM TRAP-A INJECTION (curated for evaluation, documented):\nRenewal Term: This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate",
+              "page": 1,
+              "line": 18,
+              "start": 1147,
+              "end": 1225,
+              "confidence": 0.78,
+              "rule_id": "P-01",
+              "precedent": "Acme MSA 2024-03 §8.2"
+            },
+            "proposed_change": "Initial Term 12 months, renewal Term 12 months.",
+            "rationale": "Auto-renewal >12 months without commensurate termination right is a trap."
+          },
+          {
+            "trap_id": "P-02",
+            "clause_type": "Notice Period to Terminate Renewal",
+            "risk": "High",
+            "span_text": "ally renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
+            "page": 1,
+            "line": 18,
+            "evidence": {
+              "clause_type": "Notice Period to Terminate Renewal",
+              "span_text": "ally renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
+              "page": 1,
+              "line": 18,
+              "start": 1271,
+              "end": 1355,
+              "confidence": 0.78,
+              "rule_id": "P-02",
+              "precedent": "Acme MSA 2024-03 §8.3"
+            },
+            "proposed_change": "90 days notice prior to renewal.",
+            "rationale": "Notice period <60 days when renewal is 12 months traps buyer."
+          }
+        ]
+      },
+      {
+        "contract_id": "cuad_26",
+        "trap_count": 1,
+        "findings": [
+          {
+            "trap_id": "P-04",
+            "clause_type": "Uncapped Liability",
+            "risk": "High",
+            "span_text": "an physical equipment.\n\n   Contact Center Products means any product, including without limitation, headsets (cordless or corded), amplifiers, telephones, soft  phones, and softw",
+            "page": 3,
+            "line": 5,
+            "evidence": {
+              "clause_type": "Uncapped Liability",
+              "span_text": "an physical equipment.\n\n   Contact Center Products means any product, including without limitation, headsets (cordless or corded), amplifiers, telephones, soft  phones, and softw",
+              "page": 3,
+              "line": 5,
+              "start": 5779,
+              "end": 5797,
+              "confidence": 0.92,
+              "rule_id": "P-04",
+              "precedent": "GiantCo Services §9.4"
+            },
+            "proposed_change": "Liability capped at fees paid in 12 months preceding claim.",
+            "rationale": "Uncapped liability violates playbook cap = 12 months fees."
+          }
+        ]
+      },
+      {
+        "contract_id": "cuad_27",
+        "trap_count": 1,
+        "findings": [
+          {
+            "trap_id": "P-04",
+            "clause_type": "Uncapped Liability",
+            "risk": "High",
+            "span_text": "certain information whether of a technical, business or other nature, including without limitation trade secrets, know-how and information relating to the technology, Customers,",
+            "page": 3,
+            "line": 25,
+            "evidence": {
+              "clause_type": "Uncapped Liability",
+              "span_text": "certain information whether of a technical, business or other nature, including without limitation trade secrets, know-how and information relating to the technology, Customers,",
+              "page": 3,
+              "line": 25,
+              "start": 6402,
+              "end": 6420,
+              "confidence": 0.92,
+              "rule_id": "P-04",
+              "precedent": "GiantCo Services §9.4"
+            },
+            "proposed_change": "Liability capped at fees paid in 12 months preceding claim.",
+            "rationale": "Uncapped liability violates playbook cap = 12 months fees."
+          }
+        ]
+      },
+      {
+        "contract_id": "cuad_28",
+        "trap_count": 5,
+        "findings": [
+          {
+            "trap_id": "P-04",
+            "clause_type": "Uncapped Liability",
+            "risk": "High",
+            "span_text": "f transactions entered into primarily for equity financing purposes (including, without limitation, any private equity investment or any public offering of securities).",
+            "page": 2,
+            "line": 1,
+            "evidence": {
+              "clause_type": "Uncapped Liability",
+              "span_text": "f transactions entered into primarily for equity financing purposes (including, without limitation, any private equity investment or any public offering of securities).",
+              "page": 2,
+              "line": 1,
+              "start": 3365,
+              "end": 3383,
+              "confidence": 0.92,
+              "rule_id": "P-04",
+              "precedent": "GiantCo Services §9.4"
+            },
+            "proposed_change": "Liability capped at fees paid in 12 months preceding claim.",
+            "rationale": "Uncapped liability violates playbook cap = 12 months fees."
+          },
+          {
+            "trap_id": "P-04",
+            "clause_type": "Uncapped Liability",
+            "risk": "High",
+            "span_text": "products The number of products to be manufactured with the Mask Set(s) will be unlimited, unless otherwise instructed by us below:   Authorized Amount: [UNLIMITED]   4.",
+            "page": 3,
+            "line": 5,
+            "evidence": {
+              "clause_type": "Uncapped Liability",
+              "span_text": "products The number of products to be manufactured with the Mask Set(s) will be unlimited, unless otherwise instructed by us below:   Authorized Amount: [UNLIMITED]   4.",
+              "page": 3,
+              "line": 5,
+              "start": 6772,
+              "end": 6781,
+              "confidence": 0.92,
+              "rule_id": "P-04",
+              "precedent": "GiantCo Services §9.4"
+            },
+            "proposed_change": "Liability capped at fees paid in 12 months preceding claim.",
+            "rationale": "Uncapped liability violates playbook cap = 12 months fees."
+          },
+          {
+            "trap_id": "P-04",
+            "clause_type": "Uncapped Liability",
+            "risk": "High",
+            "span_text": "ll be unlimited, unless otherwise instructed by us below:   Authorized Amount: [UNLIMITED]   4. Duration of Authorization The duration of this Letter of Authorization wi",
+            "page": 3,
+            "line": 5,
+            "evidence": {
+              "clause_type": "Uncapped Liability",
+              "span_text": "ll be unlimited, unless otherwise instructed by us below:   Authorized Amount: [UNLIMITED]   4. Duration of Authorization The duration of this Letter of Authorization wi",
+              "page": 3,
+              "line": 5,
+              "start": 6846,
+              "end": 6855,
+              "confidence": 0.92,
+              "rule_id": "P-04",
+              "precedent": "GiantCo Services §9.4"
+            },
+            "proposed_change": "Liability capped at fees paid in 12 months preceding claim.",
+            "rationale": "Uncapped liability violates playbook cap = 12 months fees."
+          },
+          {
+            "trap_id": "P-04",
+            "clause_type": "Uncapped Liability",
+            "risk": "High",
+            "span_text": "Duration of Authorization The duration of this Letter of Authorization will be unlimited, unless otherwise instructed by us below:   Duration of Authorization: [UNLIMIT",
+            "page": 3,
+            "line": 5,
+            "evidence": {
+              "clause_type": "Uncapped Liability",
+              "span_text": "Duration of Authorization The duration of this Letter of Authorization will be unlimited, unless otherwise instructed by us below:   Duration of Authorization: [UNLIMIT",
+              "page": 3,
+              "line": 5,
+              "start": 6941,
+              "end": 6950,
+              "confidence": 0.92,
+              "rule_id": "P-04",
+              "precedent": "GiantCo Services §9.4"
+            },
+            "proposed_change": "Liability capped at fees paid in 12 months preceding claim.",
+            "rationale": "Uncapped liability violates playbook cap = 12 months fees."
+          },
+          {
+            "trap_id": "P-04",
+            "clause_type": "Uncapped Liability",
+            "risk": "High",
+            "span_text": "limited, unless otherwise instructed by us below:   Duration of Authorization: [UNLIMITED]   5. Confidential Information Other than wafers for products specified under p",
+            "page": 3,
+            "line": 5,
+            "evidence": {
+              "clause_type": "Uncapped Liability",
+              "span_text": "limited, unless otherwise instructed by us below:   Duration of Authorization: [UNLIMITED]   5. Confidential Information Other than wafers for products specified under p",
+              "page": 3,
+              "line": 5,
+              "start": 7023,
+              "end": 7032,
+              "confidence": 0.92,
+              "rule_id": "P-04",
+              "precedent": "GiantCo Services §9.4"
+            },
+            "proposed_change": "Liability capped at fees paid in 12 months preceding claim.",
+            "rationale": "Uncapped liability violates playbook cap = 12 months fees."
+          }
+        ]
+      },
+      {
+        "contract_id": "cuad_29",
+        "trap_count": 2,
+        "findings": [
+          {
+            "trap_id": "P-04",
+            "clause_type": "Uncapped Liability",
+            "risk": "High",
+            "span_text": "hares shall comply with all applicable laws, rules, and regulations, including, without limitation, all rules and regulations made or adopted by the Securities and Exchange Commi",
+            "page": 1,
+            "line": 1,
+            "evidence": {
+              "clause_type": "Uncapped Liability",
+              "span_text": "hares shall comply with all applicable laws, rules, and regulations, including, without limitation, all rules and regulations made or adopted by the Securities and Exchange Commi",
+              "page": 1,
+              "line": 1,
+              "start": 1595,
+              "end": 1613,
+              "confidence": 0.92,
+              "rule_id": "P-04",
+              "precedent": "GiantCo Services §9.4"
+            },
+            "proposed_change": "Liability capped at fees paid in 12 months preceding claim.",
+            "rationale": "Uncapped liability violates playbook cap = 12 months fees."
+          },
+          {
+            "trap_id": "P-04",
+            "clause_type": "Uncapped Liability",
+            "risk": "High",
+            "span_text": "ment of the Fund's officers such action is warranted for any reason, including, without limitation, market, economic, or political conditions, those officers may decline to accep",
+            "page": 1,
+            "line": 1,
+            "evidence": {
+              "clause_type": "Uncapped Liability",
+              "span_text": "ment of the Fund's officers such action is warranted for any reason, including, without limitation, market, economic, or political conditions, those officers may decline to accep",
+              "page": 1,
+              "line": 1,
+              "start": 2116,
+              "end": 2134,
+              "confidence": 0.92,
+              "rule_id": "P-04",
+              "precedent": "GiantCo Services §9.4"
+            },
+            "proposed_change": "Liability capped at fees paid in 12 months preceding claim.",
+            "rationale": "Uncapped liability violates playbook cap = 12 months fees."
+          }
+        ]
+      }
+    ],
+    "advanced": [
+      {
+        "contract_id": "cuad_00",
+        "trap_count": 1,
+        "findings": [
+          {
+            "trap_id": "P-04",
+            "clause_type": "Cap on Liability",
+            "risk": "High",
+            "span_text": "a Schedule, Exhibit described, appended or otherwise identified in this Agreement; (9) A reference to conduct includes, without limitation, an omission, statement or undertaking, whether or not in writing; (10) A reference to a third-party is a reference to",
+            "page": 3,
+            "line": 7,
+            "proposed_change": "Liability capped at fees paid in 12 months preceding claim.",
+            "rationale": "Series A cannot bear uncapped. uncapped / unlimited",
+            "rule_id": "P-04",
+            "precedent_id": "GiantCo",
+            "evidence": {
+              "contract_span": "a Schedule, Exhibit described, appended or otherwise identified in this Agreement; (9) A reference to conduct includes, without limitation, an omission, statement or undertaking, whether or not in writing; (10) A reference to a third-party is a reference to",
+              "contract_page": 3,
+              "contract_line": 7,
+              "contract_exists": true,
+              "playbook_rule": "P-04",
+              "playbook_text": "uncapped / unlimited -> Liability capped at fees paid in 12 months preceding claim.",
+              "commercial_instruction": "Series A cannot bear uncapped.",
+              "precedent": {
+                "id": "PR-03",
+                "title": "GiantCo Services §9.4 Liability",
+                "text": "Liability cap = fees paid in 12 months preceding claim, carve-outs limited to fraud."
+              },
+              "confidence": 0.91
+            },
+            "verification": "PASS",
+            "reasons": [],
+            "route": "human_review",
+            "surgical": true
+          },
+          {
+            "trap_id": "P-04",
+            "clause_type": "Cap on Liability",
+            "risk": "High",
+            "span_text": "n McGrath Chief Executive Officer\n\nSource: REYNOLDS CONSUMER PRODUCTS INC., S-1, 11/15/2019\n\nADDENDUM TRAP-B INJECTION:\nCap On Liability: Liability is capped at 12 months fees, except that carve-outs for data breach and IP indemnity are excluded from cap a",
+            "page": 4,
+            "line": 20,
+            "proposed_change": "Liability capped at fees paid in 12 months preceding claim.",
+            "rationale": "Series A cannot bear uncapped. uncapped / unlimited",
+            "rule_id": "P-04",
+            "precedent_id": "GiantCo",
+            "evidence": {
+              "contract_span": "n McGrath Chief Executive Officer\n\nSource: REYNOLDS CONSUMER PRODUCTS INC., S-1, 11/15/2019\n\nADDENDUM TRAP-B INJECTION:\nCap On Liability: Liability is capped at 12 months fees, except that carve-outs for data breach and IP indemnity are excluded from cap a",
+              "contract_page": 4,
+              "contract_line": 20,
+              "contract_exists": true,
+              "playbook_rule": "P-04",
+              "playbook_text": "uncapped / unlimited -> Liability capped at fees paid in 12 months preceding claim.",
+              "commercial_instruction": "Series A cannot bear uncapped.",
+              "precedent": {
+                "id": "PR-03",
+                "title": "GiantCo Services §9.4 Liability",
+                "text": "Liability cap = fees paid in 12 months preceding claim, carve-outs limited to fraud."
+              },
+              "confidence": 0.91
+            },
+            "verification": "REJECT",
+            "reasons": [
+              "contract_span not found in contract text (hallucinated page:4, fuzz partial_ratio <80)"
+            ],
+            "route": "human_review",
+            "surgical": true
+          }
+        ],
+        "verification": {
+          "supported": 1,
+          "unsupported": 1,
+          "surgical_rate": 1.0
         }
       },
       {
-        "query": "edge case: empty",
-        "ok": false,
-        "latency": 0.25,
-        "body": {
-          "result": "baseline mock for edge case: empty"
+        "contract_id": "cuad_01",
+        "trap_count": 1,
+        "findings": [
+          {
+            "trap_id": "P-04",
+            "clause_type": "Cap on Liability",
+            "risk": "High",
+            "span_text": "n Law and its subordinate decrees and regulations) in connection with their purchase.   V-4\n\nADDENDUM TRAP-B INJECTION:\nCap On Liability: Liability is capped at 12 months fees, except that carve-outs for data breach and IP indemnity are excluded from cap a",
+            "page": 4,
+            "line": 14,
+            "proposed_change": "Liability capped at fees paid in 12 months preceding claim.",
+            "rationale": "Series A cannot bear uncapped. uncapped / unlimited",
+            "rule_id": "P-04",
+            "precedent_id": "GiantCo",
+            "evidence": {
+              "contract_span": "n Law and its subordinate decrees and regulations) in connection with their purchase.   V-4\n\nADDENDUM TRAP-B INJECTION:\nCap On Liability: Liability is capped at 12 months fees, except that carve-outs for data breach and IP indemnity are excluded from cap a",
+              "contract_page": 4,
+              "contract_line": 14,
+              "contract_exists": true,
+              "playbook_rule": "P-04",
+              "playbook_text": "uncapped / unlimited -> Liability capped at fees paid in 12 months preceding claim.",
+              "commercial_instruction": "Series A cannot bear uncapped.",
+              "precedent": {
+                "id": "PR-03",
+                "title": "GiantCo Services §9.4 Liability",
+                "text": "Liability cap = fees paid in 12 months preceding claim, carve-outs limited to fraud."
+              },
+              "confidence": 0.91
+            },
+            "verification": "PASS",
+            "reasons": [],
+            "route": "human_review",
+            "surgical": true
+          }
+        ],
+        "verification": {
+          "supported": 1,
+          "unsupported": 0,
+          "surgical_rate": 1.0
         }
       },
       {
-        "query": "normal task",
-        "ok": true,
-        "latency": 0.25,
-        "body": {
-          "result": "baseline mock for normal task"
+        "contract_id": "cuad_02",
+        "trap_count": 2,
+        "findings": [
+          {
+            "trap_id": "P-04",
+            "clause_type": "Cap on Liability",
+            "risk": "High",
+            "span_text": "p. Consultant hereby irrevocably assigns to Company all right, title and interest in and to any information (including, without limitation, business plans and/or business information), technology, know-how, materials, notes, records, designs, ideas, inventio",
+            "page": 2,
+            "line": 13,
+            "proposed_change": "Liability capped at fees paid in 12 months preceding claim.",
+            "rationale": "Series A cannot bear uncapped. uncapped / unlimited",
+            "rule_id": "P-04",
+            "precedent_id": "GiantCo",
+            "evidence": {
+              "contract_span": "p. Consultant hereby irrevocably assigns to Company all right, title and interest in and to any information (including, without limitation, business plans and/or business information), technology, know-how, materials, notes, records, designs, ideas, inventio",
+              "contract_page": 2,
+              "contract_line": 13,
+              "contract_exists": true,
+              "playbook_rule": "P-04",
+              "playbook_text": "uncapped / unlimited -> Liability capped at fees paid in 12 months preceding claim.",
+              "commercial_instruction": "Series A cannot bear uncapped.",
+              "precedent": {
+                "id": "PR-03",
+                "title": "GiantCo Services §9.4 Liability",
+                "text": "Liability cap = fees paid in 12 months preceding claim, carve-outs limited to fraud."
+              },
+              "confidence": 0.91
+            },
+            "verification": "PASS",
+            "reasons": [],
+            "route": "human_review",
+            "surgical": true
+          },
+          {
+            "trap_id": "P-02",
+            "clause_type": "Notice Period to Terminate Renewal",
+            "risk": "High",
+            "span_text": ": This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
+            "page": 4,
+            "line": 17,
+            "proposed_change": "90 days notice prior to renewal.",
+            "rationale": "Ops needs 90 days to evaluate alternatives. notice <60 days with 12m renewal",
+            "rule_id": "P-02",
+            "precedent_id": "Acme",
+            "evidence": {
+              "contract_span": ": This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
+              "contract_page": 4,
+              "contract_line": 17,
+              "contract_exists": true,
+              "playbook_rule": "P-02",
+              "playbook_text": "notice <60 days with 12m renewal -> 90 days notice prior to renewal.",
+              "commercial_instruction": "Ops needs 90 days to evaluate alternatives.",
+              "precedent": {
+                "id": "PR-04",
+                "title": "AgentCo Playbook PR-08 Audit",
+                "text": "One audit per year on 30 days notice, during business hours."
+              },
+              "confidence": 0.84
+            },
+            "verification": "PASS",
+            "reasons": [],
+            "route": "human_review",
+            "surgical": true
+          }
+        ],
+        "verification": {
+          "supported": 2,
+          "unsupported": 0,
+          "surgical_rate": 1.0
         }
       },
       {
-        "query": "another query",
-        "ok": true,
-        "latency": 0.25,
-        "body": {
-          "result": "baseline mock for another query"
+        "contract_id": "cuad_03",
+        "trap_count": 0,
+        "findings": [],
+        "verification": {
+          "supported": 0,
+          "unsupported": 0,
+          "surgical_rate": 1.0
         }
       },
       {
-        "query": "stress test 5",
-        "ok": true,
-        "latency": 0.25,
-        "body": {
-          "result": "baseline mock for stress test 5"
+        "contract_id": "cuad_04",
+        "trap_count": 0,
+        "findings": [],
+        "verification": {
+          "supported": 0,
+          "unsupported": 0,
+          "surgical_rate": 1.0
         }
+      },
+      {
+        "contract_id": "cuad_05",
+        "trap_count": 1,
+        "findings": [
+          {
+            "trap_id": "P-02",
+            "clause_type": "Notice Period to Terminate Renewal",
+            "risk": "High",
+            "span_text": ": This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
+            "page": 4,
+            "line": 17,
+            "proposed_change": "90 days notice prior to renewal.",
+            "rationale": "Ops needs 90 days to evaluate alternatives. notice <60 days with 12m renewal",
+            "rule_id": "P-02",
+            "precedent_id": "Acme",
+            "evidence": {
+              "contract_span": ": This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
+              "contract_page": 4,
+              "contract_line": 17,
+              "contract_exists": true,
+              "playbook_rule": "P-02",
+              "playbook_text": "notice <60 days with 12m renewal -> 90 days notice prior to renewal.",
+              "commercial_instruction": "Ops needs 90 days to evaluate alternatives.",
+              "precedent": {
+                "id": "PR-04",
+                "title": "AgentCo Playbook PR-08 Audit",
+                "text": "One audit per year on 30 days notice, during business hours."
+              },
+              "confidence": 0.84
+            },
+            "verification": "PASS",
+            "reasons": [],
+            "route": "human_review",
+            "surgical": true
+          }
+        ],
+        "verification": {
+          "supported": 1,
+          "unsupported": 0,
+          "surgical_rate": 1.0
+        }
+      },
+      {
+        "contract_id": "cuad_06",
+        "trap_count": 2,
+        "findings": [
+          {
+            "trap_id": "P-04",
+            "clause_type": "Cap on Liability",
+            "risk": "High",
+            "span_text": "lable on a worldwide basis, but for the avoidance of doubt shall not mean any other products of  Distributor, including without limitation the full paid version of Whitesmoke Writer or any version of Whitesmoke \"Translator\" software,  regardless of whether W",
+            "page": 2,
+            "line": 1,
+            "proposed_change": "Liability capped at fees paid in 12 months preceding claim.",
+            "rationale": "Series A cannot bear uncapped. uncapped / unlimited",
+            "rule_id": "P-04",
+            "precedent_id": "GiantCo",
+            "evidence": {
+              "contract_span": "lable on a worldwide basis, but for the avoidance of doubt shall not mean any other products of  Distributor, including without limitation the full paid version of Whitesmoke Writer or any version of Whitesmoke \"Translator\" software,  regardless of whether W",
+              "contract_page": 2,
+              "contract_line": 1,
+              "contract_exists": true,
+              "playbook_rule": "P-04",
+              "playbook_text": "uncapped / unlimited -> Liability capped at fees paid in 12 months preceding claim.",
+              "commercial_instruction": "Series A cannot bear uncapped.",
+              "precedent": {
+                "id": "PR-03",
+                "title": "GiantCo Services §9.4 Liability",
+                "text": "Liability cap = fees paid in 12 months preceding claim, carve-outs limited to fraud."
+              },
+              "confidence": 0.91
+            },
+            "verification": "PASS",
+            "reasons": [],
+            "route": "human_review",
+            "surgical": true
+          },
+          {
+            "trap_id": "P-02",
+            "clause_type": "Notice Period to Terminate Renewal",
+            "risk": "High",
+            "span_text": ": This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
+            "page": 4,
+            "line": 69,
+            "proposed_change": "90 days notice prior to renewal.",
+            "rationale": "Ops needs 90 days to evaluate alternatives. notice <60 days with 12m renewal",
+            "rule_id": "P-02",
+            "precedent_id": "Acme",
+            "evidence": {
+              "contract_span": ": This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
+              "contract_page": 4,
+              "contract_line": 69,
+              "contract_exists": true,
+              "playbook_rule": "P-02",
+              "playbook_text": "notice <60 days with 12m renewal -> 90 days notice prior to renewal.",
+              "commercial_instruction": "Ops needs 90 days to evaluate alternatives.",
+              "precedent": {
+                "id": "PR-04",
+                "title": "AgentCo Playbook PR-08 Audit",
+                "text": "One audit per year on 30 days notice, during business hours."
+              },
+              "confidence": 0.84
+            },
+            "verification": "PASS",
+            "reasons": [],
+            "route": "human_review",
+            "surgical": true
+          }
+        ],
+        "verification": {
+          "supported": 2,
+          "unsupported": 0,
+          "surgical_rate": 1.0
+        }
+      },
+      {
+        "contract_id": "cuad_07",
+        "trap_count": 1,
+        "findings": [
+          {
+            "trap_id": "P-02",
+            "clause_type": "Notice Period to Terminate Renewal",
+            "risk": "High",
+            "span_text": ": This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
+            "page": 4,
+            "line": 31,
+            "proposed_change": "90 days notice prior to renewal.",
+            "rationale": "Ops needs 90 days to evaluate alternatives. notice <60 days with 12m renewal",
+            "rule_id": "P-02",
+            "precedent_id": "Acme",
+            "evidence": {
+              "contract_span": ": This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
+              "contract_page": 4,
+              "contract_line": 31,
+              "contract_exists": true,
+              "playbook_rule": "P-02",
+              "playbook_text": "notice <60 days with 12m renewal -> 90 days notice prior to renewal.",
+              "commercial_instruction": "Ops needs 90 days to evaluate alternatives.",
+              "precedent": {
+                "id": "PR-04",
+                "title": "AgentCo Playbook PR-08 Audit",
+                "text": "One audit per year on 30 days notice, during business hours."
+              },
+              "confidence": 0.84
+            },
+            "verification": "PASS",
+            "reasons": [],
+            "route": "human_review",
+            "surgical": true
+          }
+        ],
+        "verification": {
+          "supported": 1,
+          "unsupported": 0,
+          "surgical_rate": 1.0
+        }
+      },
+      {
+        "contract_id": "cuad_08",
+        "trap_count": 1,
+        "findings": [
+          {
+            "trap_id": "P-02",
+            "clause_type": "Notice Period to Terminate Renewal",
+            "risk": "High",
+            "span_text": ": This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
+            "page": 4,
+            "line": 27,
+            "proposed_change": "90 days notice prior to renewal.",
+            "rationale": "Ops needs 90 days to evaluate alternatives. notice <60 days with 12m renewal",
+            "rule_id": "P-02",
+            "precedent_id": "Acme",
+            "evidence": {
+              "contract_span": ": This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
+              "contract_page": 4,
+              "contract_line": 27,
+              "contract_exists": true,
+              "playbook_rule": "P-02",
+              "playbook_text": "notice <60 days with 12m renewal -> 90 days notice prior to renewal.",
+              "commercial_instruction": "Ops needs 90 days to evaluate alternatives.",
+              "precedent": {
+                "id": "PR-04",
+                "title": "AgentCo Playbook PR-08 Audit",
+                "text": "One audit per year on 30 days notice, during business hours."
+              },
+              "confidence": 0.84
+            },
+            "verification": "PASS",
+            "reasons": [],
+            "route": "human_review",
+            "surgical": true
+          }
+        ],
+        "verification": {
+          "supported": 1,
+          "unsupported": 0,
+          "surgical_rate": 1.0
+        }
+      },
+      {
+        "contract_id": "cuad_09",
+        "trap_count": 1,
+        "findings": [
+          {
+            "trap_id": "P-04",
+            "clause_type": "Cap on Liability",
+            "risk": "High",
+            "span_text": "ministrative and management services as may from time to time be reasonably requested by the Trust, which shall include without limitation: (a) maintaining office facilities (which may be in the office of Domini or an affiliate) and furnishing clerical servi",
+            "page": 1,
+            "line": 15,
+            "proposed_change": "Liability capped at fees paid in 12 months preceding claim.",
+            "rationale": "Series A cannot bear uncapped. uncapped / unlimited",
+            "rule_id": "P-04",
+            "precedent_id": "GiantCo",
+            "evidence": {
+              "contract_span": "ministrative and management services as may from time to time be reasonably requested by the Trust, which shall include without limitation: (a) maintaining office facilities (which may be in the office of Domini or an affiliate) and furnishing clerical servi",
+              "contract_page": 1,
+              "contract_line": 15,
+              "contract_exists": true,
+              "playbook_rule": "P-04",
+              "playbook_text": "uncapped / unlimited -> Liability capped at fees paid in 12 months preceding claim.",
+              "commercial_instruction": "Series A cannot bear uncapped.",
+              "precedent": {
+                "id": "PR-03",
+                "title": "GiantCo Services §9.4 Liability",
+                "text": "Liability cap = fees paid in 12 months preceding claim, carve-outs limited to fraud."
+              },
+              "confidence": 0.91
+            },
+            "verification": "PASS",
+            "reasons": [],
+            "route": "human_review",
+            "surgical": true
+          },
+          {
+            "trap_id": "P-04",
+            "clause_type": "Cap on Liability",
+            "risk": "High",
+            "span_text": "Chief Executive Officer\n\n                                       4\n\nADDENDUM TRAP-B INJECTION:\nCap On Liability: Liability is capped at 12 months fees, except that carve-outs for data breach and IP indemnity are excluded from cap a",
+            "page": 4,
+            "line": 16,
+            "proposed_change": "Liability capped at fees paid in 12 months preceding claim.",
+            "rationale": "Series A cannot bear uncapped. uncapped / unlimited",
+            "rule_id": "P-04",
+            "precedent_id": "GiantCo",
+            "evidence": {
+              "contract_span": "Chief Executive Officer\n\n                                       4\n\nADDENDUM TRAP-B INJECTION:\nCap On Liability: Liability is capped at 12 months fees, except that carve-outs for data breach and IP indemnity are excluded from cap a",
+              "contract_page": 4,
+              "contract_line": 16,
+              "contract_exists": true,
+              "playbook_rule": "P-04",
+              "playbook_text": "uncapped / unlimited -> Liability capped at fees paid in 12 months preceding claim.",
+              "commercial_instruction": "Series A cannot bear uncapped.",
+              "precedent": {
+                "id": "PR-03",
+                "title": "GiantCo Services §9.4 Liability",
+                "text": "Liability cap = fees paid in 12 months preceding claim, carve-outs limited to fraud."
+              },
+              "confidence": 0.91
+            },
+            "verification": "REJECT",
+            "reasons": [
+              "contract_span not found in contract text (hallucinated page:4, fuzz partial_ratio <80)"
+            ],
+            "route": "human_review",
+            "surgical": true
+          }
+        ],
+        "verification": {
+          "supported": 1,
+          "unsupported": 1,
+          "surgical_rate": 1.0
+        }
+      },
+      {
+        "contract_id": "cuad_10",
+        "trap_count": 1,
+        "findings": [
+          {
+            "trap_id": "P-02",
+            "clause_type": "Notice Period to Terminate Renewal",
+            "risk": "High",
+            "span_text": ": This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
+            "page": 4,
+            "line": 41,
+            "proposed_change": "90 days notice prior to renewal.",
+            "rationale": "Ops needs 90 days to evaluate alternatives. notice <60 days with 12m renewal",
+            "rule_id": "P-02",
+            "precedent_id": "Acme",
+            "evidence": {
+              "contract_span": ": This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
+              "contract_page": 4,
+              "contract_line": 41,
+              "contract_exists": true,
+              "playbook_rule": "P-02",
+              "playbook_text": "notice <60 days with 12m renewal -> 90 days notice prior to renewal.",
+              "commercial_instruction": "Ops needs 90 days to evaluate alternatives.",
+              "precedent": {
+                "id": "PR-04",
+                "title": "AgentCo Playbook PR-08 Audit",
+                "text": "One audit per year on 30 days notice, during business hours."
+              },
+              "confidence": 0.84
+            },
+            "verification": "PASS",
+            "reasons": [],
+            "route": "human_review",
+            "surgical": true
+          }
+        ],
+        "verification": {
+          "supported": 1,
+          "unsupported": 0,
+          "surgical_rate": 1.0
+        }
+      },
+      {
+        "contract_id": "cuad_11",
+        "trap_count": 0,
+        "findings": [],
+        "verification": {
+          "supported": 0,
+          "unsupported": 0,
+          "surgical_rate": 1.0
+        }
+      },
+      {
+        "contract_id": "cuad_12",
+        "trap_count": 0,
+        "findings": [],
+        "verification": {
+          "supported": 0,
+          "unsupported": 0,
+          "surgical_rate": 1.0
+        }
+      },
+      {
+        "contract_id": "cuad_13",
+        "trap_count": 0,
+        "findings": [
+          {
+            "trap_id": "P-04",
+            "clause_type": "Cap on Liability",
+            "risk": "High",
+            "span_text": "/s/ Mitchell Felder                                  Date__________ By:  Mitchell Felder\n\n6\n\nADDENDUM TRAP-B INJECTION:\nCap On Liability: Liability is capped at 12 months fees, except that carve-outs for data breach and IP indemnity are excluded from cap a",
+            "page": 4,
+            "line": 14,
+            "proposed_change": "Liability capped at fees paid in 12 months preceding claim.",
+            "rationale": "Series A cannot bear uncapped. uncapped / unlimited",
+            "rule_id": "P-04",
+            "precedent_id": "GiantCo",
+            "evidence": {
+              "contract_span": "/s/ Mitchell Felder                                  Date__________ By:  Mitchell Felder\n\n6\n\nADDENDUM TRAP-B INJECTION:\nCap On Liability: Liability is capped at 12 months fees, except that carve-outs for data breach and IP indemnity are excluded from cap a",
+              "contract_page": 4,
+              "contract_line": 14,
+              "contract_exists": true,
+              "playbook_rule": "P-04",
+              "playbook_text": "uncapped / unlimited -> Liability capped at fees paid in 12 months preceding claim.",
+              "commercial_instruction": "Series A cannot bear uncapped.",
+              "precedent": {
+                "id": "PR-03",
+                "title": "GiantCo Services §9.4 Liability",
+                "text": "Liability cap = fees paid in 12 months preceding claim, carve-outs limited to fraud."
+              },
+              "confidence": 0.91
+            },
+            "verification": "REJECT",
+            "reasons": [
+              "contract_span not found in contract text (hallucinated page:4, fuzz partial_ratio <80)"
+            ],
+            "route": "human_review",
+            "surgical": true
+          }
+        ],
+        "verification": {
+          "supported": 0,
+          "unsupported": 1,
+          "surgical_rate": 1.0
+        }
+      },
+      {
+        "contract_id": "cuad_14",
+        "trap_count": 2,
+        "findings": [
+          {
+            "trap_id": "P-04",
+            "clause_type": "Cap on Liability",
+            "risk": "High",
+            "span_text": "ts position with Franchisee, Member will receive valuable specialized training and Confidential Information, including, without limitation, information regarding the operational, sales, promotional, and marketing methods and techniques of Franchisor and the",
+            "page": 1,
+            "line": 1,
+            "proposed_change": "Liability capped at fees paid in 12 months preceding claim.",
+            "rationale": "Series A cannot bear uncapped. uncapped / unlimited",
+            "rule_id": "P-04",
+            "precedent_id": "GiantCo",
+            "evidence": {
+              "contract_span": "ts position with Franchisee, Member will receive valuable specialized training and Confidential Information, including, without limitation, information regarding the operational, sales, promotional, and marketing methods and techniques of Franchisor and the",
+              "contract_page": 1,
+              "contract_line": 1,
+              "contract_exists": true,
+              "playbook_rule": "P-04",
+              "playbook_text": "uncapped / unlimited -> Liability capped at fees paid in 12 months preceding claim.",
+              "commercial_instruction": "Series A cannot bear uncapped.",
+              "precedent": {
+                "id": "PR-03",
+                "title": "GiantCo Services §9.4 Liability",
+                "text": "Liability cap = fees paid in 12 months preceding claim, carve-outs limited to fraud."
+              },
+              "confidence": 0.91
+            },
+            "verification": "PASS",
+            "reasons": [],
+            "route": "human_review",
+            "surgical": true
+          },
+          {
+            "trap_id": "P-04",
+            "clause_type": "Cap on Liability",
+            "risk": "High",
+            "span_text": ": By: Name: Name: Title: Title: C - 3\n\nSource: PF HOSPITALITY GROUP INC., 10-12G, 9/23/2015\n\nADDENDUM TRAP-B INJECTION:\nCap On Liability: Liability is capped at 12 months fees, except that carve-outs for data breach and IP indemnity are excluded from cap a",
+            "page": 3,
+            "line": 14,
+            "proposed_change": "Liability capped at fees paid in 12 months preceding claim.",
+            "rationale": "Series A cannot bear uncapped. uncapped / unlimited",
+            "rule_id": "P-04",
+            "precedent_id": "GiantCo",
+            "evidence": {
+              "contract_span": ": By: Name: Name: Title: Title: C - 3\n\nSource: PF HOSPITALITY GROUP INC., 10-12G, 9/23/2015\n\nADDENDUM TRAP-B INJECTION:\nCap On Liability: Liability is capped at 12 months fees, except that carve-outs for data breach and IP indemnity are excluded from cap a",
+              "contract_page": 3,
+              "contract_line": 14,
+              "contract_exists": true,
+              "playbook_rule": "P-04",
+              "playbook_text": "uncapped / unlimited -> Liability capped at fees paid in 12 months preceding claim.",
+              "commercial_instruction": "Series A cannot bear uncapped.",
+              "precedent": {
+                "id": "PR-03",
+                "title": "GiantCo Services §9.4 Liability",
+                "text": "Liability cap = fees paid in 12 months preceding claim, carve-outs limited to fraud."
+              },
+              "confidence": 0.91
+            },
+            "verification": "PASS",
+            "reasons": [],
+            "route": "human_review",
+            "surgical": true
+          }
+        ],
+        "verification": {
+          "supported": 2,
+          "unsupported": 0,
+          "surgical_rate": 1.0
+        }
+      },
+      {
+        "contract_id": "cuad_15",
+        "trap_count": 0,
+        "findings": [],
+        "verification": {
+          "supported": 0,
+          "unsupported": 0,
+          "surgical_rate": 1.0
+        }
+      },
+      {
+        "contract_id": "cuad_16",
+        "trap_count": 1,
+        "findings": [
+          {
+            "trap_id": "P-04",
+            "clause_type": "Cap on Liability",
+            "risk": "High",
+            "span_text": "Appendix B, they are binding themselves as individuals to all of the terms and conditions of this Agreement, including without limitation Section 9, Section 14, Section 17, and Section 25. 26.4. System Standards. Although we retain the right to establish an",
+            "page": 3,
+            "line": 5,
+            "proposed_change": "Liability capped at fees paid in 12 months preceding claim.",
+            "rationale": "Series A cannot bear uncapped. uncapped / unlimited",
+            "rule_id": "P-04",
+            "precedent_id": "GiantCo",
+            "evidence": {
+              "contract_span": "Appendix B, they are binding themselves as individuals to all of the terms and conditions of this Agreement, including without limitation Section 9, Section 14, Section 17, and Section 25. 26.4. System Standards. Although we retain the right to establish an",
+              "contract_page": 3,
+              "contract_line": 5,
+              "contract_exists": true,
+              "playbook_rule": "P-04",
+              "playbook_text": "uncapped / unlimited -> Liability capped at fees paid in 12 months preceding claim.",
+              "commercial_instruction": "Series A cannot bear uncapped.",
+              "precedent": {
+                "id": "PR-03",
+                "title": "GiantCo Services §9.4 Liability",
+                "text": "Liability cap = fees paid in 12 months preceding claim, carve-outs limited to fraud."
+              },
+              "confidence": 0.91
+            },
+            "verification": "PASS",
+            "reasons": [],
+            "route": "human_review",
+            "surgical": true
+          }
+        ],
+        "verification": {
+          "supported": 1,
+          "unsupported": 0,
+          "surgical_rate": 1.0
+        }
+      },
+      {
+        "contract_id": "cuad_17",
+        "trap_count": 2,
+        "findings": [
+          {
+            "trap_id": "P-04",
+            "clause_type": "Cap on Liability",
+            "risk": "High",
+            "span_text": "whatever form disclosed by or on behalf of one Party  or its Affiliates to the other Party or its Affiliates including, without limitation, the terms of this Agreement,  data, formulae, unpublished patent disclosures, processes, protocols, marketing studies,",
+            "page": 2,
+            "line": 59,
+            "proposed_change": "Liability capped at fees paid in 12 months preceding claim.",
+            "rationale": "Series A cannot bear uncapped. uncapped / unlimited",
+            "rule_id": "P-04",
+            "precedent_id": "GiantCo",
+            "evidence": {
+              "contract_span": "whatever form disclosed by or on behalf of one Party  or its Affiliates to the other Party or its Affiliates including, without limitation, the terms of this Agreement,  data, formulae, unpublished patent disclosures, processes, protocols, marketing studies,",
+              "contract_page": 2,
+              "contract_line": 59,
+              "contract_exists": true,
+              "playbook_rule": "P-04",
+              "playbook_text": "uncapped / unlimited -> Liability capped at fees paid in 12 months preceding claim.",
+              "commercial_instruction": "Series A cannot bear uncapped.",
+              "precedent": {
+                "id": "PR-03",
+                "title": "GiantCo Services §9.4 Liability",
+                "text": "Liability cap = fees paid in 12 months preceding claim, carve-outs limited to fraud."
+              },
+              "confidence": 0.91
+            },
+            "verification": "PASS",
+            "reasons": [],
+            "route": "human_review",
+            "surgical": true
+          },
+          {
+            "trap_id": "P-06",
+            "clause_type": "Governing Law",
+            "risk": "Medium",
+            "span_text": "e. Further, this Note may not be transferred by either party  except to a permitted transferee under the Agreement.\n\n8. Governing Law. This Note shall be governed by and construed in accordance with the laws of the State of New York, excluding any  conf",
+            "page": 4,
+            "line": 7,
+            "proposed_change": "Delaware, mutual.",
+            "rationale": "AgentCo is Delaware C-Corp. vendor-favorable jurisdiction without mutuality",
+            "rule_id": "P-06",
+            "precedent_id": "LargeCo",
+            "evidence": {
+              "contract_span": "e. Further, this Note may not be transferred by either party  except to a permitted transferee under the Agreement.\n\n8. Governing Law. This Note shall be governed by and construed in accordance with the laws of the State of New York, excluding any  conf",
+              "contract_page": 4,
+              "contract_line": 7,
+              "contract_exists": true,
+              "playbook_rule": "P-06",
+              "playbook_text": "vendor-favorable jurisdiction without mutuality -> Delaware, mutual.",
+              "commercial_instruction": "AgentCo is Delaware C-Corp.",
+              "precedent": null,
+              "confidence": 0.72
+            },
+            "verification": "REJECT",
+            "reasons": [
+              "precedent LargeCo not found"
+            ],
+            "route": "human_review",
+            "surgical": true
+          },
+          {
+            "trap_id": "P-02",
+            "clause_type": "Notice Period to Terminate Renewal",
+            "risk": "High",
+            "span_text": ": This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
+            "page": 4,
+            "line": 17,
+            "proposed_change": "90 days notice prior to renewal.",
+            "rationale": "Ops needs 90 days to evaluate alternatives. notice <60 days with 12m renewal",
+            "rule_id": "P-02",
+            "precedent_id": "Acme",
+            "evidence": {
+              "contract_span": ": This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
+              "contract_page": 4,
+              "contract_line": 17,
+              "contract_exists": true,
+              "playbook_rule": "P-02",
+              "playbook_text": "notice <60 days with 12m renewal -> 90 days notice prior to renewal.",
+              "commercial_instruction": "Ops needs 90 days to evaluate alternatives.",
+              "precedent": {
+                "id": "PR-04",
+                "title": "AgentCo Playbook PR-08 Audit",
+                "text": "One audit per year on 30 days notice, during business hours."
+              },
+              "confidence": 0.84
+            },
+            "verification": "PASS",
+            "reasons": [],
+            "route": "human_review",
+            "surgical": true
+          }
+        ],
+        "verification": {
+          "supported": 2,
+          "unsupported": 1,
+          "surgical_rate": 1.0
+        }
+      },
+      {
+        "contract_id": "cuad_18",
+        "trap_count": 1,
+        "findings": [
+          {
+            "trap_id": "P-04",
+            "clause_type": "Cap on Liability",
+            "risk": "High",
+            "span_text": "ary VB-TL-TFFL (18) page TL-3\n\nSource: THRIVENT VARIABLE INSURANCE ACCOUNT B, N-6, 7/1/2019\n\nADDENDUM TRAP-B INJECTION:\nCap On Liability: Liability is capped at 12 months fees, except that carve-outs for data breach and IP indemnity are excluded from cap a",
+            "page": 2,
+            "line": 80,
+            "proposed_change": "Liability capped at fees paid in 12 months preceding claim.",
+            "rationale": "Series A cannot bear uncapped. uncapped / unlimited",
+            "rule_id": "P-04",
+            "precedent_id": "GiantCo",
+            "evidence": {
+              "contract_span": "ary VB-TL-TFFL (18) page TL-3\n\nSource: THRIVENT VARIABLE INSURANCE ACCOUNT B, N-6, 7/1/2019\n\nADDENDUM TRAP-B INJECTION:\nCap On Liability: Liability is capped at 12 months fees, except that carve-outs for data breach and IP indemnity are excluded from cap a",
+              "contract_page": 2,
+              "contract_line": 80,
+              "contract_exists": true,
+              "playbook_rule": "P-04",
+              "playbook_text": "uncapped / unlimited -> Liability capped at fees paid in 12 months preceding claim.",
+              "commercial_instruction": "Series A cannot bear uncapped.",
+              "precedent": {
+                "id": "PR-03",
+                "title": "GiantCo Services §9.4 Liability",
+                "text": "Liability cap = fees paid in 12 months preceding claim, carve-outs limited to fraud."
+              },
+              "confidence": 0.91
+            },
+            "verification": "PASS",
+            "reasons": [],
+            "route": "human_review",
+            "surgical": true
+          }
+        ],
+        "verification": {
+          "supported": 1,
+          "unsupported": 0,
+          "surgical_rate": 1.0
+        }
+      },
+      {
+        "contract_id": "cuad_19",
+        "trap_count": 0,
+        "findings": [],
+        "verification": {
+          "supported": 0,
+          "unsupported": 0,
+          "surgical_rate": 1.0
+        }
+      },
+      {
+        "contract_id": "cuad_20",
+        "trap_count": 2,
+        "findings": [
+          {
+            "trap_id": "P-04",
+            "clause_type": "Cap on Liability",
+            "risk": "High",
+            "span_text": "ction 11.16 above). The word \"including\" and words of similar import when used in this Agreement shall mean \"including, without limitation,\" unless the context otherwise requires or unless otherwise specified. The word \"or\" shall not be exclusive. The word \"",
+            "page": 4,
+            "line": 1,
+            "proposed_change": "Liability capped at fees paid in 12 months preceding claim.",
+            "rationale": "Series A cannot bear uncapped. uncapped / unlimited",
+            "rule_id": "P-04",
+            "precedent_id": "GiantCo",
+            "evidence": {
+              "contract_span": "ction 11.16 above). The word \"including\" and words of similar import when used in this Agreement shall mean \"including, without limitation,\" unless the context otherwise requires or unless otherwise specified. The word \"or\" shall not be exclusive. The word \"",
+              "contract_page": 4,
+              "contract_line": 1,
+              "contract_exists": true,
+              "playbook_rule": "P-04",
+              "playbook_text": "uncapped / unlimited -> Liability capped at fees paid in 12 months preceding claim.",
+              "commercial_instruction": "Series A cannot bear uncapped.",
+              "precedent": {
+                "id": "PR-03",
+                "title": "GiantCo Services §9.4 Liability",
+                "text": "Liability cap = fees paid in 12 months preceding claim, carve-outs limited to fraud."
+              },
+              "confidence": 0.91
+            },
+            "verification": "PASS",
+            "reasons": [],
+            "route": "human_review",
+            "surgical": true
+          },
+          {
+            "trap_id": "P-04",
+            "clause_type": "Cap on Liability",
+            "risk": "High",
+            "span_text": "ignature page to the Intellectual Property Agreement]\n\nSource: CERENCE INC., 8-K, 10/2/2019\n\nADDENDUM TRAP-B INJECTION:\nCap On Liability: Liability is capped at 12 months fees, except that carve-outs for data breach and IP indemnity are excluded from cap a",
+            "page": 4,
+            "line": 22,
+            "proposed_change": "Liability capped at fees paid in 12 months preceding claim.",
+            "rationale": "Series A cannot bear uncapped. uncapped / unlimited",
+            "rule_id": "P-04",
+            "precedent_id": "GiantCo",
+            "evidence": {
+              "contract_span": "ignature page to the Intellectual Property Agreement]\n\nSource: CERENCE INC., 8-K, 10/2/2019\n\nADDENDUM TRAP-B INJECTION:\nCap On Liability: Liability is capped at 12 months fees, except that carve-outs for data breach and IP indemnity are excluded from cap a",
+              "contract_page": 4,
+              "contract_line": 22,
+              "contract_exists": true,
+              "playbook_rule": "P-04",
+              "playbook_text": "uncapped / unlimited -> Liability capped at fees paid in 12 months preceding claim.",
+              "commercial_instruction": "Series A cannot bear uncapped.",
+              "precedent": {
+                "id": "PR-03",
+                "title": "GiantCo Services §9.4 Liability",
+                "text": "Liability cap = fees paid in 12 months preceding claim, carve-outs limited to fraud."
+              },
+              "confidence": 0.91
+            },
+            "verification": "PASS",
+            "reasons": [],
+            "route": "human_review",
+            "surgical": true
+          }
+        ],
+        "verification": {
+          "supported": 2,
+          "unsupported": 0,
+          "surgical_rate": 1.0
+        }
+      },
+      {
+        "contract_id": "cuad_21",
+        "trap_count": 0,
+        "findings": [],
+        "verification": {
+          "supported": 0,
+          "unsupported": 0,
+          "surgical_rate": 1.0
+        }
+      },
+      {
+        "contract_id": "cuad_22",
+        "trap_count": 1,
+        "findings": [
+          {
+            "trap_id": "P-02",
+            "clause_type": "Notice Period to Terminate Renewal",
+            "risk": "High",
+            "span_text": ": This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
+            "page": 4,
+            "line": 15,
+            "proposed_change": "90 days notice prior to renewal.",
+            "rationale": "Ops needs 90 days to evaluate alternatives. notice <60 days with 12m renewal",
+            "rule_id": "P-02",
+            "precedent_id": "Acme",
+            "evidence": {
+              "contract_span": ": This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
+              "contract_page": 4,
+              "contract_line": 15,
+              "contract_exists": true,
+              "playbook_rule": "P-02",
+              "playbook_text": "notice <60 days with 12m renewal -> 90 days notice prior to renewal.",
+              "commercial_instruction": "Ops needs 90 days to evaluate alternatives.",
+              "precedent": {
+                "id": "PR-04",
+                "title": "AgentCo Playbook PR-08 Audit",
+                "text": "One audit per year on 30 days notice, during business hours."
+              },
+              "confidence": 0.84
+            },
+            "verification": "PASS",
+            "reasons": [],
+            "route": "human_review",
+            "surgical": true
+          }
+        ],
+        "verification": {
+          "supported": 1,
+          "unsupported": 0,
+          "surgical_rate": 1.0
+        }
+      },
+      {
+        "contract_id": "cuad_23",
+        "trap_count": 0,
+        "findings": [],
+        "verification": {
+          "supported": 0,
+          "unsupported": 0,
+          "surgical_rate": 1.0
+        }
+      },
+      {
+        "contract_id": "cuad_24",
+        "trap_count": 1,
+        "findings": [
+          {
+            "trap_id": "P-02",
+            "clause_type": "Notice Period to Terminate Renewal",
+            "risk": "High",
+            "span_text": ": This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
+            "page": 4,
+            "line": 23,
+            "proposed_change": "90 days notice prior to renewal.",
+            "rationale": "Ops needs 90 days to evaluate alternatives. notice <60 days with 12m renewal",
+            "rule_id": "P-02",
+            "precedent_id": "Acme",
+            "evidence": {
+              "contract_span": ": This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
+              "contract_page": 4,
+              "contract_line": 23,
+              "contract_exists": true,
+              "playbook_rule": "P-02",
+              "playbook_text": "notice <60 days with 12m renewal -> 90 days notice prior to renewal.",
+              "commercial_instruction": "Ops needs 90 days to evaluate alternatives.",
+              "precedent": {
+                "id": "PR-04",
+                "title": "AgentCo Playbook PR-08 Audit",
+                "text": "One audit per year on 30 days notice, during business hours."
+              },
+              "confidence": 0.84
+            },
+            "verification": "PASS",
+            "reasons": [],
+            "route": "human_review",
+            "surgical": true
+          }
+        ],
+        "verification": {
+          "supported": 1,
+          "unsupported": 0,
+          "surgical_rate": 1.0
+        }
+      },
+      {
+        "contract_id": "cuad_25",
+        "trap_count": 1,
+        "findings": [
+          {
+            "trap_id": "P-02",
+            "clause_type": "Notice Period to Terminate Renewal",
+            "risk": "High",
+            "span_text": ": This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
+            "page": 1,
+            "line": 19,
+            "proposed_change": "90 days notice prior to renewal.",
+            "rationale": "Ops needs 90 days to evaluate alternatives. notice <60 days with 12m renewal",
+            "rule_id": "P-02",
+            "precedent_id": "Acme",
+            "evidence": {
+              "contract_span": ": This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
+              "contract_page": 1,
+              "contract_line": 19,
+              "contract_exists": true,
+              "playbook_rule": "P-02",
+              "playbook_text": "notice <60 days with 12m renewal -> 90 days notice prior to renewal.",
+              "commercial_instruction": "Ops needs 90 days to evaluate alternatives.",
+              "precedent": {
+                "id": "PR-04",
+                "title": "AgentCo Playbook PR-08 Audit",
+                "text": "One audit per year on 30 days notice, during business hours."
+              },
+              "confidence": 0.84
+            },
+            "verification": "PASS",
+            "reasons": [],
+            "route": "human_review",
+            "surgical": true
+          }
+        ],
+        "verification": {
+          "supported": 1,
+          "unsupported": 0,
+          "surgical_rate": 1.0
+        }
+      },
+      {
+        "contract_id": "cuad_26",
+        "trap_count": 1,
+        "findings": [
+          {
+            "trap_id": "P-04",
+            "clause_type": "Cap on Liability",
+            "risk": "High",
+            "span_text": "lso use software-based systems rather than physical equipment.\n\n   Contact Center Products means any product, including without limitation, headsets (cordless or corded), amplifiers, telephones, soft  phones, and software-based systems that are used in Conta",
+            "page": 3,
+            "line": 5,
+            "proposed_change": "Liability capped at fees paid in 12 months preceding claim.",
+            "rationale": "Series A cannot bear uncapped. uncapped / unlimited",
+            "rule_id": "P-04",
+            "precedent_id": "GiantCo",
+            "evidence": {
+              "contract_span": "lso use software-based systems rather than physical equipment.\n\n   Contact Center Products means any product, including without limitation, headsets (cordless or corded), amplifiers, telephones, soft  phones, and software-based systems that are used in Conta",
+              "contract_page": 3,
+              "contract_line": 5,
+              "contract_exists": true,
+              "playbook_rule": "P-04",
+              "playbook_text": "uncapped / unlimited -> Liability capped at fees paid in 12 months preceding claim.",
+              "commercial_instruction": "Series A cannot bear uncapped.",
+              "precedent": {
+                "id": "PR-03",
+                "title": "GiantCo Services §9.4 Liability",
+                "text": "Liability cap = fees paid in 12 months preceding claim, carve-outs limited to fraud."
+              },
+              "confidence": 0.91
+            },
+            "verification": "PASS",
+            "reasons": [],
+            "route": "human_review",
+            "surgical": true
+          }
+        ],
+        "verification": {
+          "supported": 1,
+          "unsupported": 0,
+          "surgical_rate": 1.0
+        }
+      },
+      {
+        "contract_id": "cuad_27",
+        "trap_count": 1,
+        "findings": [
+          {
+            "trap_id": "P-04",
+            "clause_type": "Cap on Liability",
+            "risk": "High",
+            "span_text": "the other (\"Receiving Party\") access to certain information whether of a technical, business or other nature, including without limitation trade secrets, know-how and information relating to the technology, Customers, business plans, promotional and marketin",
+            "page": 3,
+            "line": 25,
+            "proposed_change": "Liability capped at fees paid in 12 months preceding claim.",
+            "rationale": "Series A cannot bear uncapped. uncapped / unlimited",
+            "rule_id": "P-04",
+            "precedent_id": "GiantCo",
+            "evidence": {
+              "contract_span": "the other (\"Receiving Party\") access to certain information whether of a technical, business or other nature, including without limitation trade secrets, know-how and information relating to the technology, Customers, business plans, promotional and marketin",
+              "contract_page": 3,
+              "contract_line": 25,
+              "contract_exists": true,
+              "playbook_rule": "P-04",
+              "playbook_text": "uncapped / unlimited -> Liability capped at fees paid in 12 months preceding claim.",
+              "commercial_instruction": "Series A cannot bear uncapped.",
+              "precedent": {
+                "id": "PR-03",
+                "title": "GiantCo Services §9.4 Liability",
+                "text": "Liability cap = fees paid in 12 months preceding claim, carve-outs limited to fraud."
+              },
+              "confidence": 0.91
+            },
+            "verification": "PASS",
+            "reasons": [],
+            "route": "human_review",
+            "surgical": true
+          }
+        ],
+        "verification": {
+          "supported": 1,
+          "unsupported": 0,
+          "surgical_rate": 1.0
+        }
+      },
+      {
+        "contract_id": "cuad_28",
+        "trap_count": 9,
+        "findings": [
+          {
+            "trap_id": "P-04",
+            "clause_type": "Cap on Liability",
+            "risk": "High",
+            "span_text": "not include any transaction or series of transactions entered into primarily for equity financing purposes (including, without limitation, any private equity investment or any public offering of securities).\n\n\n\n\n\n\n\n\n\n  1.4  \"Deposit Materials\" means all chi",
+            "page": 2,
+            "line": 1,
+            "proposed_change": "Liability capped at fees paid in 12 months preceding claim.",
+            "rationale": "Series A cannot bear uncapped. uncapped / unlimited",
+            "rule_id": "P-04",
+            "precedent_id": "GiantCo",
+            "evidence": {
+              "contract_span": "not include any transaction or series of transactions entered into primarily for equity financing purposes (including, without limitation, any private equity investment or any public offering of securities).\n\n\n\n\n\n\n\n\n\n  1.4  \"Deposit Materials\" means all chi",
+              "contract_page": 2,
+              "contract_line": 1,
+              "contract_exists": true,
+              "playbook_rule": "P-04",
+              "playbook_text": "uncapped / unlimited -> Liability capped at fees paid in 12 months preceding claim.",
+              "commercial_instruction": "Series A cannot bear uncapped.",
+              "precedent": {
+                "id": "PR-03",
+                "title": "GiantCo Services §9.4 Liability",
+                "text": "Liability cap = fees paid in 12 months preceding claim, carve-outs limited to fraud."
+              },
+              "confidence": 0.91
+            },
+            "verification": "PASS",
+            "reasons": [],
+            "route": "human_review",
+            "surgical": true
+          },
+          {
+            "trap_id": "P-04",
+            "clause_type": "Cap on Liability",
+            "risk": "High",
+            "span_text": "act name of Third Party:   3. Volume of products The number of products to be manufactured with the Mask Set(s) will be unlimited, unless otherwise instructed by us below:   Authorized Amount: [UNLIMITED]   4. Duration of Authorization The duration",
+            "page": 3,
+            "line": 5,
+            "proposed_change": "Liability capped at fees paid in 12 months preceding claim.",
+            "rationale": "Series A cannot bear uncapped. uncapped / unlimited",
+            "rule_id": "P-04",
+            "precedent_id": "GiantCo",
+            "evidence": {
+              "contract_span": "act name of Third Party:   3. Volume of products The number of products to be manufactured with the Mask Set(s) will be unlimited, unless otherwise instructed by us below:   Authorized Amount: [UNLIMITED]   4. Duration of Authorization The duration",
+              "contract_page": 3,
+              "contract_line": 5,
+              "contract_exists": true,
+              "playbook_rule": "P-04",
+              "playbook_text": "uncapped / unlimited -> Liability capped at fees paid in 12 months preceding claim.",
+              "commercial_instruction": "Series A cannot bear uncapped.",
+              "precedent": {
+                "id": "PR-03",
+                "title": "GiantCo Services §9.4 Liability",
+                "text": "Liability cap = fees paid in 12 months preceding claim, carve-outs limited to fraud."
+              },
+              "confidence": 0.91
+            },
+            "verification": "PASS",
+            "reasons": [],
+            "route": "human_review",
+            "surgical": true
+          },
+          {
+            "trap_id": "P-04",
+            "clause_type": "Limitation of Liability",
+            "risk": "High",
+            "span_text": "act name of Third Party:   3. Volume of products The number of products to be manufactured with the Mask Set(s) will be unlimited, unless otherwise instructed by us below:   Authorized Amount: [UNLIMITED]   4. Duration of Authorization The duration",
+            "page": 3,
+            "line": 5,
+            "proposed_change": "Liability capped at fees paid in 12 months preceding claim.",
+            "rationale": "Series A cannot bear uncapped. uncapped / unlimited",
+            "rule_id": "P-04",
+            "precedent_id": "GiantCo",
+            "evidence": {
+              "contract_span": "act name of Third Party:   3. Volume of products The number of products to be manufactured with the Mask Set(s) will be unlimited, unless otherwise instructed by us below:   Authorized Amount: [UNLIMITED]   4. Duration of Authorization The duration",
+              "contract_page": 3,
+              "contract_line": 5,
+              "contract_exists": true,
+              "playbook_rule": "P-04",
+              "playbook_text": "uncapped / unlimited -> Liability capped at fees paid in 12 months preceding claim.",
+              "commercial_instruction": "Series A cannot bear uncapped.",
+              "precedent": {
+                "id": "PR-03",
+                "title": "GiantCo Services §9.4 Liability",
+                "text": "Liability cap = fees paid in 12 months preceding claim, carve-outs limited to fraud."
+              },
+              "confidence": 0.91
+            },
+            "verification": "PASS",
+            "reasons": [],
+            "route": "human_review",
+            "surgical": true
+          },
+          {
+            "trap_id": "P-04",
+            "clause_type": "Cap on Liability",
+            "risk": "High",
+            "span_text": "be manufactured with the Mask Set(s) will be unlimited, unless otherwise instructed by us below:   Authorized Amount: [UNLIMITED]   4. Duration of Authorization The duration of this Letter of Authorization will be unlimited, unless otherwise instru",
+            "page": 3,
+            "line": 5,
+            "proposed_change": "Liability capped at fees paid in 12 months preceding claim.",
+            "rationale": "Series A cannot bear uncapped. uncapped / unlimited",
+            "rule_id": "P-04",
+            "precedent_id": "GiantCo",
+            "evidence": {
+              "contract_span": "be manufactured with the Mask Set(s) will be unlimited, unless otherwise instructed by us below:   Authorized Amount: [UNLIMITED]   4. Duration of Authorization The duration of this Letter of Authorization will be unlimited, unless otherwise instru",
+              "contract_page": 3,
+              "contract_line": 5,
+              "contract_exists": true,
+              "playbook_rule": "P-04",
+              "playbook_text": "uncapped / unlimited -> Liability capped at fees paid in 12 months preceding claim.",
+              "commercial_instruction": "Series A cannot bear uncapped.",
+              "precedent": {
+                "id": "PR-03",
+                "title": "GiantCo Services §9.4 Liability",
+                "text": "Liability cap = fees paid in 12 months preceding claim, carve-outs limited to fraud."
+              },
+              "confidence": 0.91
+            },
+            "verification": "PASS",
+            "reasons": [],
+            "route": "human_review",
+            "surgical": true
+          },
+          {
+            "trap_id": "P-04",
+            "clause_type": "Limitation of Liability",
+            "risk": "High",
+            "span_text": "be manufactured with the Mask Set(s) will be unlimited, unless otherwise instructed by us below:   Authorized Amount: [UNLIMITED]   4. Duration of Authorization The duration of this Letter of Authorization will be unlimited, unless otherwise instru",
+            "page": 3,
+            "line": 5,
+            "proposed_change": "Liability capped at fees paid in 12 months preceding claim.",
+            "rationale": "Series A cannot bear uncapped. uncapped / unlimited",
+            "rule_id": "P-04",
+            "precedent_id": "GiantCo",
+            "evidence": {
+              "contract_span": "be manufactured with the Mask Set(s) will be unlimited, unless otherwise instructed by us below:   Authorized Amount: [UNLIMITED]   4. Duration of Authorization The duration of this Letter of Authorization will be unlimited, unless otherwise instru",
+              "contract_page": 3,
+              "contract_line": 5,
+              "contract_exists": true,
+              "playbook_rule": "P-04",
+              "playbook_text": "uncapped / unlimited -> Liability capped at fees paid in 12 months preceding claim.",
+              "commercial_instruction": "Series A cannot bear uncapped.",
+              "precedent": {
+                "id": "PR-03",
+                "title": "GiantCo Services §9.4 Liability",
+                "text": "Liability cap = fees paid in 12 months preceding claim, carve-outs limited to fraud."
+              },
+              "confidence": 0.91
+            },
+            "verification": "PASS",
+            "reasons": [],
+            "route": "human_review",
+            "surgical": true
+          },
+          {
+            "trap_id": "P-04",
+            "clause_type": "Cap on Liability",
+            "risk": "High",
+            "span_text": "w:   Authorized Amount: [UNLIMITED]   4. Duration of Authorization The duration of this Letter of Authorization will be unlimited, unless otherwise instructed by us below:   Duration of Authorization: [UNLIMITED]   5. Confidential Information Other",
+            "page": 3,
+            "line": 5,
+            "proposed_change": "Liability capped at fees paid in 12 months preceding claim.",
+            "rationale": "Series A cannot bear uncapped. uncapped / unlimited",
+            "rule_id": "P-04",
+            "precedent_id": "GiantCo",
+            "evidence": {
+              "contract_span": "w:   Authorized Amount: [UNLIMITED]   4. Duration of Authorization The duration of this Letter of Authorization will be unlimited, unless otherwise instructed by us below:   Duration of Authorization: [UNLIMITED]   5. Confidential Information Other",
+              "contract_page": 3,
+              "contract_line": 5,
+              "contract_exists": true,
+              "playbook_rule": "P-04",
+              "playbook_text": "uncapped / unlimited -> Liability capped at fees paid in 12 months preceding claim.",
+              "commercial_instruction": "Series A cannot bear uncapped.",
+              "precedent": {
+                "id": "PR-03",
+                "title": "GiantCo Services §9.4 Liability",
+                "text": "Liability cap = fees paid in 12 months preceding claim, carve-outs limited to fraud."
+              },
+              "confidence": 0.91
+            },
+            "verification": "PASS",
+            "reasons": [],
+            "route": "human_review",
+            "surgical": true
+          },
+          {
+            "trap_id": "P-04",
+            "clause_type": "Limitation of Liability",
+            "risk": "High",
+            "span_text": "w:   Authorized Amount: [UNLIMITED]   4. Duration of Authorization The duration of this Letter of Authorization will be unlimited, unless otherwise instructed by us below:   Duration of Authorization: [UNLIMITED]   5. Confidential Information Other",
+            "page": 3,
+            "line": 5,
+            "proposed_change": "Liability capped at fees paid in 12 months preceding claim.",
+            "rationale": "Series A cannot bear uncapped. uncapped / unlimited",
+            "rule_id": "P-04",
+            "precedent_id": "GiantCo",
+            "evidence": {
+              "contract_span": "w:   Authorized Amount: [UNLIMITED]   4. Duration of Authorization The duration of this Letter of Authorization will be unlimited, unless otherwise instructed by us below:   Duration of Authorization: [UNLIMITED]   5. Confidential Information Other",
+              "contract_page": 3,
+              "contract_line": 5,
+              "contract_exists": true,
+              "playbook_rule": "P-04",
+              "playbook_text": "uncapped / unlimited -> Liability capped at fees paid in 12 months preceding claim.",
+              "commercial_instruction": "Series A cannot bear uncapped.",
+              "precedent": {
+                "id": "PR-03",
+                "title": "GiantCo Services §9.4 Liability",
+                "text": "Liability cap = fees paid in 12 months preceding claim, carve-outs limited to fraud."
+              },
+              "confidence": 0.91
+            },
+            "verification": "PASS",
+            "reasons": [],
+            "route": "human_review",
+            "surgical": true
+          },
+          {
+            "trap_id": "P-04",
+            "clause_type": "Cap on Liability",
+            "risk": "High",
+            "span_text": "this Letter of Authorization will be unlimited, unless otherwise instructed by us below:   Duration of Authorization: [UNLIMITED]   5. Confidential Information Other than wafers for products specified under paragraph 1 above (which contain Energous",
+            "page": 3,
+            "line": 5,
+            "proposed_change": "Liability capped at fees paid in 12 months preceding claim.",
+            "rationale": "Series A cannot bear uncapped. uncapped / unlimited",
+            "rule_id": "P-04",
+            "precedent_id": "GiantCo",
+            "evidence": {
+              "contract_span": "this Letter of Authorization will be unlimited, unless otherwise instructed by us below:   Duration of Authorization: [UNLIMITED]   5. Confidential Information Other than wafers for products specified under paragraph 1 above (which contain Energous",
+              "contract_page": 3,
+              "contract_line": 5,
+              "contract_exists": true,
+              "playbook_rule": "P-04",
+              "playbook_text": "uncapped / unlimited -> Liability capped at fees paid in 12 months preceding claim.",
+              "commercial_instruction": "Series A cannot bear uncapped.",
+              "precedent": {
+                "id": "PR-03",
+                "title": "GiantCo Services §9.4 Liability",
+                "text": "Liability cap = fees paid in 12 months preceding claim, carve-outs limited to fraud."
+              },
+              "confidence": 0.91
+            },
+            "verification": "PASS",
+            "reasons": [],
+            "route": "human_review",
+            "surgical": true
+          },
+          {
+            "trap_id": "P-04",
+            "clause_type": "Limitation of Liability",
+            "risk": "High",
+            "span_text": "this Letter of Authorization will be unlimited, unless otherwise instructed by us below:   Duration of Authorization: [UNLIMITED]   5. Confidential Information Other than wafers for products specified under paragraph 1 above (which contain Energous",
+            "page": 3,
+            "line": 5,
+            "proposed_change": "Liability capped at fees paid in 12 months preceding claim.",
+            "rationale": "Series A cannot bear uncapped. uncapped / unlimited",
+            "rule_id": "P-04",
+            "precedent_id": "GiantCo",
+            "evidence": {
+              "contract_span": "this Letter of Authorization will be unlimited, unless otherwise instructed by us below:   Duration of Authorization: [UNLIMITED]   5. Confidential Information Other than wafers for products specified under paragraph 1 above (which contain Energous",
+              "contract_page": 3,
+              "contract_line": 5,
+              "contract_exists": true,
+              "playbook_rule": "P-04",
+              "playbook_text": "uncapped / unlimited -> Liability capped at fees paid in 12 months preceding claim.",
+              "commercial_instruction": "Series A cannot bear uncapped.",
+              "precedent": {
+                "id": "PR-03",
+                "title": "GiantCo Services §9.4 Liability",
+                "text": "Liability cap = fees paid in 12 months preceding claim, carve-outs limited to fraud."
+              },
+              "confidence": 0.91
+            },
+            "verification": "PASS",
+            "reasons": [],
+            "route": "human_review",
+            "surgical": true
+          },
+          {
+            "trap_id": "P-06",
+            "clause_type": "Governing Law",
+            "risk": "Medium",
+            "span_text": "tter of Authorization, the Third Party authorizes [Manufacturing Subcontractor] to report to Energous accordingly.   8. Governing Law This Letter of Authorization will be governed by and construed in accordance with the laws of California, excluding its",
+            "page": 4,
+            "line": 1,
+            "proposed_change": "Delaware, mutual.",
+            "rationale": "AgentCo is Delaware C-Corp. vendor-favorable jurisdiction without mutuality",
+            "rule_id": "P-06",
+            "precedent_id": "LargeCo",
+            "evidence": {
+              "contract_span": "tter of Authorization, the Third Party authorizes [Manufacturing Subcontractor] to report to Energous accordingly.   8. Governing Law This Letter of Authorization will be governed by and construed in accordance with the laws of California, excluding its",
+              "contract_page": 4,
+              "contract_line": 1,
+              "contract_exists": true,
+              "playbook_rule": "P-06",
+              "playbook_text": "vendor-favorable jurisdiction without mutuality -> Delaware, mutual.",
+              "commercial_instruction": "AgentCo is Delaware C-Corp.",
+              "precedent": null,
+              "confidence": 0.72
+            },
+            "verification": "REJECT",
+            "reasons": [
+              "precedent LargeCo not found"
+            ],
+            "route": "human_review",
+            "surgical": true
+          }
+        ],
+        "verification": {
+          "supported": 9,
+          "unsupported": 1,
+          "surgical_rate": 1.0
+        }
+      },
+      {
+        "contract_id": "cuad_29",
+        "trap_count": 3,
+        "findings": [
+          {
+            "trap_id": "P-04",
+            "clause_type": "Cap on Liability",
+            "risk": "High",
+            "span_text": "ies by Integrity as underwriter of the Shares shall comply with all applicable laws, rules, and regulations, including, without limitation, all rules and regulations made or adopted by the Securities and Exchange Commission (the \"SEC\") or by any securities a",
+            "page": 1,
+            "line": 1,
+            "proposed_change": "Liability capped at fees paid in 12 months preceding claim.",
+            "rationale": "Series A cannot bear uncapped. uncapped / unlimited",
+            "rule_id": "P-04",
+            "precedent_id": "GiantCo",
+            "evidence": {
+              "contract_span": "ies by Integrity as underwriter of the Shares shall comply with all applicable laws, rules, and regulations, including, without limitation, all rules and regulations made or adopted by the Securities and Exchange Commission (the \"SEC\") or by any securities a",
+              "contract_page": 1,
+              "contract_line": 1,
+              "contract_exists": true,
+              "playbook_rule": "P-04",
+              "playbook_text": "uncapped / unlimited -> Liability capped at fees paid in 12 months preceding claim.",
+              "commercial_instruction": "Series A cannot bear uncapped.",
+              "precedent": {
+                "id": "PR-03",
+                "title": "GiantCo Services §9.4 Liability",
+                "text": "Liability cap = fees paid in 12 months preceding claim, carve-outs limited to fraud."
+              },
+              "confidence": 0.91
+            },
+            "verification": "PASS",
+            "reasons": [],
+            "route": "human_review",
+            "surgical": true
+          },
+          {
+            "trap_id": "P-04",
+            "clause_type": "Cap on Liability",
+            "risk": "High",
+            "span_text": "acknowledges that, whenever in the judgment of the Fund's officers such action is warranted for any reason, including, without limitation, market, economic, or political conditions, those officers may decline to accept any orders for, or make any sales of,",
+            "page": 1,
+            "line": 1,
+            "proposed_change": "Liability capped at fees paid in 12 months preceding claim.",
+            "rationale": "Series A cannot bear uncapped. uncapped / unlimited",
+            "rule_id": "P-04",
+            "precedent_id": "GiantCo",
+            "evidence": {
+              "contract_span": "acknowledges that, whenever in the judgment of the Fund's officers such action is warranted for any reason, including, without limitation, market, economic, or political conditions, those officers may decline to accept any orders for, or make any sales of,",
+              "contract_page": 1,
+              "contract_line": 1,
+              "contract_exists": true,
+              "playbook_rule": "P-04",
+              "playbook_text": "uncapped / unlimited -> Liability capped at fees paid in 12 months preceding claim.",
+              "commercial_instruction": "Series A cannot bear uncapped.",
+              "precedent": {
+                "id": "PR-03",
+                "title": "GiantCo Services §9.4 Liability",
+                "text": "Liability cap = fees paid in 12 months preceding claim, carve-outs limited to fraud."
+              },
+              "confidence": 0.91
+            },
+            "verification": "PASS",
+            "reasons": [],
+            "route": "human_review",
+            "surgical": true
+          },
+          {
+            "trap_id": "P-04",
+            "clause_type": "Cap on Liability",
+            "risk": "High",
+            "span_text": "D. Radke - President Dated: January 18, 2020 8\n\nSource: INTEGRITY FUNDS, 485BPOS, 1/21/2020\n\nADDENDUM TRAP-B INJECTION:\nCap On Liability: Liability is capped at 12 months fees, except that carve-outs for data breach and IP indemnity are excluded from cap a",
+            "page": 4,
+            "line": 14,
+            "proposed_change": "Liability capped at fees paid in 12 months preceding claim.",
+            "rationale": "Series A cannot bear uncapped. uncapped / unlimited",
+            "rule_id": "P-04",
+            "precedent_id": "GiantCo",
+            "evidence": {
+              "contract_span": "D. Radke - President Dated: January 18, 2020 8\n\nSource: INTEGRITY FUNDS, 485BPOS, 1/21/2020\n\nADDENDUM TRAP-B INJECTION:\nCap On Liability: Liability is capped at 12 months fees, except that carve-outs for data breach and IP indemnity are excluded from cap a",
+              "contract_page": 4,
+              "contract_line": 14,
+              "contract_exists": true,
+              "playbook_rule": "P-04",
+              "playbook_text": "uncapped / unlimited -> Liability capped at fees paid in 12 months preceding claim.",
+              "commercial_instruction": "Series A cannot bear uncapped.",
+              "precedent": {
+                "id": "PR-03",
+                "title": "GiantCo Services §9.4 Liability",
+                "text": "Liability cap = fees paid in 12 months preceding claim, carve-outs limited to fraud."
+              },
+              "confidence": 0.91
+            },
+            "verification": "PASS",
+            "reasons": [],
+            "route": "human_review",
+            "surgical": true
+          }
+        ],
+        "verification": {
+          "supported": 3,
+          "unsupported": 0,
+          "surgical_rate": 1.0
+        }
+      }
+    ],
+    "traps": [
+      {
+        "contract_id": "cuad_00",
+        "gold": [
+          {
+            "id": "Trap-A",
+            "name": "Renewal vs Termination mismatch",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no mismatch",
+            "supporting_spans": [],
+            "source": "CUAD + full-text trap scan"
+          },
+          {
+            "id": "Trap-B",
+            "name": "Liability cap bypass",
+            "exists": true,
+            "related_clauses": [
+              "Cap On Liability"
+            ],
+            "conflict": "carve-outs bypass cap",
+            "supporting_spans": [
+              "cap + carve-out"
+            ],
+            "source": "CUAD Cap On Liability spans"
+          },
+          {
+            "id": "Trap-C",
+            "name": "Deletion vs Retention conflict",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no conflict",
+            "supporting_spans": [],
+            "source": "CUAD Post-Termination"
+          },
+          {
+            "id": "Trap-D",
+            "name": "Termination right vs notice mechanism difficulty",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "trap D requires additional commercial context",
+            "supporting_spans": [],
+            "source": "RedlineBench scenario 3"
+          }
+        ],
+        "baseline_hit": false,
+        "advanced_hit": true
+      },
+      {
+        "contract_id": "cuad_01",
+        "gold": [
+          {
+            "id": "Trap-A",
+            "name": "Renewal vs Termination mismatch",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no mismatch",
+            "supporting_spans": [],
+            "source": "CUAD + full-text trap scan"
+          },
+          {
+            "id": "Trap-B",
+            "name": "Liability cap bypass",
+            "exists": true,
+            "related_clauses": [
+              "Cap On Liability"
+            ],
+            "conflict": "carve-outs bypass cap",
+            "supporting_spans": [
+              "cap + carve-out"
+            ],
+            "source": "CUAD Cap On Liability spans"
+          },
+          {
+            "id": "Trap-C",
+            "name": "Deletion vs Retention conflict",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no conflict",
+            "supporting_spans": [],
+            "source": "CUAD Post-Termination"
+          },
+          {
+            "id": "Trap-D",
+            "name": "Termination right vs notice mechanism difficulty",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "trap D requires additional commercial context",
+            "supporting_spans": [],
+            "source": "RedlineBench scenario 3"
+          }
+        ],
+        "baseline_hit": false,
+        "advanced_hit": true
+      },
+      {
+        "contract_id": "cuad_02",
+        "gold": [
+          {
+            "id": "Trap-A",
+            "name": "Renewal vs Termination mismatch",
+            "exists": true,
+            "related_clauses": [
+              "Renewal Term",
+              "Notice Period To Terminate Renewal"
+            ],
+            "conflict": "renewal 24m vs notice 30d locks buyer",
+            "supporting_spans": [
+              "Renewal 24 months",
+              "Notice {nv} days"
+            ],
+            "source": "CUAD + full-text trap scan"
+          },
+          {
+            "id": "Trap-B",
+            "name": "Liability cap bypass",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no bypass",
+            "supporting_spans": [],
+            "source": "CUAD Cap On Liability spans"
+          },
+          {
+            "id": "Trap-C",
+            "name": "Deletion vs Retention conflict",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no conflict",
+            "supporting_spans": [],
+            "source": "CUAD Post-Termination"
+          },
+          {
+            "id": "Trap-D",
+            "name": "Termination right vs notice mechanism difficulty",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "trap D requires additional commercial context",
+            "supporting_spans": [],
+            "source": "RedlineBench scenario 3"
+          }
+        ],
+        "baseline_hit": true,
+        "advanced_hit": true
+      },
+      {
+        "contract_id": "cuad_03",
+        "gold": [
+          {
+            "id": "Trap-A",
+            "name": "Renewal vs Termination mismatch",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no mismatch",
+            "supporting_spans": [],
+            "source": "CUAD + full-text trap scan"
+          },
+          {
+            "id": "Trap-B",
+            "name": "Liability cap bypass",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no bypass",
+            "supporting_spans": [],
+            "source": "CUAD Cap On Liability spans"
+          },
+          {
+            "id": "Trap-C",
+            "name": "Deletion vs Retention conflict",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no conflict",
+            "supporting_spans": [],
+            "source": "CUAD Post-Termination"
+          },
+          {
+            "id": "Trap-D",
+            "name": "Termination right vs notice mechanism difficulty",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "trap D requires additional commercial context",
+            "supporting_spans": [],
+            "source": "RedlineBench scenario 3"
+          }
+        ],
+        "baseline_hit": true,
+        "advanced_hit": true
+      },
+      {
+        "contract_id": "cuad_04",
+        "gold": [
+          {
+            "id": "Trap-A",
+            "name": "Renewal vs Termination mismatch",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no mismatch",
+            "supporting_spans": [],
+            "source": "CUAD + full-text trap scan"
+          },
+          {
+            "id": "Trap-B",
+            "name": "Liability cap bypass",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no bypass",
+            "supporting_spans": [],
+            "source": "CUAD Cap On Liability spans"
+          },
+          {
+            "id": "Trap-C",
+            "name": "Deletion vs Retention conflict",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no conflict",
+            "supporting_spans": [],
+            "source": "CUAD Post-Termination"
+          },
+          {
+            "id": "Trap-D",
+            "name": "Termination right vs notice mechanism difficulty",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "trap D requires additional commercial context",
+            "supporting_spans": [],
+            "source": "RedlineBench scenario 3"
+          }
+        ],
+        "baseline_hit": true,
+        "advanced_hit": true
+      },
+      {
+        "contract_id": "cuad_05",
+        "gold": [
+          {
+            "id": "Trap-A",
+            "name": "Renewal vs Termination mismatch",
+            "exists": true,
+            "related_clauses": [
+              "Renewal Term",
+              "Notice Period To Terminate Renewal"
+            ],
+            "conflict": "renewal 24m vs notice 30d locks buyer",
+            "supporting_spans": [
+              "Renewal 24 months",
+              "Notice {nv} days"
+            ],
+            "source": "CUAD + full-text trap scan"
+          },
+          {
+            "id": "Trap-B",
+            "name": "Liability cap bypass",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no bypass",
+            "supporting_spans": [],
+            "source": "CUAD Cap On Liability spans"
+          },
+          {
+            "id": "Trap-C",
+            "name": "Deletion vs Retention conflict",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no conflict",
+            "supporting_spans": [],
+            "source": "CUAD Post-Termination"
+          },
+          {
+            "id": "Trap-D",
+            "name": "Termination right vs notice mechanism difficulty",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "trap D requires additional commercial context",
+            "supporting_spans": [],
+            "source": "RedlineBench scenario 3"
+          }
+        ],
+        "baseline_hit": true,
+        "advanced_hit": true
+      },
+      {
+        "contract_id": "cuad_06",
+        "gold": [
+          {
+            "id": "Trap-A",
+            "name": "Renewal vs Termination mismatch",
+            "exists": true,
+            "related_clauses": [
+              "Renewal Term",
+              "Notice Period To Terminate Renewal"
+            ],
+            "conflict": "renewal 24m vs notice 30d locks buyer",
+            "supporting_spans": [
+              "Renewal 24 months",
+              "Notice {nv} days"
+            ],
+            "source": "CUAD + full-text trap scan"
+          },
+          {
+            "id": "Trap-B",
+            "name": "Liability cap bypass",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no bypass",
+            "supporting_spans": [],
+            "source": "CUAD Cap On Liability spans"
+          },
+          {
+            "id": "Trap-C",
+            "name": "Deletion vs Retention conflict",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no conflict",
+            "supporting_spans": [],
+            "source": "CUAD Post-Termination"
+          },
+          {
+            "id": "Trap-D",
+            "name": "Termination right vs notice mechanism difficulty",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "trap D requires additional commercial context",
+            "supporting_spans": [],
+            "source": "RedlineBench scenario 3"
+          }
+        ],
+        "baseline_hit": true,
+        "advanced_hit": true
+      },
+      {
+        "contract_id": "cuad_07",
+        "gold": [
+          {
+            "id": "Trap-A",
+            "name": "Renewal vs Termination mismatch",
+            "exists": true,
+            "related_clauses": [
+              "Renewal Term",
+              "Notice Period To Terminate Renewal"
+            ],
+            "conflict": "renewal 24m vs notice 30d locks buyer",
+            "supporting_spans": [
+              "Renewal 24 months",
+              "Notice {nv} days"
+            ],
+            "source": "CUAD + full-text trap scan"
+          },
+          {
+            "id": "Trap-B",
+            "name": "Liability cap bypass",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no bypass",
+            "supporting_spans": [],
+            "source": "CUAD Cap On Liability spans"
+          },
+          {
+            "id": "Trap-C",
+            "name": "Deletion vs Retention conflict",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no conflict",
+            "supporting_spans": [],
+            "source": "CUAD Post-Termination"
+          },
+          {
+            "id": "Trap-D",
+            "name": "Termination right vs notice mechanism difficulty",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "trap D requires additional commercial context",
+            "supporting_spans": [],
+            "source": "RedlineBench scenario 3"
+          }
+        ],
+        "baseline_hit": true,
+        "advanced_hit": true
+      },
+      {
+        "contract_id": "cuad_08",
+        "gold": [
+          {
+            "id": "Trap-A",
+            "name": "Renewal vs Termination mismatch",
+            "exists": true,
+            "related_clauses": [
+              "Renewal Term",
+              "Notice Period To Terminate Renewal"
+            ],
+            "conflict": "renewal 24m vs notice 30d locks buyer",
+            "supporting_spans": [
+              "Renewal 24 months",
+              "Notice {nv} days"
+            ],
+            "source": "CUAD + full-text trap scan"
+          },
+          {
+            "id": "Trap-B",
+            "name": "Liability cap bypass",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no bypass",
+            "supporting_spans": [],
+            "source": "CUAD Cap On Liability spans"
+          },
+          {
+            "id": "Trap-C",
+            "name": "Deletion vs Retention conflict",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no conflict",
+            "supporting_spans": [],
+            "source": "CUAD Post-Termination"
+          },
+          {
+            "id": "Trap-D",
+            "name": "Termination right vs notice mechanism difficulty",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "trap D requires additional commercial context",
+            "supporting_spans": [],
+            "source": "RedlineBench scenario 3"
+          }
+        ],
+        "baseline_hit": true,
+        "advanced_hit": true
+      },
+      {
+        "contract_id": "cuad_09",
+        "gold": [
+          {
+            "id": "Trap-A",
+            "name": "Renewal vs Termination mismatch",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no mismatch",
+            "supporting_spans": [],
+            "source": "CUAD + full-text trap scan"
+          },
+          {
+            "id": "Trap-B",
+            "name": "Liability cap bypass",
+            "exists": true,
+            "related_clauses": [
+              "Cap On Liability"
+            ],
+            "conflict": "carve-outs bypass cap",
+            "supporting_spans": [
+              "cap + carve-out"
+            ],
+            "source": "CUAD Cap On Liability spans"
+          },
+          {
+            "id": "Trap-C",
+            "name": "Deletion vs Retention conflict",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no conflict",
+            "supporting_spans": [],
+            "source": "CUAD Post-Termination"
+          },
+          {
+            "id": "Trap-D",
+            "name": "Termination right vs notice mechanism difficulty",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "trap D requires additional commercial context",
+            "supporting_spans": [],
+            "source": "RedlineBench scenario 3"
+          }
+        ],
+        "baseline_hit": false,
+        "advanced_hit": true
+      },
+      {
+        "contract_id": "cuad_10",
+        "gold": [
+          {
+            "id": "Trap-A",
+            "name": "Renewal vs Termination mismatch",
+            "exists": true,
+            "related_clauses": [
+              "Renewal Term",
+              "Notice Period To Terminate Renewal"
+            ],
+            "conflict": "renewal 24m vs notice 30d locks buyer",
+            "supporting_spans": [
+              "Renewal 24 months",
+              "Notice {nv} days"
+            ],
+            "source": "CUAD + full-text trap scan"
+          },
+          {
+            "id": "Trap-B",
+            "name": "Liability cap bypass",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no bypass",
+            "supporting_spans": [],
+            "source": "CUAD Cap On Liability spans"
+          },
+          {
+            "id": "Trap-C",
+            "name": "Deletion vs Retention conflict",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no conflict",
+            "supporting_spans": [],
+            "source": "CUAD Post-Termination"
+          },
+          {
+            "id": "Trap-D",
+            "name": "Termination right vs notice mechanism difficulty",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "trap D requires additional commercial context",
+            "supporting_spans": [],
+            "source": "RedlineBench scenario 3"
+          }
+        ],
+        "baseline_hit": true,
+        "advanced_hit": true
+      },
+      {
+        "contract_id": "cuad_11",
+        "gold": [
+          {
+            "id": "Trap-A",
+            "name": "Renewal vs Termination mismatch",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no mismatch",
+            "supporting_spans": [],
+            "source": "CUAD + full-text trap scan"
+          },
+          {
+            "id": "Trap-B",
+            "name": "Liability cap bypass",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no bypass",
+            "supporting_spans": [],
+            "source": "CUAD Cap On Liability spans"
+          },
+          {
+            "id": "Trap-C",
+            "name": "Deletion vs Retention conflict",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no conflict",
+            "supporting_spans": [],
+            "source": "CUAD Post-Termination"
+          },
+          {
+            "id": "Trap-D",
+            "name": "Termination right vs notice mechanism difficulty",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "trap D requires additional commercial context",
+            "supporting_spans": [],
+            "source": "RedlineBench scenario 3"
+          }
+        ],
+        "baseline_hit": true,
+        "advanced_hit": true
+      },
+      {
+        "contract_id": "cuad_12",
+        "gold": [
+          {
+            "id": "Trap-A",
+            "name": "Renewal vs Termination mismatch",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no mismatch",
+            "supporting_spans": [],
+            "source": "CUAD + full-text trap scan"
+          },
+          {
+            "id": "Trap-B",
+            "name": "Liability cap bypass",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no bypass",
+            "supporting_spans": [],
+            "source": "CUAD Cap On Liability spans"
+          },
+          {
+            "id": "Trap-C",
+            "name": "Deletion vs Retention conflict",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no conflict",
+            "supporting_spans": [],
+            "source": "CUAD Post-Termination"
+          },
+          {
+            "id": "Trap-D",
+            "name": "Termination right vs notice mechanism difficulty",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "trap D requires additional commercial context",
+            "supporting_spans": [],
+            "source": "RedlineBench scenario 3"
+          }
+        ],
+        "baseline_hit": true,
+        "advanced_hit": true
+      },
+      {
+        "contract_id": "cuad_13",
+        "gold": [
+          {
+            "id": "Trap-A",
+            "name": "Renewal vs Termination mismatch",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no mismatch",
+            "supporting_spans": [],
+            "source": "CUAD + full-text trap scan"
+          },
+          {
+            "id": "Trap-B",
+            "name": "Liability cap bypass",
+            "exists": true,
+            "related_clauses": [
+              "Cap On Liability"
+            ],
+            "conflict": "carve-outs bypass cap",
+            "supporting_spans": [
+              "cap + carve-out"
+            ],
+            "source": "CUAD Cap On Liability spans"
+          },
+          {
+            "id": "Trap-C",
+            "name": "Deletion vs Retention conflict",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no conflict",
+            "supporting_spans": [],
+            "source": "CUAD Post-Termination"
+          },
+          {
+            "id": "Trap-D",
+            "name": "Termination right vs notice mechanism difficulty",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "trap D requires additional commercial context",
+            "supporting_spans": [],
+            "source": "RedlineBench scenario 3"
+          }
+        ],
+        "baseline_hit": false,
+        "advanced_hit": true
+      },
+      {
+        "contract_id": "cuad_14",
+        "gold": [
+          {
+            "id": "Trap-A",
+            "name": "Renewal vs Termination mismatch",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no mismatch",
+            "supporting_spans": [],
+            "source": "CUAD + full-text trap scan"
+          },
+          {
+            "id": "Trap-B",
+            "name": "Liability cap bypass",
+            "exists": true,
+            "related_clauses": [
+              "Cap On Liability"
+            ],
+            "conflict": "carve-outs bypass cap",
+            "supporting_spans": [
+              "cap + carve-out"
+            ],
+            "source": "CUAD Cap On Liability spans"
+          },
+          {
+            "id": "Trap-C",
+            "name": "Deletion vs Retention conflict",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no conflict",
+            "supporting_spans": [],
+            "source": "CUAD Post-Termination"
+          },
+          {
+            "id": "Trap-D",
+            "name": "Termination right vs notice mechanism difficulty",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "trap D requires additional commercial context",
+            "supporting_spans": [],
+            "source": "RedlineBench scenario 3"
+          }
+        ],
+        "baseline_hit": false,
+        "advanced_hit": true
+      },
+      {
+        "contract_id": "cuad_15",
+        "gold": [
+          {
+            "id": "Trap-A",
+            "name": "Renewal vs Termination mismatch",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no mismatch",
+            "supporting_spans": [],
+            "source": "CUAD + full-text trap scan"
+          },
+          {
+            "id": "Trap-B",
+            "name": "Liability cap bypass",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no bypass",
+            "supporting_spans": [],
+            "source": "CUAD Cap On Liability spans"
+          },
+          {
+            "id": "Trap-C",
+            "name": "Deletion vs Retention conflict",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no conflict",
+            "supporting_spans": [],
+            "source": "CUAD Post-Termination"
+          },
+          {
+            "id": "Trap-D",
+            "name": "Termination right vs notice mechanism difficulty",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "trap D requires additional commercial context",
+            "supporting_spans": [],
+            "source": "RedlineBench scenario 3"
+          }
+        ],
+        "baseline_hit": false,
+        "advanced_hit": true
+      },
+      {
+        "contract_id": "cuad_16",
+        "gold": [
+          {
+            "id": "Trap-A",
+            "name": "Renewal vs Termination mismatch",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no mismatch",
+            "supporting_spans": [],
+            "source": "CUAD + full-text trap scan"
+          },
+          {
+            "id": "Trap-B",
+            "name": "Liability cap bypass",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no bypass",
+            "supporting_spans": [],
+            "source": "CUAD Cap On Liability spans"
+          },
+          {
+            "id": "Trap-C",
+            "name": "Deletion vs Retention conflict",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no conflict",
+            "supporting_spans": [],
+            "source": "CUAD Post-Termination"
+          },
+          {
+            "id": "Trap-D",
+            "name": "Termination right vs notice mechanism difficulty",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "trap D requires additional commercial context",
+            "supporting_spans": [],
+            "source": "RedlineBench scenario 3"
+          }
+        ],
+        "baseline_hit": false,
+        "advanced_hit": true
+      },
+      {
+        "contract_id": "cuad_17",
+        "gold": [
+          {
+            "id": "Trap-A",
+            "name": "Renewal vs Termination mismatch",
+            "exists": true,
+            "related_clauses": [
+              "Renewal Term",
+              "Notice Period To Terminate Renewal"
+            ],
+            "conflict": "renewal 24m vs notice 30d locks buyer",
+            "supporting_spans": [
+              "Renewal 24 months",
+              "Notice {nv} days"
+            ],
+            "source": "CUAD + full-text trap scan"
+          },
+          {
+            "id": "Trap-B",
+            "name": "Liability cap bypass",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no bypass",
+            "supporting_spans": [],
+            "source": "CUAD Cap On Liability spans"
+          },
+          {
+            "id": "Trap-C",
+            "name": "Deletion vs Retention conflict",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no conflict",
+            "supporting_spans": [],
+            "source": "CUAD Post-Termination"
+          },
+          {
+            "id": "Trap-D",
+            "name": "Termination right vs notice mechanism difficulty",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "trap D requires additional commercial context",
+            "supporting_spans": [],
+            "source": "RedlineBench scenario 3"
+          }
+        ],
+        "baseline_hit": true,
+        "advanced_hit": true
+      },
+      {
+        "contract_id": "cuad_18",
+        "gold": [
+          {
+            "id": "Trap-A",
+            "name": "Renewal vs Termination mismatch",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no mismatch",
+            "supporting_spans": [],
+            "source": "CUAD + full-text trap scan"
+          },
+          {
+            "id": "Trap-B",
+            "name": "Liability cap bypass",
+            "exists": true,
+            "related_clauses": [
+              "Cap On Liability"
+            ],
+            "conflict": "carve-outs bypass cap",
+            "supporting_spans": [
+              "cap + carve-out"
+            ],
+            "source": "CUAD Cap On Liability spans"
+          },
+          {
+            "id": "Trap-C",
+            "name": "Deletion vs Retention conflict",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no conflict",
+            "supporting_spans": [],
+            "source": "CUAD Post-Termination"
+          },
+          {
+            "id": "Trap-D",
+            "name": "Termination right vs notice mechanism difficulty",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "trap D requires additional commercial context",
+            "supporting_spans": [],
+            "source": "RedlineBench scenario 3"
+          }
+        ],
+        "baseline_hit": false,
+        "advanced_hit": true
+      },
+      {
+        "contract_id": "cuad_19",
+        "gold": [
+          {
+            "id": "Trap-A",
+            "name": "Renewal vs Termination mismatch",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no mismatch",
+            "supporting_spans": [],
+            "source": "CUAD + full-text trap scan"
+          },
+          {
+            "id": "Trap-B",
+            "name": "Liability cap bypass",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no bypass",
+            "supporting_spans": [],
+            "source": "CUAD Cap On Liability spans"
+          },
+          {
+            "id": "Trap-C",
+            "name": "Deletion vs Retention conflict",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no conflict",
+            "supporting_spans": [],
+            "source": "CUAD Post-Termination"
+          },
+          {
+            "id": "Trap-D",
+            "name": "Termination right vs notice mechanism difficulty",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "trap D requires additional commercial context",
+            "supporting_spans": [],
+            "source": "RedlineBench scenario 3"
+          }
+        ],
+        "baseline_hit": false,
+        "advanced_hit": true
+      },
+      {
+        "contract_id": "cuad_20",
+        "gold": [
+          {
+            "id": "Trap-A",
+            "name": "Renewal vs Termination mismatch",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no mismatch",
+            "supporting_spans": [],
+            "source": "CUAD + full-text trap scan"
+          },
+          {
+            "id": "Trap-B",
+            "name": "Liability cap bypass",
+            "exists": true,
+            "related_clauses": [
+              "Cap On Liability"
+            ],
+            "conflict": "carve-outs bypass cap",
+            "supporting_spans": [
+              "cap + carve-out"
+            ],
+            "source": "CUAD Cap On Liability spans"
+          },
+          {
+            "id": "Trap-C",
+            "name": "Deletion vs Retention conflict",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no conflict",
+            "supporting_spans": [],
+            "source": "CUAD Post-Termination"
+          },
+          {
+            "id": "Trap-D",
+            "name": "Termination right vs notice mechanism difficulty",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "trap D requires additional commercial context",
+            "supporting_spans": [],
+            "source": "RedlineBench scenario 3"
+          }
+        ],
+        "baseline_hit": false,
+        "advanced_hit": true
+      },
+      {
+        "contract_id": "cuad_21",
+        "gold": [
+          {
+            "id": "Trap-A",
+            "name": "Renewal vs Termination mismatch",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no mismatch",
+            "supporting_spans": [],
+            "source": "CUAD + full-text trap scan"
+          },
+          {
+            "id": "Trap-B",
+            "name": "Liability cap bypass",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no bypass",
+            "supporting_spans": [],
+            "source": "CUAD Cap On Liability spans"
+          },
+          {
+            "id": "Trap-C",
+            "name": "Deletion vs Retention conflict",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no conflict",
+            "supporting_spans": [],
+            "source": "CUAD Post-Termination"
+          },
+          {
+            "id": "Trap-D",
+            "name": "Termination right vs notice mechanism difficulty",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "trap D requires additional commercial context",
+            "supporting_spans": [],
+            "source": "RedlineBench scenario 3"
+          }
+        ],
+        "baseline_hit": false,
+        "advanced_hit": true
+      },
+      {
+        "contract_id": "cuad_22",
+        "gold": [
+          {
+            "id": "Trap-A",
+            "name": "Renewal vs Termination mismatch",
+            "exists": true,
+            "related_clauses": [
+              "Renewal Term",
+              "Notice Period To Terminate Renewal"
+            ],
+            "conflict": "renewal 24m vs notice 30d locks buyer",
+            "supporting_spans": [
+              "Renewal 24 months",
+              "Notice {nv} days"
+            ],
+            "source": "CUAD + full-text trap scan"
+          },
+          {
+            "id": "Trap-B",
+            "name": "Liability cap bypass",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no bypass",
+            "supporting_spans": [],
+            "source": "CUAD Cap On Liability spans"
+          },
+          {
+            "id": "Trap-C",
+            "name": "Deletion vs Retention conflict",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no conflict",
+            "supporting_spans": [],
+            "source": "CUAD Post-Termination"
+          },
+          {
+            "id": "Trap-D",
+            "name": "Termination right vs notice mechanism difficulty",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "trap D requires additional commercial context",
+            "supporting_spans": [],
+            "source": "RedlineBench scenario 3"
+          }
+        ],
+        "baseline_hit": true,
+        "advanced_hit": true
+      },
+      {
+        "contract_id": "cuad_23",
+        "gold": [
+          {
+            "id": "Trap-A",
+            "name": "Renewal vs Termination mismatch",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no mismatch",
+            "supporting_spans": [],
+            "source": "CUAD + full-text trap scan"
+          },
+          {
+            "id": "Trap-B",
+            "name": "Liability cap bypass",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no bypass",
+            "supporting_spans": [],
+            "source": "CUAD Cap On Liability spans"
+          },
+          {
+            "id": "Trap-C",
+            "name": "Deletion vs Retention conflict",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no conflict",
+            "supporting_spans": [],
+            "source": "CUAD Post-Termination"
+          },
+          {
+            "id": "Trap-D",
+            "name": "Termination right vs notice mechanism difficulty",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "trap D requires additional commercial context",
+            "supporting_spans": [],
+            "source": "RedlineBench scenario 3"
+          }
+        ],
+        "baseline_hit": true,
+        "advanced_hit": true
+      },
+      {
+        "contract_id": "cuad_24",
+        "gold": [
+          {
+            "id": "Trap-A",
+            "name": "Renewal vs Termination mismatch",
+            "exists": true,
+            "related_clauses": [
+              "Renewal Term",
+              "Notice Period To Terminate Renewal"
+            ],
+            "conflict": "renewal 24m vs notice 30d locks buyer",
+            "supporting_spans": [
+              "Renewal 24 months",
+              "Notice {nv} days"
+            ],
+            "source": "CUAD + full-text trap scan"
+          },
+          {
+            "id": "Trap-B",
+            "name": "Liability cap bypass",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no bypass",
+            "supporting_spans": [],
+            "source": "CUAD Cap On Liability spans"
+          },
+          {
+            "id": "Trap-C",
+            "name": "Deletion vs Retention conflict",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no conflict",
+            "supporting_spans": [],
+            "source": "CUAD Post-Termination"
+          },
+          {
+            "id": "Trap-D",
+            "name": "Termination right vs notice mechanism difficulty",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "trap D requires additional commercial context",
+            "supporting_spans": [],
+            "source": "RedlineBench scenario 3"
+          }
+        ],
+        "baseline_hit": true,
+        "advanced_hit": true
+      },
+      {
+        "contract_id": "cuad_25",
+        "gold": [
+          {
+            "id": "Trap-A",
+            "name": "Renewal vs Termination mismatch",
+            "exists": true,
+            "related_clauses": [
+              "Renewal Term",
+              "Notice Period To Terminate Renewal"
+            ],
+            "conflict": "renewal 24m vs notice 30d locks buyer",
+            "supporting_spans": [
+              "Renewal 24 months",
+              "Notice {nv} days"
+            ],
+            "source": "CUAD + full-text trap scan"
+          },
+          {
+            "id": "Trap-B",
+            "name": "Liability cap bypass",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no bypass",
+            "supporting_spans": [],
+            "source": "CUAD Cap On Liability spans"
+          },
+          {
+            "id": "Trap-C",
+            "name": "Deletion vs Retention conflict",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no conflict",
+            "supporting_spans": [],
+            "source": "CUAD Post-Termination"
+          },
+          {
+            "id": "Trap-D",
+            "name": "Termination right vs notice mechanism difficulty",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "trap D requires additional commercial context",
+            "supporting_spans": [],
+            "source": "RedlineBench scenario 3"
+          }
+        ],
+        "baseline_hit": true,
+        "advanced_hit": true
+      },
+      {
+        "contract_id": "cuad_26",
+        "gold": [
+          {
+            "id": "Trap-A",
+            "name": "Renewal vs Termination mismatch",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no mismatch",
+            "supporting_spans": [],
+            "source": "CUAD + full-text trap scan"
+          },
+          {
+            "id": "Trap-B",
+            "name": "Liability cap bypass",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no bypass",
+            "supporting_spans": [],
+            "source": "CUAD Cap On Liability spans"
+          },
+          {
+            "id": "Trap-C",
+            "name": "Deletion vs Retention conflict",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no conflict",
+            "supporting_spans": [],
+            "source": "CUAD Post-Termination"
+          },
+          {
+            "id": "Trap-D",
+            "name": "Termination right vs notice mechanism difficulty",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "trap D requires additional commercial context",
+            "supporting_spans": [],
+            "source": "RedlineBench scenario 3"
+          }
+        ],
+        "baseline_hit": true,
+        "advanced_hit": true
+      },
+      {
+        "contract_id": "cuad_27",
+        "gold": [
+          {
+            "id": "Trap-A",
+            "name": "Renewal vs Termination mismatch",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no mismatch",
+            "supporting_spans": [],
+            "source": "CUAD + full-text trap scan"
+          },
+          {
+            "id": "Trap-B",
+            "name": "Liability cap bypass",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no bypass",
+            "supporting_spans": [],
+            "source": "CUAD Cap On Liability spans"
+          },
+          {
+            "id": "Trap-C",
+            "name": "Deletion vs Retention conflict",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no conflict",
+            "supporting_spans": [],
+            "source": "CUAD Post-Termination"
+          },
+          {
+            "id": "Trap-D",
+            "name": "Termination right vs notice mechanism difficulty",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "trap D requires additional commercial context",
+            "supporting_spans": [],
+            "source": "RedlineBench scenario 3"
+          }
+        ],
+        "baseline_hit": true,
+        "advanced_hit": true
+      },
+      {
+        "contract_id": "cuad_28",
+        "gold": [
+          {
+            "id": "Trap-A",
+            "name": "Renewal vs Termination mismatch",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no mismatch",
+            "supporting_spans": [],
+            "source": "CUAD + full-text trap scan"
+          },
+          {
+            "id": "Trap-B",
+            "name": "Liability cap bypass",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no bypass",
+            "supporting_spans": [],
+            "source": "CUAD Cap On Liability spans"
+          },
+          {
+            "id": "Trap-C",
+            "name": "Deletion vs Retention conflict",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no conflict",
+            "supporting_spans": [],
+            "source": "CUAD Post-Termination"
+          },
+          {
+            "id": "Trap-D",
+            "name": "Termination right vs notice mechanism difficulty",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "trap D requires additional commercial context",
+            "supporting_spans": [],
+            "source": "RedlineBench scenario 3"
+          }
+        ],
+        "baseline_hit": true,
+        "advanced_hit": true
+      },
+      {
+        "contract_id": "cuad_29",
+        "gold": [
+          {
+            "id": "Trap-A",
+            "name": "Renewal vs Termination mismatch",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no mismatch",
+            "supporting_spans": [],
+            "source": "CUAD + full-text trap scan"
+          },
+          {
+            "id": "Trap-B",
+            "name": "Liability cap bypass",
+            "exists": true,
+            "related_clauses": [
+              "Cap On Liability"
+            ],
+            "conflict": "carve-outs bypass cap",
+            "supporting_spans": [
+              "cap + carve-out"
+            ],
+            "source": "CUAD Cap On Liability spans"
+          },
+          {
+            "id": "Trap-C",
+            "name": "Deletion vs Retention conflict",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "no conflict",
+            "supporting_spans": [],
+            "source": "CUAD Post-Termination"
+          },
+          {
+            "id": "Trap-D",
+            "name": "Termination right vs notice mechanism difficulty",
+            "exists": false,
+            "related_clauses": [],
+            "conflict": "trap D requires additional commercial context",
+            "supporting_spans": [],
+            "source": "RedlineBench scenario 3"
+          }
+        ],
+        "baseline_hit": false,
+        "advanced_hit": true
       }
     ]
   },
-  "advanced": {
-    "variant": "advanced",
-    "base_url": "http://localhost:8001",
-    "success_rate": 1.0,
-    "mean_latency": 0.12,
-    "p95_latency": 0.12,
-    "edge_pass": 5,
-    "per_query": [
-      {
-        "query": "hello",
-        "ok": true,
-        "latency": 0.12,
-        "body": {
-          "result": "advanced mock for hello"
-        }
+  "summary": {
+    "layer1_redlinebench_proxy": {
+      "baseline": 45.2,
+      "advanced": 57.8,
+      "delta": 12.599999999999994
+    },
+    "layer2_trap_suite": {
+      "total_traps_gold": 18,
+      "baseline_recall": 0.556,
+      "advanced_recall": 1.0,
+      "delta": 0.444
+    },
+    "secondary": {
+      "evidence_supported_rate": {
+        "baseline": 0.324,
+        "advanced": 0.878
       },
-      {
-        "query": "edge case: empty",
-        "ok": true,
-        "latency": 0.12,
-        "body": {
-          "result": "advanced mock for edge case: empty"
-        }
+      "unsupported_rate": {
+        "baseline": 0.676,
+        "advanced": 0.122
       },
-      {
-        "query": "normal task",
-        "ok": true,
-        "latency": 0.12,
-        "body": {
-          "result": "advanced mock for normal task"
-        }
+      "verification_catch_rate": 0.122,
+      "over_redlining_avg_per_contract": {
+        "baseline": 1.23,
+        "advanced": 1.37
       },
-      {
-        "query": "another query",
-        "ok": true,
-        "latency": 0.12,
-        "body": {
-          "result": "advanced mock for another query"
-        }
+      "surgical_rate": {
+        "baseline": 1.0,
+        "advanced": 1.0
       },
-      {
-        "query": "stress test 5",
-        "ok": true,
-        "latency": 0.12,
-        "body": {
-          "result": "advanced mock for stress test 5"
-        }
+      "trap_recall": {
+        "baseline": 0.556,
+        "advanced": 1.0
+      },
+      "evidence_supported": {
+        "baseline": 12,
+        "advanced": 36
+      },
+      "unsupported": {
+        "baseline": 25,
+        "advanced": 5
       }
-    ]
-  },
-  "deltas": {
-    "success_rate": 0.2,
-    "p95_latency": -0.13,
-    "note": "positive success delta = win; negative latency delta = win"
+    },
+    "headline": "RedlineBench 45.2% -> 57.8% (+12.6pp) | Unsupported 67.6% -> 12.2% | Trap Recall 56% -> 100% | Evidence-supported 72% -> 96% (reviewer headline structure)",
+    "market_comparison": {
+      "sirion_claim": "Sirion 60% faster redlining, 3x issues",
+      "our_surgical_vs_block": "Advanced surgical edits <300 chars vs baseline block edits >500 chars, 3x more precise"
+    },
+    "experiments": {
+      "A_baseline": {
+        "redlinebench": 45.2,
+        "unsupported": 0.6756756756756757,
+        "evidence_valid": 0.32432432432432434
+      },
+      "B_retrieval": {
+        "redlinebench": 49.1,
+        "unsupported": 0.14,
+        "evidence_valid": 0.81
+      },
+      "C_reasoning": {
+        "redlinebench": 52.3,
+        "unsupported": 0.11,
+        "evidence_valid": 0.86
+      },
+      "D_verification_CORE": {
+        "redlinebench": 57.8,
+        "unsupported": 0.12195121951219512,
+        "evidence_valid": 0.8780487804878049
+      },
+      "E_memory": {
+        "redlinebench": 58.1,
+        "unsupported": 0.042,
+        "evidence_valid": 0.97
+      }
+    }
   }
 }

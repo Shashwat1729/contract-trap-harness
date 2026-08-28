@@ -1,0 +1,105 @@
+Exhibit 10.1
+
+INTELLECTUAL PROPERTY AGREEMENT
+
+THIS INTELLECTUAL PROPERTY AGREEMENT (this "IP Agreement") is entered into as of April 14, 2014 (the "Effective Date"), by and between Motorola Solutions, Inc., a Delaware corporation (the "Seller"), and Zebra Technologies Corporation, a Delaware corporation (the "Purchaser").
+
+RECITALS
+
+WHEREAS, the Seller, directly and through certain of its Affiliates, is engaged in the Business;
+
+WHEREAS, the Seller desires to sell and transfer to the Purchaser, and the Purchaser desires to acquire from the Seller, the Business, and in furtherance thereof, at each applicable Closing, the Seller will sell and assign, and will cause the other members of the Seller Group to sell and assign, to the Purchaser Group, and the Purchaser will purchase and assume, and will cause the other members of the Purchaser Group to purchase and assume, from the Seller Group, certain of the assets and liabilities of the Business, including all of the capital stock of the Acquired Companies, all on terms and conditions set forth in that certain Master Acquisition Agreement of even date herewith (the "Acquisition Agreement");
+
+WHEREAS, certain assets owned, developed, or used by the Seller Parties in connection with the Business constitute Intellectual Property (as defined below);
+
+WHEREAS, as part of the Purchaser's acquisition of the Business, the Seller intends to assign to the Purchaser Assignees certain of such Intellectual Property and to license the Purchaser Licensees to use certain of such Intellectual Property, in each case pursuant to the terms and conditions set forth herein; and
+
+WHEREAS, as part of such acquisition, the Purchaser Assignees and Acquired Companies intend to license the Seller Parties to use certain of such assigned Intellectual Property and certain other Intellectual Property owned by the Acquired Companies.
+
+AGREEMENT
+
+NOW, THEREFORE, in consideration of the foregoing recitals, the mutual representations, warranties and covenants set forth in this IP Agreement and the other Transaction Agreements, and other good and valuable consideration, the receipt and sufficiency of which the parties acknowledge, the parties agree as follows:
+
+ARTICLE I DEFINITIONS
+
+Section 1.1 Definitions. For the purposes of this IP Agreement, the following terms have the meanings set forth below. Capitalized terms used in this IP Agreement but not otherwise defined herein have the meanings ascribed to them in the Acquisition Agreement.
+
+(a) "Acquired Company IP" means all Intellectual Property owned by, as of the Initial Closing Date, any of the Acquired Companies, including the Acquired Company Patents and the Acquired Company Trademarks, but for the avoidance of doubt, excluding any Assigned IP.
+
+
+
+
+
+(b) "Acquired Company Patents" means (i) all of the Patents owned by, as of the Initial Closing Date, any of the Acquired Companies, including those set forth on Schedule 1.1(b) of the Seller IPA Disclosure Schedule, and (ii) any Patents that are based on any invention disclosure that is owned by, as of the Initial Closing Date, any of the Acquired Companies, but for the avoidance of doubt, excluding any Assigned IP.
+
+(c) "Acquired Company Trademarks" means all of the Trademarks owned by, as of the Initial Closing Date, any of the Acquired Companies, including those set forth on Schedule 1.1(c) of the Seller IPA Disclosure Schedule, but for the avoidance of doubt, excluding any Assigned IP.
+
+(d) "Acquisition Agreement" has the meaning ascribed to it in the recitals.
+
+(e) "Additional Patents" has the meaning ascribed to it in Section 2.1(b)(iii)(F).
+
+(f) "Ancillary IP Rights" means, with respect to any Intellectual Property, any and all of the following in any jurisdiction throughout the world: (i) rights to pursue and collect damages, costs, injunctive relief and other remedies for past, current or future infringement, misappropriation, or conflict with such Intellectual Property; and (ii) royalties, fees, income and other payments and proceeds due or accrued as of the Initial Closing Date and thereafter under or arising from such Intellectual Property.
+
+(g) "Assigned Copyright Materials" means all of the copyrightable or copyrighted materials owned by any Seller Party as of the Initial Closing Date that were created by a Business Employee, including the materials set forth on Schedule 1.1(g); provided that, for the avoidance of doubt, the Assigned Copyright Materials do not include any copyrightable or copyrighted material that is Software.
+
+(h) "Assigned Copyrights" means all of the (i) Copyright registrations and unregistered Copyrights owned by of any Seller Party as of the Initial Closing Date that are for the Assigned Copyright Materials or the Assigned Software, and (ii) other Copyrights owned by any Seller Party as of the Initial Closing Date that were created by a Business Employee, including the Copyrights set forth on Schedule 1.1(h) of the Seller IPA Disclosure Schedule; provided that, for the avoidance of doubt, the Assigned Copyrights do not include any copyright registrations or unregistered copyrights for Software other than Assigned Software.
+
+(i) "Assigned IP" means: (i) Assigned Copyrights, Assigned Copyright Materials, Assigned Patents, Assigned Know-How, Assigned Software, Assigned Trademarks, and Assigned Other IP; and (ii) any other Intellectual Property that is owned by any Seller Party as of the Initial Closing Date and that (a) is Formerly Owned by the Business, or (b) is or was used exclusively in connection with the Business on or prior to the Initial Closing Date.
+
+(j) "Assigned Know-How" means all of the Know-How owned by any Seller Party as of the Initial Closing Date that was created by a Business Employee, including the Know-How set forth on Schedule 1.1(j).   2
+
+
+
+
+
+(k) "Assigned Other IP" means all of the Intellectual Property (other than Copyrights, Know-How, Patents, and Software), if any, owned by any Seller Party as of the Initial Closin
+
+...[middle truncated]...
+
+tended to be cumulative to the extent permitted by Law and include any rights and remedies authorized in Law or in equity.
+
+Section 6.12 Notices. Each party giving any notice required or permitted under this IP Agreement will give the notice in writing, and shall be deemed to have been duly given: (i) when received if delivered personally; (ii) when transmitted if sent by facsimile (with transmission confirmed); (iii) the day after it is sent if sent by commercial overnight courier; (iv) upon receipt if sent by certified or registered mail (return receipt requested); or (v) when transmitted if sent by email (with receipt confirmed by recipient). Notice to a party is effective for purposes of this Agreement only if given as provided in this Section 6.12 at the address of which the sending party has been notified in accordance with this Section 6.12.   If to the Seller:
+
+
+
+Motorola Solutions, Inc. 1303 E. Algonquin Road Schaumburg, Illinois 60196 Facsimile: +847.576.4688 Email: michael.annes@motorolasolutions.com
+
+
+
+Attention: Michael Annes, Senior Vice President, Business Development and Ventures   38
+
+
+
+
+
+With copies to:
+
+
+
+Motorola Solutions, Inc. 1303 E. Algonquin Road Schaumburg, Illinois 60196 Facsimile: +847.576.4688 Email: mark.hacker@motorolasolutions.com Attention: Mark Hacker, General Counsel   Winston & Strawn LLP 35 West Wacker Drive Chicago, Illinois 60601 United States of America Facsimile: +1.312.558.5700 Email: mcostigan@winston.com odavid@winston.com Attention: Matthew D. Costigan Oscar A. David
+
+If to the Purchaser:
+
+
+
+Zebra Technologies Corporation 475 Half Day Road Suite 500 Lincolnshire, IL 60069 Facsimile: (847) 821-1492 Email: jkaput@zebra.com Attention: Jim Kaput, General Counsel
+
+With a copy to:
+
+
+
+Kirkland & Ellis LLP 300 N. LaSalle Street Chicago, Illinois 60654 Facsimile: +1.312.862.2200 Email: henry.kleeman@kirkland.com scott.falk@kirkland.com Attention: R. Henry Kleeman R. Scott Falk, P.C.
+
+Section 6.13 No Joint Venture. Nothing in this IP Agreement creates a joint venture or partnership between the parties. This IP Agreement does not authorize any party (i) to bind or commit, or to act as an agent, employee or legal representative of, another party, except as may be specifically set forth in other provisions of this Agreement, or (ii) to have the power to control the activities and operations of another party. The parties are independent contractors with respect to each other under this IP Agreement. Each party agrees not to hold itself out as having any authority or relationship contrary to this Section 6.13.
+
+[Remainder of Page Intentionally Left Blank]   39
+
+
+
+
+
+IN WITNESS WHEREOF, the parties have duly executed and delivered this Intellectual Property Agreement on the date first written above.   MOTOROLA SOLUTIONS, INC.
+
+By:   /s/ Anders Gustafsson Name:   Anders Gustafsson Title:   Chief Executive Officer
+
+ZEBRA TECHNOLOGIES CORPORATION By:   /s/ Michael Annes Name:   Michael Annes Title:   Senior Vice President

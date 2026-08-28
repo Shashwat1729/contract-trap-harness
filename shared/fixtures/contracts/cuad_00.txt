@@ -1,0 +1,52 @@
+Exhibit 10.18
+
+MASTER SUPPLY AGREEMENT
+
+MASTER SUPPLY AGREEMENT (the "Agreement") dated November 1, 2019 (the "Effective Date") between REYNOLDS CONSUMER PRODUCTS LLC, a Delaware limited liability company with its headquarters at 1900 West Field Court, Lake Forest, IL 60045 ("Seller"), and PACTIV LLC, a Delaware limited liability company with its headquarters at 1900 West Field Court, Lake Forest, IL 60045 ("Buyer"). Seller and Buyer are referred to individually at times as a "Party" and collectively at times as the "Parties".
+
+BACKGROUND
+
+A. Seller sells various types of products used in the consumer and food service markets.
+
+B. Buyer sells various types of products, including certain products of the type made by Seller, to its customers.
+
+C. The Parties are entering into this Agreement to establish the terms and conditions under which Seller may agree to sell specific products to Buyer, and Buyer may agree to purchase specific products from Seller for later resale by Buyer to its business customers.
+
+AGREEMENT
+
+1. Term. The "Term" of this Agreement will commence on the Effective Date and will end on the earlier of: (a) the first anniversary of the expiration date of the last Purchase Schedule (as defined in this next Section); (b) a termination date elected by a Party in a written notice delivered to the other Party any time after the expiration of the last Purchase Schedule; or (c) a termination date elected by a Party in a written notice delivered to the other Party as provided in Subsection 11(d) of this Agreement. The rights and obligations of the Parties under this Agreement will survive the expiration or earlier termination of this Agreement with respect to any (i) products purchased and sold under this Agreement during the Term and products sold after the Term for orders accepted during the Term; (ii) Confidential Information (as defined in Section 10 of this Agreement) disclosed or received by a Party during the Term; (iii) breach of this Agreement by a Party; (iv) any other statement, decision, act or omission of a Party concerning or related to this Agreement; (v) any Dispute (as defined in Section 11 of this Agreement) between the Parties concerning or related to this Agreement; (vi) products and other materials manufactured or maintained by Seller in inventory for sale to Buyer that Buyer is obligated to purchase under a Purchase Schedule; and (vii) any provision that expressly states that it will survive the expiration or earlier termination of this Agreement.
+
+2. Scope. This Agreement will apply to all products sold by Seller to Buyer, and all products purchased by Buyer from Seller, during the Term unless the Parties expressly agree that this Agreement will not apply to a particular type of transaction in a separate written document signed by an officer of each Party. This Agreement will not require Seller to sell any type or quantity of a product to Buyer, nor will this Agreement required Buyer to purchase any type or quantity of a product from Seller, except as expressly provided by the Parties in a Purchase Schedule. The phrase "Purchase Schedule" will mean a written supplement to this Agreement signed by an officer of each Party which references this Agreement and which identities, among other terms and conditions, the specific types and quantities of products that will be purchased and sold by the Parties on terms and conditions in the schedule, the specifications for the identified products, the duration of the commitment period during which the Parties will be obligated to purchase and sell the identified products on the terms and conditions in the schedule, the prices of the identified products, any mechanisms for adjusting the prices of the identified products over the commitment period, and the facilities at which the identified products will be manufactured, stored and delivered by Seller. The Parties may add terms and conditions to, and amend the terms and conditions of, this Agreement in a Purchase Schedule, but any additional and amended terms and conditions in a Purchase Schedule supplementing and modifying this Agreement will only apply the specific products identified in that Purchase Schedule for its duration.
+
+Source: REYNOLDS CONSUMER PRODUCTS INC., S-1, 11/15/2019
+
+
+
+
+
+3. Standard Operating Procedures. Over approximately the past eight years, the Parties have been supplying select Products to one another for use in the operation of their respective businesses within the United States of America, Canada and Mexico. The Parties developed and been following certain standard operating procedures in connecting with, among other topics, forecasting, production planning, ordering, delivering and resolving claims on the Products supplied to one another (the "Current SOPs"). The Parties will be updating their respective business systems over the next six months, and the updates to these business systems will require the Parties to modify the Current SOPs. Once the Parties have completed the updates to the business systems and agreed on the necessary modifications to the Current SOPs, the Parties will sign a written amendment to this Agreement appending the updated standard operating procedures (the "Updated SOPs"). Until the Parties have signed a written amendment appending the Updated SOPs, the parties will continue to follow the Current SOPs. The Parties will comply with the applicable SOPs in connection with the purchase and sale of products identified in a Purchase Schedule. The Parties may add terms and conditions to, and amend the terms and conditions of, the SOP in a Purchase Schedule, but any additional and amended terms and conditions in a Purchase Schedule supplementing and modifying the SOP will only apply the specific products identified in that Purchase Schedule for its duration.
+
+4. Order and Priority of Interpretation. In the event of any conflict, inconsistency or ambiguity between two or more provisions in this Agreement, including the provi
+
+...[middle truncated]...
+
+terpretation of the Agreement: (1) Headings are for convenience only and do not affect interpretation; (2) Singular includes the plural and vice-versa; (3) Gender includes all genders; (4) If a word or phrase is defined, its other grammatical forms have a corresponding meaning; (5) The meaning of general words is not limited by specific examples introduced by "includes", "including" or "for example" or similar expressions; (6) The word "person" includes an individual, corporation, company, trust, partnership, limited partnership, unincorporated body, joint venture, consortium or other legal entity; (7) A reference in any Purchase Schedule or Exhibit to an Article, Section, Subsection or Clause is a reference to an Article, Section, Subsection or Clause in that Purchase Schedule or Exhibit unless otherwise identified; (8) Reference to a Purchase Schedule or Exhibit is a reference to a Schedule, Exhibit described, appended or otherwise identified in this Agreement; (9) A reference to conduct includes, without limitation, an omission, statement or undertaking, whether or not in writing; (10) A reference to a third-party is a reference to a person who is not a Party to this Agreement; (11) Where a period of time is specified for the performance of any act and dates from a given day or the day of an act or event, the period shall be exclusive of that date; and (12) the Parties agree that the Agreement is the product of negotiation between sophisticated parties and individuals, all of whom were or have been given the opportunity to be represented by counsel, and each of whom had an opportunity to participate in, and did participate in, negotiation of the terms hereof. Accordingly, the Parties acknowledge and agree that the Agreement is not a contract of adhesion and that ambiguities in the Agreement, if any, shall not be construed strictly or in favor of or against either Party, but rather shall be given a fair and reasonable construction. m. Execution. This Agreement may be executed in any number of counterparts, each of which shall be deemed an original as against the Party whose signature appears thereon, but all of which taken together shall constitute but one and the same instrument. Acceptance of this Agreement may be made by e-mail, mail or other commercially reasonable means showing the signatures of the chief executive officers of the Parties.
+
+Source: REYNOLDS CONSUMER PRODUCTS INC., S-1, 11/15/2019
+
+
+
+
+
+In witness whereof, Seller and Buyer have executed this Master Supply Agreement as of the Effective Date. REYNOLDS CONSUMER PRODUCTS LLC, as Seller
+
+By: //s// Lance Mitchell Lance Mitchell Chief Executive Officer
+
+PACTIV LLC, as Buyer
+
+By: //s// John McGrath John McGrath Chief Executive Officer
+
+Source: REYNOLDS CONSUMER PRODUCTS INC., S-1, 11/15/2019
+
+ADDENDUM TRAP-B INJECTION:
+Cap On Liability: Liability is capped at 12 months fees, except that carve-outs for data breach and IP indemnity are excluded from cap and not subject to limitation.

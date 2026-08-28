@@ -1,0 +1,179 @@
+Exhibit 10.26    CONFIDENTIAL TREATMENT HAS BEEN REQUESTED AS TO CERTAIN PORTIONS OF THIS DOCUMENT. EACH SUCH PORTION,  WHICH HAS BEEN OMITTED HEREIN AND REPLACED WITH AN ASTERISK [*], HAS BEEN FILED SEPARATELY WITH THE  SECURITIES AND EXCHANGE COMMISSION.     PROMOTION AND DISTRIBUTION AGREEMENT     This Promotion and Distribution Agreement including all exhibits (collectively referred to as the "Agreement"), effective as of 1 August 2011 (the  "Effective Date"), is made by and between Whitesmoke Inc., with registered offices/principle place of business at 501 Silverside Road, Suite 105,  Wilmington DE 19809, USA, ("Distributor"), and Google Inc whose principle place of business is at 1600 Amphitheatre Parkway, Mountain View,  CA 94043, USA ("Google").
+
+
+
+   "Bundle" means the Distribution Products bundled with the Distributor App(s).     "Chrome Browser" means the machine-readable binary code version of the Google Chrome browser provided to Distributor in connection with  this Agreement, and any modifications or updates to it that Google may provide to Distributor.     "Chrome Browser Installer" means: (a) the machine-readable binary code version of the installer provided to Distributor in connection with this  Agreement that installs the Chrome Browser, and any modifications, updates or upgrades to it that Google may provide to Distributor; and (b) the  Chrome Browser Criteria Checker.     "Chrome Use Event" means an event that indicates an [* ] has occurred.     "Chrome Server Communication" means a communication that, as determined solely by Google, is sent for the purpose of indicating that an End  User: (a) is [* ] to the [* ]; and (b) has kept the [* ] open for a minimum of [* ] during a [* ] (whether during the [* ] or a [* ] of the Chrome  Browser).     "Criteria Checker" means a set of software routines (and any updates to them) provided to Distributor by Google, as part of a software library,  that check certain criteria (as determined by Google and modified by Google from time to time) to determine if the Chrome Browser or Google  Toolbar (as applicable) can be installed on an End User's operating system. Accordingly, "Chrome Browser Criteria Checker" means the Criteria  Checker provided by Google in respect of the Chrome Browser and "Google Toolbar Criteria Checker" means the Criteria Checker provided by  Google in respect of the Google Toolbar.     "Distributor App(s)" means the following application (and successor versions of such software): the trial version of the WhiteSmoke Writer  (currently called WhiteSmoke 2011) available on a worldwide basis, but for the avoidance of doubt shall not mean any other products of  Distributor, including without limitation the full paid version of Whitesmoke Writer or any version of Whitesmoke "Translator" software,  regardless of whether Whitesmoke Writer incorporates any translation functionality.     *Confidential treatment requested  Google Confidential
+
+1. DEFINITIONS
+
+1.1 In this Agreement unless expressly stated otherwise:
+
+  - 1 -
+
+
+
+
+
+   "Distribution Products" means:
+
+
+
+
+
+   "End User" means an end user customer of Distributor who is located in the Territory.     "EULA" means the end user license agreement applicable to a Product, which end user license agreement may be updated or modified by Google in  its sole discretion from time to time.     "False" means a "false" response (or equivalent negative response) given by the Criteria Checker.     "Google Program Guidelines" means the policy and implementation guidelines applicable to the Products as updated by Google and provided to  Distributor from time to time.     "Google Toolbar" means the machine-readable binary code version of the Google toolbar for Internet Explorer provided to Distributor in  connection with this Agreement, and any modifications or updates to it that Google may provide to Distributor.     "Google Toolbar Installer" means: (a) the machine-readable binary code version of the installer provided to Distributor in connection with this  Agreement that installs the Google Toolbar, and any modifications, updates or upgrades to it that Google may provide to Distributor; and (b) the  Google Toolbar Criteria Checker.     "Google Trademarks" means all names, trade names, trademarks, and logos used by Google in connection with the Products.     "Group Company" means in relation to each of the parties:
+
+
+
+   "Install Completed" occurs when an End User has completed the install process for a Bundle and the install completed screen is shown to the End  User in accordance with Exhibit B.
+
+
+
+  (a) as at the Effective Date, the Google Toolbar Installer and the Chrome Browser Installer; and
+
+  (b) if Distributor notifies Google at any time after the Effective Date that it wishes to bundle the full Google Toolbar and Google  provides its approval in writing (including email), the Google Toolbar; and
+
+  (c) if Distributor notifies Google at any time after the Effective Date that it wishes to bundle the full Chrome Browser and Google  provides its approval in writing (including email), the Chrome Browser.
+
+  (a) any parent company of that party; and
+
+  (b) any corporate body of which that party directly or indirectly has control or which is directly or indirectly controlled by the same  person or group of persons as that party.
+
+  - 2 -
+
+
+
+
+
+  "Intellectual Property Rights" means all copyright, moral rights, patent rights, trade marks, design right, rights in or relating to databases, rights in  or relating to confidential information, rights in relation to domain names, and any other intellectual property rights (registered or unregistered)  throughout the world.     "IPO" means an initial public offering of all or any of the shares in Distributor or securities representing those shares for the purposes of being  publically traded or quoted on an investment exchange.     "Maximum Distribution Commitment" means [* ] , as may be increased by Google pursuant to Clause 4.2 (Ma
+
+...[middle truncated]...
+
+tion which would violate the terms of any agreement between you and any unaffiliated third party that is in  effect on the date that Google delivers notice of the proposed update. In any event, if you are unable to bring any Application into compliance  during the Maximum Compliance Period, Google may elect, by providing at least thirty (30) days prior written notice, to require you to cease  bundling either the specific non-conforming Application or those versions of the Application which are, or are distributed, in violation of the  Guidelines, as updated; it being understood that, at such time, you will be entitled to procure services from an alternative source for those  Applications (or versions thereof) with respect to which Google has exercised such election.     Google Confidential
+
+
+
+  - 30 -
+
+
+
+
+
+  Attachment 1     Prohibited Behavior and Content     The application may not impact the display of other applications unless you provide clear disclosure in each instance
+
+    Google Confidential
+
+
+
+  - 31 -
+
+
+
+
+
+
+
+    Google Confidential
+
+
+
+  - 32 -
+
+
+
+
+
+  Disclosure and Consent     Clear and conspicuous disclosure is required prior to download or install: what it is, what it does, and how it will be displayed to the end user
+
+     Disclosure and Consent     Describe type, method, and use of personal information, if applicable. Point user to privacy policy
+
+    Google Confidential
+
+
+
+  - 33 -
+
+
+
+
+
+
+
+    Google Confidential
+
+
+
+  - 34 -
+
+
+
+
+
+  Branding & Attribution     The visible elements of the application should be easily identifiable to the end user
+
+    Google Confidential
+
+
+
+  - 35 -
+
+
+
+
+
+  Implementation, Transparency and Deactivation     The Application must permit end users to uninstall it in the customary place the applicable operating system has designated for adding or  removing programs (e.g., Add/Remove Programs control panel in Windows) in a straightforward manner    Google Confidential
+
+
+
+  - 36 -
+
+
+
+
+
+
+
+    Google Confidential
+
+
+
+  - 37 -
+
+
+
+
+
+  Implementation, Transparency and Deactivation     The Application must contain (in an easily found location) clear and concise instructions on how it may be uninstalled
+
+    Google Confidential
+
+
+
+  - 38 -
+
+
+
+
+
+  Bundling of Applications     When bundling, the end user must be made aware of all the applications included prior to installation.
+
+    Google Confidential
+
+
+
+  - 39 -
+
+
+
+
+
+  Bundling of Applications     When bundling, the end user must be made aware of advertising revenue relationships to other applications, if the continued use of the primary  application is conditioned on the other applications being installed and active on the end user's computer
+
+     Google Confidential
+
+
+
+  - 40 -
+
+ADDENDUM TRAP-A INJECTION (curated for evaluation, documented):
+Renewal Term: This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.
+Notice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.

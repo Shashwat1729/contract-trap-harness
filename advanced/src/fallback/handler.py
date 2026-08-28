@@ -1,11 +1,25 @@
 """
-Fallback / sandbox handler — for hidden dependencies, rate limits, offline judging.
-Rule Book: "Keep consequential actions controlled through a sandbox or simulation."
+Fallback / sandbox handler — production, Rule 04.
+
+All consequential redlines are sandboxed; fallback never auto-applies.
+Returns a safe, auditable payload for human review.
 """
-def fallback(query: str, reason: str = "unknown") -> dict:
+from __future__ import annotations
+
+import logging
+
+log = logging.getLogger("advanced.fallback")
+
+
+def fallback_response(contract_id: str, reason: str) -> dict:
+    log.warning("fallback for %s reason=%s", contract_id, reason)
     return {
         "variant": "advanced",
-        "result": f"fallback for '{query}' — reason: {reason}",
+        "contract_id": contract_id,
+        "status": "fallback",
+        "reason": reason,
         "fallback": True,
         "verified": False,
+        "next_step": "Route to human reviewer with original contract and error context. No redline applied.",
+        "sandbox": True,
     }

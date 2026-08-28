@@ -1,0 +1,317 @@
+Exhibit 10.2
+
+______________________________________________________________________________
+
+CO-PROMOTION AGREEMENT
+
+by and between
+
+DOVA PHARMACEUTICALS, INC.
+
+and
+
+VALEANT PHARMACEUTICALS NORTH AMERICA LLC
+
+September 26, 2018
+
+______________________________________________________________________________
+
+CONFIDENTIAL TREATMENT HAS BEEN REQUESTED FOR PORTIONS OF THIS EXHIBIT. THE COPY FILED HEREWITH OMITS THE INFORMATION SUBJECT TO A CONFIDENTIALITY REQUEST. OMISSIONS ARE DESIGNATED [***]. A COMPLETE VERSION OF THIS EXHIBIT HAS BEEN FILED SEPARATELY WITH THE SECURITIES AND EXCHANGE COMMISSION.
+
+Source: DOVA PHARMACEUTICALS INC., 10-Q, 11/8/2018
+
+
+
+
+
+TABLE OF CONTENTS
+
+Page
+
+ARTICLE 1 DEFINITIONS 1
+
+ARTICLE 2 RIGHTS AND OBLIGATIONS 8
+
+2.1 Engagement; Grant of Rights. 8
+
+2.2 Retention of Rights. 9
+
+2.3 Non-Competition; Non-Solicitation. 9
+
+2.4 Dova Trademarks and Copyrights. 10
+
+ARTICLE 3 JOINT STEERING COMMITTEE 11
+
+3.1 Formation of the JSC. 11
+
+3.2 Meetings and Minutes. 11
+
+3.3 Purpose of the JSC. 11
+
+3.4 Decision Making. 13
+
+3.5 Marketing Sub-Committee. 13
+
+ARTICLE 4 VALEANT ACTIVITIES FOR THE PRODUCT 14
+
+4.1 Valeant Activities. 14
+
+4.2 Detailing. 15
+
+4.3 Compliance with Applicable Law. 17
+
+4.4 Field Force Personnel Training; Product Materials. 19
+
+4.5 Provisions Related to Field Force Personnel. 21
+
+4.6 Responsibility for Valeant Activity Costs and Expenses. 22
+
+4.7 Data Sharing. 22
+
+ARTICLE 5 REGULATORY, SAFETY AND SURVEILLANCE, COMMERCIAL MATTERS 23
+
+5.1 Dova Responsibility. 23
+
+5.2 Valeant Involvement. 23
+
+5.3 Inspections. 23
+
+5.4 Pharmacovigilance. 24
+
+5.5 Unsolicited Requests for Medical Information. 24
+
+5.6 Recalls and Market Withdrawals. 25
+
+5.7 Certain Reporting Responsibilities. 25
+
+5.8 Booking of Sales Revenues. 25
+
+5.9 Returns. 25
+
+Source: DOVA PHARMACEUTICALS INC., 10-Q, 11/8/2018
+
+
+
+
+
+i
+
+CONFIDENTIAL TREATMENT HAS BEEN REQUESTED FOR PORTIONS OF THIS EXHIBIT. THE COPY FILED HEREWITH OMITS THE INFORMATION SUBJECT TO A CONFIDENTIALITY REQUEST. OMISSIONS ARE DESIGNATED [***]. A COMPLETE VERSION OF THIS EXHIBIT HAS BEEN FILED SEPARATELY WITH THE SECURITIES AND EXCHANGE COMMISSION.
+
+Source: DOVA PHARMACEUTICALS INC., 10-Q, 11/8/2018
+
+
+
+
+
+TABLE OF CONTENTS (continued)
+
+5.10 Manufacturing; Distribution; Marketing. 25
+
+ARTICLE 6 FINANCIAL PROVISIONS 26
+
+6.1 Promotion Fee. 26
+
+6.2 Milestone Payment. 27
+
+6.3 Reports; Payments. 27
+
+6.4 Taxes. 28
+
+6.5 Determination of Specialty. 29
+
+ARTICLE 7 AUDIT RIGHTS 30
+
+7.1 Recordkeeping. 30
+
+7.2 Valeant Rights. 30
+
+7.3 Dova Rights. 31
+
+ARTICLE 8 INTELLECTUAL PROPERTY 32
+
+8.1 Ownership of Intellectual Property. 32
+
+8.2 Title to Trademarks and Copyrights. 32
+
+8.3 Protection of Trademarks and Copyrights. 32
+
+8.4 Disclosure of Know-How. 33
+
+ARTICLE 9 CONFIDENTIALITY 33
+
+9.1 Confidential Information. 33
+
+9.2 Public Announcements. 34
+
+ARTICLE 10 REPRESENTATIONS AND WARRANTIES; ADDITIONAL COVENANTS 35
+
+10.1 Representations and Warranties of Dova. 35
+
+10.2 Representations and Warranties of Valeant. 37
+
+10.3 Disclaimer of Warranty. 38
+
+10.4 Additional Covenants. 39
+
+ARTICLE 11 INDEMNIFICATION; LIMITATIONS ON LIABILITY 39
+
+11.1 Indemnification by Dova. 39
+
+11.2 Indemnification by Valeant. 39
+
+11.3 Indemnification Procedures. 40
+
+11.4 Limitation of Liability. 40
+
+11.5 Insurance. 40
+
+ARTICLE 12 TERM AND TERMINATION 41
+
+12.1 Term. 41
+
+12.2 Early Termination for Cause. 41
+
+Source: DOVA PHARMACEUTICALS INC., 10-Q, 11/8/2018
+
+
+
+
+
+12.3 Other Early Termination. 42
+
+12.4 Effects of Termination. 42
+
+12.5 Tail Period. 42
+
+ii
+
+CONFIDENTIAL TREATMENT HAS BEEN REQUESTED FOR PORTIONS OF THIS EXHIBIT. THE COPY FILED HEREWITH OMITS THE INFORMATION SUBJECT TO A CONFIDENTIALITY REQUEST. OMISSIONS ARE DESIGNATED [***]. A COMPLETE VERSION OF THIS EXHIBIT HAS BEEN FILED SEPARATELY WITH THE SECURITIES AND EXCHANGE COMMISSION.
+
+Source: DOVA PHARMACEUTICALS INC., 10-Q, 11/8/2018
+
+
+
+
+
+TABLE OF CONTENTS (continued)
+
+12.6 Survival. 43
+
+ARTICLE 13 MISCELLANEOUS 43
+
+13.1 Force Majeure. 43
+
+13.2 Assignment. 43
+
+13.3 Severability. 44
+
+13.4 Notices. 44
+
+13.5 Governing Law. 45
+
+13.6 Dispute Resolution. 45
+
+13.7 Waiver of Jury Trial. 45
+
+13.8 Entire Agreement; Amendments. 46
+
+13.9 Headings. 46
+
+13.10 Independent Contractors. 46
+
+13.11 Third Party Beneficiaries. 46
+
+13.12 Waiver. 46
+
+13.13 Cumulative Remedies. 46
+
+13.14 Waiver of Rule of Construction. 46
+
+13.15 Use of Names. 46
+
+13.16 Further Actions and Documents. 47
+
+13.17 Certain Conventions. 47
+
+13.18 Counterparts. 47
+
+iii
+
+CONFIDENTIAL TREATMENT HAS BEEN REQUESTED FOR PORTIONS OF THIS EXHIBIT. THE COPY FILED HEREWITH OMITS THE INFORMATION SUBJECT TO A CONFIDENTIALITY REQUEST. OMISSIONS ARE DESIGNATED [***]. A COMPLETE VERSION OF THIS EXHIBIT HAS BEEN FILED SEPARATELY WITH THE SECURITIES AND EXCHANGE COMMISSION.
+
+Source: DOVA PHARMACEUTICALS INC., 10-Q, 11/8/2018
+
+
+
+
+
+CO-PROMOTION AGREEMENT
+
+This Co-Promotion Agreement (this "Agreement") is entered into and dated as of September 26, 2018 (the "Effective Date") by and between Dova Pharmaceuticals, Inc., a Delaware corporation ("Dova"), and Valeant Pharmaceuticals North America LLC, a Delaware limited liability company ("Valeant"). Dova and Valeant are each referred to individually as a "Party" and together as the "Parties".
+
+RECITALS
+
+WHEREAS, Dova has developed and has rights to market and sell the Product (as defined below) in the Territory;
+
+WHEREAS, the Parties believe that it would be mutually beneficial to collaborate on promotional activities for the Product and, accordingly, Dova desires that Valeant conduct certain promotional activities, and Valeant desires to conduct such activities, for the Product in the Territory;
+
+NOW, THEREFORE, in consideration of the following mutual promises and obligations, and for other good and valuable consideration the adequacy and sufficiency of which are hereby acknowledged, the Parties agree as follows:
+
+CONFIDENTIAL TREATMENT HAS BEEN REQUESTED FOR PORTIONS OF THIS EXHIBIT. THE COPY FILED HEREWITH OMITS THE INFORMATION SUBJECT TO A CONFIDEN
+
+...[middle truncated]...
+
+ts to differ materially from those described in these forward-looking statements. Bausch Health believes that the material factors and assumptions reflected in these forward-looking statements are reasonable, but readers are cautioned not to place undue reliance on any of these forward-looking statements. These forward-looking statements speak only as of the date hereof. Bausch Health and Salix undertake no obligation to update any of these forward-looking statements to reflect events or circumstances after the date of this news release or to reflect actual outcomes, unless required by law.
+
+Dova Investor Contacts:  Mark W. Hahn  Chief Financial Officer  mhahn@dova.com  (919) 338-7936
+
+Salix Investor Contact:  Arthur Shannon  Arthur.Shannon@bauschhealth.com  514-856-3855  877-281-6642 (toll free)
+
+Westwicke Partners  John Woolford  john.woolford@westwicke.com  (443) 213-0506
+
+Salix Media Contacts:  Lainie Keller  Lainie.Keller@bauschhealth.com  908-927-0617
+
+Karen Paff
+
+CONFIDENTIAL TREATMENT HAS BEEN REQUESTED FOR PORTIONS OF THIS EXHIBIT. THE COPY FILED HEREWITH OMITS THE INFORMATION SUBJECT TO A CONFIDENTIALITY REQUEST. OMISSIONS ARE DESIGNATED [***]. A COMPLETE VERSION OF THIS EXHIBIT HAS BEEN FILED SEPARATELY WITH THE SECURITIES AND EXCHANGE COMMISSION.
+
+Source: DOVA PHARMACEUTICALS INC., 10-Q, 11/8/2018
+
+
+
+
+
+Karen.Paff@salix.com  908-927-1190
+
+AkaRx, Inc., a wholly owned subsidiary of Dova Pharmaceuticals, Inc., is the exclusive licensee and distributor of DOPTELET® in the United States and its territories. ©2018  DOPTELET® is a registered trademark of AkaRx, Inc.
+
+PM-US-DOP-0072
+
+The Xifaxan 550 mg product and the Xifaxan trademark are licensed by Alfasigma S.p.A.to Salix Pharmaceuticals or its affiliates.
+
+SAL.0103.USA.18
+
+CONFIDENTIAL TREATMENT HAS BEEN REQUESTED FOR PORTIONS OF THIS EXHIBIT. THE COPY FILED HEREWITH OMITS THE INFORMATION SUBJECT TO A CONFIDENTIALITY REQUEST. OMISSIONS ARE DESIGNATED [***]. A COMPLETE VERSION OF THIS EXHIBIT HAS BEEN FILED SEPARATELY WITH THE SECURITIES AND EXCHANGE COMMISSION.
+
+Source: DOVA PHARMACEUTICALS INC., 10-Q, 11/8/2018
+
+
+
+
+
+Schedule 1.65
+
+Third Party Agreements
+
+1. Stock Purchase Agreement dated March 29, 2016 (as amended) between PBM AKX Holdings, LLC and Eisai, Inc.
+
+2. License Agreement dated August 15, 2005 (as amended) between Astellas Pharma Inc. and AkaRx, Inc.
+
+CONFIDENTIAL TREATMENT HAS BEEN REQUESTED FOR PORTIONS OF THIS EXHIBIT. THE COPY FILED HEREWITH OMITS THE INFORMATION SUBJECT TO A CONFIDENTIALITY REQUEST. OMISSIONS ARE DESIGNATED [***]. A COMPLETE VERSION OF THIS EXHIBIT HAS BEEN FILED SEPARATELY WITH THE SECURITIES AND EXCHANGE COMMISSION.
+
+Source: DOVA PHARMACEUTICALS INC., 10-Q, 11/8/2018
+
+ADDENDUM TRAP-A INJECTION (curated for evaluation, documented):
+Renewal Term: This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.
+Notice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.

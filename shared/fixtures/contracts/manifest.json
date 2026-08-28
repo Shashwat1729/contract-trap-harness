@@ -1,0 +1,1354 @@
+[
+  {
+    "contract_id": "cuad_00",
+    "title": "ReynoldsConsumerProductsInc_20191115_S-1_EX-10.18_11896469_EX-10.18_Supply Agreement [TRAP-B INJECTED]",
+    "traps": [
+      {
+        "id": "Trap-A",
+        "name": "Renewal vs Termination mismatch",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no mismatch",
+        "supporting_spans": [],
+        "source": "CUAD + full-text trap scan"
+      },
+      {
+        "id": "Trap-B",
+        "name": "Liability cap bypass",
+        "exists": true,
+        "related_clauses": [
+          "Cap On Liability"
+        ],
+        "conflict": "carve-outs bypass cap",
+        "supporting_spans": [
+          "cap + carve-out"
+        ],
+        "source": "CUAD Cap On Liability spans"
+      },
+      {
+        "id": "Trap-C",
+        "name": "Deletion vs Retention conflict",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no conflict",
+        "supporting_spans": [],
+        "source": "CUAD Post-Termination"
+      },
+      {
+        "id": "Trap-D",
+        "name": "Termination right vs notice mechanism difficulty",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "trap D requires additional commercial context",
+        "supporting_spans": [],
+        "source": "RedlineBench scenario 3"
+      }
+    ]
+  },
+  {
+    "contract_id": "cuad_01",
+    "title": "MetLife, Inc. - Remarketing Agreement [TRAP-B INJECTED]",
+    "traps": [
+      {
+        "id": "Trap-A",
+        "name": "Renewal vs Termination mismatch",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no mismatch",
+        "supporting_spans": [],
+        "source": "CUAD + full-text trap scan"
+      },
+      {
+        "id": "Trap-B",
+        "name": "Liability cap bypass",
+        "exists": true,
+        "related_clauses": [
+          "Cap On Liability"
+        ],
+        "conflict": "carve-outs bypass cap",
+        "supporting_spans": [
+          "cap + carve-out"
+        ],
+        "source": "CUAD Cap On Liability spans"
+      },
+      {
+        "id": "Trap-C",
+        "name": "Deletion vs Retention conflict",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no conflict",
+        "supporting_spans": [],
+        "source": "CUAD Post-Termination"
+      },
+      {
+        "id": "Trap-D",
+        "name": "Termination right vs notice mechanism difficulty",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "trap D requires additional commercial context",
+        "supporting_spans": [],
+        "source": "RedlineBench scenario 3"
+      }
+    ]
+  },
+  {
+    "contract_id": "cuad_02",
+    "title": "KIROMICBIOPHARMA,INC_05_11_2020-EX-10.23-CONSULTING AGREEMENT [TRAP-A INJECTED]",
+    "traps": [
+      {
+        "id": "Trap-A",
+        "name": "Renewal vs Termination mismatch",
+        "exists": true,
+        "related_clauses": [
+          "Renewal Term",
+          "Notice Period To Terminate Renewal"
+        ],
+        "conflict": "renewal 24m vs notice 30d locks buyer",
+        "supporting_spans": [
+          "Renewal 24 months",
+          "Notice {nv} days"
+        ],
+        "source": "CUAD + full-text trap scan"
+      },
+      {
+        "id": "Trap-B",
+        "name": "Liability cap bypass",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no bypass",
+        "supporting_spans": [],
+        "source": "CUAD Cap On Liability spans"
+      },
+      {
+        "id": "Trap-C",
+        "name": "Deletion vs Retention conflict",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no conflict",
+        "supporting_spans": [],
+        "source": "CUAD Post-Termination"
+      },
+      {
+        "id": "Trap-D",
+        "name": "Termination right vs notice mechanism difficulty",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "trap D requires additional commercial context",
+        "supporting_spans": [],
+        "source": "RedlineBench scenario 3"
+      }
+    ]
+  },
+  {
+    "contract_id": "cuad_03",
+    "title": "Freecook_20180605_S-1_EX-10.3_11233807_EX-10.3_Hosting Agreement",
+    "traps": [
+      {
+        "id": "Trap-A",
+        "name": "Renewal vs Termination mismatch",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no mismatch",
+        "supporting_spans": [],
+        "source": "CUAD + full-text trap scan"
+      },
+      {
+        "id": "Trap-B",
+        "name": "Liability cap bypass",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no bypass",
+        "supporting_spans": [],
+        "source": "CUAD Cap On Liability spans"
+      },
+      {
+        "id": "Trap-C",
+        "name": "Deletion vs Retention conflict",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no conflict",
+        "supporting_spans": [],
+        "source": "CUAD Post-Termination"
+      },
+      {
+        "id": "Trap-D",
+        "name": "Termination right vs notice mechanism difficulty",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "trap D requires additional commercial context",
+        "supporting_spans": [],
+        "source": "RedlineBench scenario 3"
+      }
+    ]
+  },
+  {
+    "contract_id": "cuad_04",
+    "title": "SIBANNAC,INC_12_04_2017-EX-2.1-Strategic Alliance Agreement",
+    "traps": [
+      {
+        "id": "Trap-A",
+        "name": "Renewal vs Termination mismatch",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no mismatch",
+        "supporting_spans": [],
+        "source": "CUAD + full-text trap scan"
+      },
+      {
+        "id": "Trap-B",
+        "name": "Liability cap bypass",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no bypass",
+        "supporting_spans": [],
+        "source": "CUAD Cap On Liability spans"
+      },
+      {
+        "id": "Trap-C",
+        "name": "Deletion vs Retention conflict",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no conflict",
+        "supporting_spans": [],
+        "source": "CUAD Post-Termination"
+      },
+      {
+        "id": "Trap-D",
+        "name": "Termination right vs notice mechanism difficulty",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "trap D requires additional commercial context",
+        "supporting_spans": [],
+        "source": "RedlineBench scenario 3"
+      }
+    ]
+  },
+  {
+    "contract_id": "cuad_05",
+    "title": "LohaCompanyltd_20191209_F-1_EX-10.16_11917878_EX-10.16_Supply Agreement [TRAP-A INJECTED]",
+    "traps": [
+      {
+        "id": "Trap-A",
+        "name": "Renewal vs Termination mismatch",
+        "exists": true,
+        "related_clauses": [
+          "Renewal Term",
+          "Notice Period To Terminate Renewal"
+        ],
+        "conflict": "renewal 24m vs notice 30d locks buyer",
+        "supporting_spans": [
+          "Renewal 24 months",
+          "Notice {nv} days"
+        ],
+        "source": "CUAD + full-text trap scan"
+      },
+      {
+        "id": "Trap-B",
+        "name": "Liability cap bypass",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no bypass",
+        "supporting_spans": [],
+        "source": "CUAD Cap On Liability spans"
+      },
+      {
+        "id": "Trap-C",
+        "name": "Deletion vs Retention conflict",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no conflict",
+        "supporting_spans": [],
+        "source": "CUAD Post-Termination"
+      },
+      {
+        "id": "Trap-D",
+        "name": "Termination right vs notice mechanism difficulty",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "trap D requires additional commercial context",
+        "supporting_spans": [],
+        "source": "RedlineBench scenario 3"
+      }
+    ]
+  },
+  {
+    "contract_id": "cuad_06",
+    "title": "WHITESMOKE,INC_11_08_2011-EX-10.26-PROMOTION AND DISTRIBUTION AGREEMENT [TRAP-A INJECTED]",
+    "traps": [
+      {
+        "id": "Trap-A",
+        "name": "Renewal vs Termination mismatch",
+        "exists": true,
+        "related_clauses": [
+          "Renewal Term",
+          "Notice Period To Terminate Renewal"
+        ],
+        "conflict": "renewal 24m vs notice 30d locks buyer",
+        "supporting_spans": [
+          "Renewal 24 months",
+          "Notice {nv} days"
+        ],
+        "source": "CUAD + full-text trap scan"
+      },
+      {
+        "id": "Trap-B",
+        "name": "Liability cap bypass",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no bypass",
+        "supporting_spans": [],
+        "source": "CUAD Cap On Liability spans"
+      },
+      {
+        "id": "Trap-C",
+        "name": "Deletion vs Retention conflict",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no conflict",
+        "supporting_spans": [],
+        "source": "CUAD Post-Termination"
+      },
+      {
+        "id": "Trap-D",
+        "name": "Termination right vs notice mechanism difficulty",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "trap D requires additional commercial context",
+        "supporting_spans": [],
+        "source": "RedlineBench scenario 3"
+      }
+    ]
+  },
+  {
+    "contract_id": "cuad_07",
+    "title": "DovaPharmaceuticalsInc_20181108_10-Q_EX-10.2_11414857_EX-10.2_Promotion Agreement [TRAP-A INJECTED]",
+    "traps": [
+      {
+        "id": "Trap-A",
+        "name": "Renewal vs Termination mismatch",
+        "exists": true,
+        "related_clauses": [
+          "Renewal Term",
+          "Notice Period To Terminate Renewal"
+        ],
+        "conflict": "renewal 24m vs notice 30d locks buyer",
+        "supporting_spans": [
+          "Renewal 24 months",
+          "Notice {nv} days"
+        ],
+        "source": "CUAD + full-text trap scan"
+      },
+      {
+        "id": "Trap-B",
+        "name": "Liability cap bypass",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no bypass",
+        "supporting_spans": [],
+        "source": "CUAD Cap On Liability spans"
+      },
+      {
+        "id": "Trap-C",
+        "name": "Deletion vs Retention conflict",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no conflict",
+        "supporting_spans": [],
+        "source": "CUAD Post-Termination"
+      },
+      {
+        "id": "Trap-D",
+        "name": "Termination right vs notice mechanism difficulty",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "trap D requires additional commercial context",
+        "supporting_spans": [],
+        "source": "RedlineBench scenario 3"
+      }
+    ]
+  },
+  {
+    "contract_id": "cuad_08",
+    "title": "VEONEER,INC_02_21_2020-EX-10.11-JOINT VENTURE AGREEMENT [TRAP-A INJECTED]",
+    "traps": [
+      {
+        "id": "Trap-A",
+        "name": "Renewal vs Termination mismatch",
+        "exists": true,
+        "related_clauses": [
+          "Renewal Term",
+          "Notice Period To Terminate Renewal"
+        ],
+        "conflict": "renewal 24m vs notice 30d locks buyer",
+        "supporting_spans": [
+          "Renewal 24 months",
+          "Notice {nv} days"
+        ],
+        "source": "CUAD + full-text trap scan"
+      },
+      {
+        "id": "Trap-B",
+        "name": "Liability cap bypass",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no bypass",
+        "supporting_spans": [],
+        "source": "CUAD Cap On Liability spans"
+      },
+      {
+        "id": "Trap-C",
+        "name": "Deletion vs Retention conflict",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no conflict",
+        "supporting_spans": [],
+        "source": "CUAD Post-Termination"
+      },
+      {
+        "id": "Trap-D",
+        "name": "Termination right vs notice mechanism difficulty",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "trap D requires additional commercial context",
+        "supporting_spans": [],
+        "source": "RedlineBench scenario 3"
+      }
+    ]
+  },
+  {
+    "contract_id": "cuad_09",
+    "title": "DOMINIADVISORTRUST_02_18_2005-EX-99.(H)(2)-SPONSORSHIP AGREEMENT [TRAP-B INJECTED]",
+    "traps": [
+      {
+        "id": "Trap-A",
+        "name": "Renewal vs Termination mismatch",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no mismatch",
+        "supporting_spans": [],
+        "source": "CUAD + full-text trap scan"
+      },
+      {
+        "id": "Trap-B",
+        "name": "Liability cap bypass",
+        "exists": true,
+        "related_clauses": [
+          "Cap On Liability"
+        ],
+        "conflict": "carve-outs bypass cap",
+        "supporting_spans": [
+          "cap + carve-out"
+        ],
+        "source": "CUAD Cap On Liability spans"
+      },
+      {
+        "id": "Trap-C",
+        "name": "Deletion vs Retention conflict",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no conflict",
+        "supporting_spans": [],
+        "source": "CUAD Post-Termination"
+      },
+      {
+        "id": "Trap-D",
+        "name": "Termination right vs notice mechanism difficulty",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "trap D requires additional commercial context",
+        "supporting_spans": [],
+        "source": "RedlineBench scenario 3"
+      }
+    ]
+  },
+  {
+    "contract_id": "cuad_10",
+    "title": "ADAMSGOLFINC_03_21_2005-EX-10.17-ENDORSEMENT AGREEMENT [TRAP-A INJECTED]",
+    "traps": [
+      {
+        "id": "Trap-A",
+        "name": "Renewal vs Termination mismatch",
+        "exists": true,
+        "related_clauses": [
+          "Renewal Term",
+          "Notice Period To Terminate Renewal"
+        ],
+        "conflict": "renewal 24m vs notice 30d locks buyer",
+        "supporting_spans": [
+          "Renewal 24 months",
+          "Notice {nv} days"
+        ],
+        "source": "CUAD + full-text trap scan"
+      },
+      {
+        "id": "Trap-B",
+        "name": "Liability cap bypass",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no bypass",
+        "supporting_spans": [],
+        "source": "CUAD Cap On Liability spans"
+      },
+      {
+        "id": "Trap-C",
+        "name": "Deletion vs Retention conflict",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no conflict",
+        "supporting_spans": [],
+        "source": "CUAD Post-Termination"
+      },
+      {
+        "id": "Trap-D",
+        "name": "Termination right vs notice mechanism difficulty",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "trap D requires additional commercial context",
+        "supporting_spans": [],
+        "source": "RedlineBench scenario 3"
+      }
+    ]
+  },
+  {
+    "contract_id": "cuad_11",
+    "title": "ON2TECHNOLOGIES,INC_11_17_2006-EX-10.3-SUPPORT AND MAINTENANCE AGREEMENT",
+    "traps": [
+      {
+        "id": "Trap-A",
+        "name": "Renewal vs Termination mismatch",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no mismatch",
+        "supporting_spans": [],
+        "source": "CUAD + full-text trap scan"
+      },
+      {
+        "id": "Trap-B",
+        "name": "Liability cap bypass",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no bypass",
+        "supporting_spans": [],
+        "source": "CUAD Cap On Liability spans"
+      },
+      {
+        "id": "Trap-C",
+        "name": "Deletion vs Retention conflict",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no conflict",
+        "supporting_spans": [],
+        "source": "CUAD Post-Termination"
+      },
+      {
+        "id": "Trap-D",
+        "name": "Termination right vs notice mechanism difficulty",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "trap D requires additional commercial context",
+        "supporting_spans": [],
+        "source": "RedlineBench scenario 3"
+      }
+    ]
+  },
+  {
+    "contract_id": "cuad_12",
+    "title": "ZEBRATECHNOLOGIESCORP_04_16_2014-EX-10.1-INTELLECTUAL PROPERTY AGREEMENT",
+    "traps": [
+      {
+        "id": "Trap-A",
+        "name": "Renewal vs Termination mismatch",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no mismatch",
+        "supporting_spans": [],
+        "source": "CUAD + full-text trap scan"
+      },
+      {
+        "id": "Trap-B",
+        "name": "Liability cap bypass",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no bypass",
+        "supporting_spans": [],
+        "source": "CUAD Cap On Liability spans"
+      },
+      {
+        "id": "Trap-C",
+        "name": "Deletion vs Retention conflict",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no conflict",
+        "supporting_spans": [],
+        "source": "CUAD Post-Termination"
+      },
+      {
+        "id": "Trap-D",
+        "name": "Termination right vs notice mechanism difficulty",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "trap D requires additional commercial context",
+        "supporting_spans": [],
+        "source": "RedlineBench scenario 3"
+      }
+    ]
+  },
+  {
+    "contract_id": "cuad_13",
+    "title": "PREMIERBIOMEDICALINC_05_14_2020-EX-10.2-INTELLECTUAL PROPERTY AGREEMENT [TRAP-B INJECTED]",
+    "traps": [
+      {
+        "id": "Trap-A",
+        "name": "Renewal vs Termination mismatch",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no mismatch",
+        "supporting_spans": [],
+        "source": "CUAD + full-text trap scan"
+      },
+      {
+        "id": "Trap-B",
+        "name": "Liability cap bypass",
+        "exists": true,
+        "related_clauses": [
+          "Cap On Liability"
+        ],
+        "conflict": "carve-outs bypass cap",
+        "supporting_spans": [
+          "cap + carve-out"
+        ],
+        "source": "CUAD Cap On Liability spans"
+      },
+      {
+        "id": "Trap-C",
+        "name": "Deletion vs Retention conflict",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no conflict",
+        "supporting_spans": [],
+        "source": "CUAD Post-Termination"
+      },
+      {
+        "id": "Trap-D",
+        "name": "Termination right vs notice mechanism difficulty",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "trap D requires additional commercial context",
+        "supporting_spans": [],
+        "source": "RedlineBench scenario 3"
+      }
+    ]
+  },
+  {
+    "contract_id": "cuad_14",
+    "title": "PfHospitalityGroupInc_20150923_10-12G_EX-10.1_9266710_EX-10.1_Franchise Agreement3 [TRAP-B INJECTED]",
+    "traps": [
+      {
+        "id": "Trap-A",
+        "name": "Renewal vs Termination mismatch",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no mismatch",
+        "supporting_spans": [],
+        "source": "CUAD + full-text trap scan"
+      },
+      {
+        "id": "Trap-B",
+        "name": "Liability cap bypass",
+        "exists": true,
+        "related_clauses": [
+          "Cap On Liability"
+        ],
+        "conflict": "carve-outs bypass cap",
+        "supporting_spans": [
+          "cap + carve-out"
+        ],
+        "source": "CUAD Cap On Liability spans"
+      },
+      {
+        "id": "Trap-C",
+        "name": "Deletion vs Retention conflict",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no conflict",
+        "supporting_spans": [],
+        "source": "CUAD Post-Termination"
+      },
+      {
+        "id": "Trap-D",
+        "name": "Termination right vs notice mechanism difficulty",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "trap D requires additional commercial context",
+        "supporting_spans": [],
+        "source": "RedlineBench scenario 3"
+      }
+    ]
+  },
+  {
+    "contract_id": "cuad_15",
+    "title": "OPERALTD_04_30_2020-EX-4.14-SERVICE AGREEMENT",
+    "traps": [
+      {
+        "id": "Trap-A",
+        "name": "Renewal vs Termination mismatch",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no mismatch",
+        "supporting_spans": [],
+        "source": "CUAD + full-text trap scan"
+      },
+      {
+        "id": "Trap-B",
+        "name": "Liability cap bypass",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no bypass",
+        "supporting_spans": [],
+        "source": "CUAD Cap On Liability spans"
+      },
+      {
+        "id": "Trap-C",
+        "name": "Deletion vs Retention conflict",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no conflict",
+        "supporting_spans": [],
+        "source": "CUAD Post-Termination"
+      },
+      {
+        "id": "Trap-D",
+        "name": "Termination right vs notice mechanism difficulty",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "trap D requires additional commercial context",
+        "supporting_spans": [],
+        "source": "RedlineBench scenario 3"
+      }
+    ]
+  },
+  {
+    "contract_id": "cuad_16",
+    "title": "PfHospitalityGroupInc_20150923_10-12G_EX-10.1_9266710_EX-10.1_Franchise Agreement1",
+    "traps": [
+      {
+        "id": "Trap-A",
+        "name": "Renewal vs Termination mismatch",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no mismatch",
+        "supporting_spans": [],
+        "source": "CUAD + full-text trap scan"
+      },
+      {
+        "id": "Trap-B",
+        "name": "Liability cap bypass",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no bypass",
+        "supporting_spans": [],
+        "source": "CUAD Cap On Liability spans"
+      },
+      {
+        "id": "Trap-C",
+        "name": "Deletion vs Retention conflict",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no conflict",
+        "supporting_spans": [],
+        "source": "CUAD Post-Termination"
+      },
+      {
+        "id": "Trap-D",
+        "name": "Termination right vs notice mechanism difficulty",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "trap D requires additional commercial context",
+        "supporting_spans": [],
+        "source": "RedlineBench scenario 3"
+      }
+    ]
+  },
+  {
+    "contract_id": "cuad_17",
+    "title": "PACIRA PHARMACEUTICALS, INC. - A_R STRATEGIC LICENSING, DISTRIBUTION AND MARKETING AGREEMENT  [TRAP-A INJECTED]",
+    "traps": [
+      {
+        "id": "Trap-A",
+        "name": "Renewal vs Termination mismatch",
+        "exists": true,
+        "related_clauses": [
+          "Renewal Term",
+          "Notice Period To Terminate Renewal"
+        ],
+        "conflict": "renewal 24m vs notice 30d locks buyer",
+        "supporting_spans": [
+          "Renewal 24 months",
+          "Notice {nv} days"
+        ],
+        "source": "CUAD + full-text trap scan"
+      },
+      {
+        "id": "Trap-B",
+        "name": "Liability cap bypass",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no bypass",
+        "supporting_spans": [],
+        "source": "CUAD Cap On Liability spans"
+      },
+      {
+        "id": "Trap-C",
+        "name": "Deletion vs Retention conflict",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no conflict",
+        "supporting_spans": [],
+        "source": "CUAD Post-Termination"
+      },
+      {
+        "id": "Trap-D",
+        "name": "Termination right vs notice mechanism difficulty",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "trap D requires additional commercial context",
+        "supporting_spans": [],
+        "source": "RedlineBench scenario 3"
+      }
+    ]
+  },
+  {
+    "contract_id": "cuad_18",
+    "title": "ThriventVariableInsuranceAccountB_20190701_N-6_EX-99.D(IV)_11720968_EX-99.D(IV)_Endorsement Agreement [TRAP-B INJECTED]",
+    "traps": [
+      {
+        "id": "Trap-A",
+        "name": "Renewal vs Termination mismatch",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no mismatch",
+        "supporting_spans": [],
+        "source": "CUAD + full-text trap scan"
+      },
+      {
+        "id": "Trap-B",
+        "name": "Liability cap bypass",
+        "exists": true,
+        "related_clauses": [
+          "Cap On Liability"
+        ],
+        "conflict": "carve-outs bypass cap",
+        "supporting_spans": [
+          "cap + carve-out"
+        ],
+        "source": "CUAD Cap On Liability spans"
+      },
+      {
+        "id": "Trap-C",
+        "name": "Deletion vs Retention conflict",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no conflict",
+        "supporting_spans": [],
+        "source": "CUAD Post-Termination"
+      },
+      {
+        "id": "Trap-D",
+        "name": "Termination right vs notice mechanism difficulty",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "trap D requires additional commercial context",
+        "supporting_spans": [],
+        "source": "RedlineBench scenario 3"
+      }
+    ]
+  },
+  {
+    "contract_id": "cuad_19",
+    "title": "SENMIAOTECHNOLOGYLTD_02_19_2019-EX-10.5-Collaboration Agreement",
+    "traps": [
+      {
+        "id": "Trap-A",
+        "name": "Renewal vs Termination mismatch",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no mismatch",
+        "supporting_spans": [],
+        "source": "CUAD + full-text trap scan"
+      },
+      {
+        "id": "Trap-B",
+        "name": "Liability cap bypass",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no bypass",
+        "supporting_spans": [],
+        "source": "CUAD Cap On Liability spans"
+      },
+      {
+        "id": "Trap-C",
+        "name": "Deletion vs Retention conflict",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no conflict",
+        "supporting_spans": [],
+        "source": "CUAD Post-Termination"
+      },
+      {
+        "id": "Trap-D",
+        "name": "Termination right vs notice mechanism difficulty",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "trap D requires additional commercial context",
+        "supporting_spans": [],
+        "source": "RedlineBench scenario 3"
+      }
+    ]
+  },
+  {
+    "contract_id": "cuad_20",
+    "title": "CerenceInc_20191002_8-K_EX-10.4_11827494_EX-10.4_Intellectual Property Agreement [TRAP-B INJECTED]",
+    "traps": [
+      {
+        "id": "Trap-A",
+        "name": "Renewal vs Termination mismatch",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no mismatch",
+        "supporting_spans": [],
+        "source": "CUAD + full-text trap scan"
+      },
+      {
+        "id": "Trap-B",
+        "name": "Liability cap bypass",
+        "exists": true,
+        "related_clauses": [
+          "Cap On Liability"
+        ],
+        "conflict": "carve-outs bypass cap",
+        "supporting_spans": [
+          "cap + carve-out"
+        ],
+        "source": "CUAD Cap On Liability spans"
+      },
+      {
+        "id": "Trap-C",
+        "name": "Deletion vs Retention conflict",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no conflict",
+        "supporting_spans": [],
+        "source": "CUAD Post-Termination"
+      },
+      {
+        "id": "Trap-D",
+        "name": "Termination right vs notice mechanism difficulty",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "trap D requires additional commercial context",
+        "supporting_spans": [],
+        "source": "RedlineBench scenario 3"
+      }
+    ]
+  },
+  {
+    "contract_id": "cuad_21",
+    "title": "BORROWMONEYCOM,INC_06_11_2020-EX-10.1-JOINT VENTURE AGREEMENT",
+    "traps": [
+      {
+        "id": "Trap-A",
+        "name": "Renewal vs Termination mismatch",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no mismatch",
+        "supporting_spans": [],
+        "source": "CUAD + full-text trap scan"
+      },
+      {
+        "id": "Trap-B",
+        "name": "Liability cap bypass",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no bypass",
+        "supporting_spans": [],
+        "source": "CUAD Cap On Liability spans"
+      },
+      {
+        "id": "Trap-C",
+        "name": "Deletion vs Retention conflict",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no conflict",
+        "supporting_spans": [],
+        "source": "CUAD Post-Termination"
+      },
+      {
+        "id": "Trap-D",
+        "name": "Termination right vs notice mechanism difficulty",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "trap D requires additional commercial context",
+        "supporting_spans": [],
+        "source": "RedlineBench scenario 3"
+      }
+    ]
+  },
+  {
+    "contract_id": "cuad_22",
+    "title": "LIMEENERGYCO_09_09_1999-EX-10-DISTRIBUTOR AGREEMENT [TRAP-A INJECTED]",
+    "traps": [
+      {
+        "id": "Trap-A",
+        "name": "Renewal vs Termination mismatch",
+        "exists": true,
+        "related_clauses": [
+          "Renewal Term",
+          "Notice Period To Terminate Renewal"
+        ],
+        "conflict": "renewal 24m vs notice 30d locks buyer",
+        "supporting_spans": [
+          "Renewal 24 months",
+          "Notice {nv} days"
+        ],
+        "source": "CUAD + full-text trap scan"
+      },
+      {
+        "id": "Trap-B",
+        "name": "Liability cap bypass",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no bypass",
+        "supporting_spans": [],
+        "source": "CUAD Cap On Liability spans"
+      },
+      {
+        "id": "Trap-C",
+        "name": "Deletion vs Retention conflict",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no conflict",
+        "supporting_spans": [],
+        "source": "CUAD Post-Termination"
+      },
+      {
+        "id": "Trap-D",
+        "name": "Termination right vs notice mechanism difficulty",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "trap D requires additional commercial context",
+        "supporting_spans": [],
+        "source": "RedlineBench scenario 3"
+      }
+    ]
+  },
+  {
+    "contract_id": "cuad_23",
+    "title": "BONTONSTORESINC_04_20_2018-EX-99.3-AGENCY AGREEMENT",
+    "traps": [
+      {
+        "id": "Trap-A",
+        "name": "Renewal vs Termination mismatch",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no mismatch",
+        "supporting_spans": [],
+        "source": "CUAD + full-text trap scan"
+      },
+      {
+        "id": "Trap-B",
+        "name": "Liability cap bypass",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no bypass",
+        "supporting_spans": [],
+        "source": "CUAD Cap On Liability spans"
+      },
+      {
+        "id": "Trap-C",
+        "name": "Deletion vs Retention conflict",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no conflict",
+        "supporting_spans": [],
+        "source": "CUAD Post-Termination"
+      },
+      {
+        "id": "Trap-D",
+        "name": "Termination right vs notice mechanism difficulty",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "trap D requires additional commercial context",
+        "supporting_spans": [],
+        "source": "RedlineBench scenario 3"
+      }
+    ]
+  },
+  {
+    "contract_id": "cuad_24",
+    "title": "CENTRACKINTERNATIONALINC_10_29_1999-EX-10.3-WEB SITE HOSTING AGREEMENT [TRAP-A INJECTED]",
+    "traps": [
+      {
+        "id": "Trap-A",
+        "name": "Renewal vs Termination mismatch",
+        "exists": true,
+        "related_clauses": [
+          "Renewal Term",
+          "Notice Period To Terminate Renewal"
+        ],
+        "conflict": "renewal 24m vs notice 30d locks buyer",
+        "supporting_spans": [
+          "Renewal 24 months",
+          "Notice {nv} days"
+        ],
+        "source": "CUAD + full-text trap scan"
+      },
+      {
+        "id": "Trap-B",
+        "name": "Liability cap bypass",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no bypass",
+        "supporting_spans": [],
+        "source": "CUAD Cap On Liability spans"
+      },
+      {
+        "id": "Trap-C",
+        "name": "Deletion vs Retention conflict",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no conflict",
+        "supporting_spans": [],
+        "source": "CUAD Post-Termination"
+      },
+      {
+        "id": "Trap-D",
+        "name": "Termination right vs notice mechanism difficulty",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "trap D requires additional commercial context",
+        "supporting_spans": [],
+        "source": "RedlineBench scenario 3"
+      }
+    ]
+  },
+  {
+    "contract_id": "cuad_25",
+    "title": "NELNETINC_04_08_2020-EX-1-JOINT FILING AGREEMENT [TRAP-A INJECTED]",
+    "traps": [
+      {
+        "id": "Trap-A",
+        "name": "Renewal vs Termination mismatch",
+        "exists": true,
+        "related_clauses": [
+          "Renewal Term",
+          "Notice Period To Terminate Renewal"
+        ],
+        "conflict": "renewal 24m vs notice 30d locks buyer",
+        "supporting_spans": [
+          "Renewal 24 months",
+          "Notice {nv} days"
+        ],
+        "source": "CUAD + full-text trap scan"
+      },
+      {
+        "id": "Trap-B",
+        "name": "Liability cap bypass",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no bypass",
+        "supporting_spans": [],
+        "source": "CUAD Cap On Liability spans"
+      },
+      {
+        "id": "Trap-C",
+        "name": "Deletion vs Retention conflict",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no conflict",
+        "supporting_spans": [],
+        "source": "CUAD Post-Termination"
+      },
+      {
+        "id": "Trap-D",
+        "name": "Termination right vs notice mechanism difficulty",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "trap D requires additional commercial context",
+        "supporting_spans": [],
+        "source": "RedlineBench scenario 3"
+      }
+    ]
+  },
+  {
+    "contract_id": "cuad_26",
+    "title": "INTRICONCORP_03_10_2009-EX-10.22-Strategic Alliance Agreement",
+    "traps": [
+      {
+        "id": "Trap-A",
+        "name": "Renewal vs Termination mismatch",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no mismatch",
+        "supporting_spans": [],
+        "source": "CUAD + full-text trap scan"
+      },
+      {
+        "id": "Trap-B",
+        "name": "Liability cap bypass",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no bypass",
+        "supporting_spans": [],
+        "source": "CUAD Cap On Liability spans"
+      },
+      {
+        "id": "Trap-C",
+        "name": "Deletion vs Retention conflict",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no conflict",
+        "supporting_spans": [],
+        "source": "CUAD Post-Termination"
+      },
+      {
+        "id": "Trap-D",
+        "name": "Termination right vs notice mechanism difficulty",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "trap D requires additional commercial context",
+        "supporting_spans": [],
+        "source": "RedlineBench scenario 3"
+      }
+    ]
+  },
+  {
+    "contract_id": "cuad_27",
+    "title": "FTENETWORKS,INC_02_18_2016-EX-99.4-STRATEGIC ALLIANCE AGREEMENT",
+    "traps": [
+      {
+        "id": "Trap-A",
+        "name": "Renewal vs Termination mismatch",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no mismatch",
+        "supporting_spans": [],
+        "source": "CUAD + full-text trap scan"
+      },
+      {
+        "id": "Trap-B",
+        "name": "Liability cap bypass",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no bypass",
+        "supporting_spans": [],
+        "source": "CUAD Cap On Liability spans"
+      },
+      {
+        "id": "Trap-C",
+        "name": "Deletion vs Retention conflict",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no conflict",
+        "supporting_spans": [],
+        "source": "CUAD Post-Termination"
+      },
+      {
+        "id": "Trap-D",
+        "name": "Termination right vs notice mechanism difficulty",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "trap D requires additional commercial context",
+        "supporting_spans": [],
+        "source": "RedlineBench scenario 3"
+      }
+    ]
+  },
+  {
+    "contract_id": "cuad_28",
+    "title": "ENERGOUSCORP_03_16_2017-EX-10.24-STRATEGIC ALLIANCE AGREEMENT",
+    "traps": [
+      {
+        "id": "Trap-A",
+        "name": "Renewal vs Termination mismatch",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no mismatch",
+        "supporting_spans": [],
+        "source": "CUAD + full-text trap scan"
+      },
+      {
+        "id": "Trap-B",
+        "name": "Liability cap bypass",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no bypass",
+        "supporting_spans": [],
+        "source": "CUAD Cap On Liability spans"
+      },
+      {
+        "id": "Trap-C",
+        "name": "Deletion vs Retention conflict",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no conflict",
+        "supporting_spans": [],
+        "source": "CUAD Post-Termination"
+      },
+      {
+        "id": "Trap-D",
+        "name": "Termination right vs notice mechanism difficulty",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "trap D requires additional commercial context",
+        "supporting_spans": [],
+        "source": "RedlineBench scenario 3"
+      }
+    ]
+  },
+  {
+    "contract_id": "cuad_29",
+    "title": "IntegrityFunds_20200121_485BPOS_EX-99.E UNDR CONTR_11948727_EX-99.E UNDR CONTR_Service Agreement [TRAP-B INJECTED]",
+    "traps": [
+      {
+        "id": "Trap-A",
+        "name": "Renewal vs Termination mismatch",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no mismatch",
+        "supporting_spans": [],
+        "source": "CUAD + full-text trap scan"
+      },
+      {
+        "id": "Trap-B",
+        "name": "Liability cap bypass",
+        "exists": true,
+        "related_clauses": [
+          "Cap On Liability"
+        ],
+        "conflict": "carve-outs bypass cap",
+        "supporting_spans": [
+          "cap + carve-out"
+        ],
+        "source": "CUAD Cap On Liability spans"
+      },
+      {
+        "id": "Trap-C",
+        "name": "Deletion vs Retention conflict",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "no conflict",
+        "supporting_spans": [],
+        "source": "CUAD Post-Termination"
+      },
+      {
+        "id": "Trap-D",
+        "name": "Termination right vs notice mechanism difficulty",
+        "exists": false,
+        "related_clauses": [],
+        "conflict": "trap D requires additional commercial context",
+        "supporting_spans": [],
+        "source": "RedlineBench scenario 3"
+      }
+    ]
+  }
+]

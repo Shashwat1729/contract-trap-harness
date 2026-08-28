@@ -1,0 +1,51 @@
+{
+  "contract_id": "cuad_13",
+  "title": "PREMIERBIOMEDICALINC_05_14_2020-EX-10.2-INTELLECTUAL PROPERTY AGREEMENT [TRAP-B INJECTED]",
+  "original_cuad_title": "PREMIERBIOMEDICALINC_05_14_2020-EX-10.2-INTELLECTUAL PROPERTY AGREEMENT [TRAP-B INJECTED]",
+  "chars": 9028,
+  "trap_gold": [
+    {
+      "id": "Trap-A",
+      "name": "Renewal vs Termination mismatch",
+      "exists": false,
+      "related_clauses": [],
+      "conflict": "no mismatch",
+      "supporting_spans": [],
+      "source": "CUAD + full-text trap scan"
+    },
+    {
+      "id": "Trap-B",
+      "name": "Liability cap bypass",
+      "exists": true,
+      "related_clauses": [
+        "Cap On Liability"
+      ],
+      "conflict": "carve-outs bypass cap",
+      "supporting_spans": [
+        "cap + carve-out"
+      ],
+      "source": "CUAD Cap On Liability spans"
+    },
+    {
+      "id": "Trap-C",
+      "name": "Deletion vs Retention conflict",
+      "exists": false,
+      "related_clauses": [],
+      "conflict": "no conflict",
+      "supporting_spans": [],
+      "source": "CUAD Post-Termination"
+    },
+    {
+      "id": "Trap-D",
+      "name": "Termination right vs notice mechanism difficulty",
+      "exists": false,
+      "related_clauses": [],
+      "conflict": "trap D requires additional commercial context",
+      "supporting_spans": [],
+      "source": "RedlineBench scenario 3"
+    }
+  ],
+  "clause_span_count": 1,
+  "source": "CUAD v1 (CC BY 4.0) — trap-focused golds (exists yes/no, related clauses, conflict) not redline golds, per reviewer",
+  "adversarial": false
+}

@@ -47,17 +47,20 @@ advanced   ──┘                      ─► evidence/benchmarks/comparison.
 
 ---
 
-## 5. Stack decisions (pre-kickoff defaults, override if PDF prescribes)
+## 5. Stack decisions (final for Contract Trap Harness)
 
-| Layer | Default | Reason | When to switch |
-|-------|---------|--------|----------------|
-| Baseline | Python 3.11 + FastAPI | Fastest to correctness; best test tooling | PDF says TS/Java/Go/Rust — use that |
-| Advanced | Same stack + LangGraph / retry / cache | Easy delta on top of baseline | If baseline switches, advanced follows |
-| Frontend (if needed) | Next.js 14 | Judges expect polished demo | Only if problem has UI |
-| DB | SQLite (file) or in-memory | Zero-setup repro | PDF says Postgres/Redis — use Docker service |
-| Infra | Docker Compose | One-command repro for judges | — |
+| Layer | Choice | Reason |
+|-------|--------|--------|
+| Baseline | Python 3.11 + FastAPI single-prompt redliner | Fastest to Harbor I/O (contract.docx in-place), best test tooling, matches scaffold |
+| Advanced | Python 3.11 + FastAPI harness: ingest (pypdf+python-docx) + extract + risk (hybrid BM25+MiniLM) + verify gate + memory + router + fallback | Verification-gated commitments fix block-edit hallucination; tier-aware harness fixes HEAT-24 paradox; lightweight no fine-tune keeps <$2, <5min |
+| Retrieval | sentence-transformers all-MiniLM-L6-v2 + BM25 (legal-intelligence-swarm pattern) | Hybrid beats keyword-only NDCG, 80MB not 2GB |
+| Frontend | Minimal Streamlit Harness Monitor (optional, for demo) | Judges see 4 agents + live citations, not slides |
+| DB | In-memory + JSON fixtures (CUAD committed), no Postgres | Zero-setup repro, EVAL_MOCK offline |
+| Infra | Docker Compose | One-command repro for judges |
 
 **Rule:** Never introduce a stack the problem doesn't need. Prize is for *engineering quality*, not tech sprawl.
+
+Per docs/11-IMPLEMENTATION-PLAN.md §4: rejected fine-tuned LegalBERT (heavy training), rejected pure LLM retrieval (cost), rejected CrewAI (82% vs LangGraph 87% but we use lightweight harness, not full framework).
 
 ---
 
@@ -73,25 +76,29 @@ advanced   ──┘                      ─► evidence/benchmarks/comparison.
 
 ---
 
-## 7. What to decide at kickoff (T+0 checklist — Phase 0 gate)
+## 7. Kickoff Decisions (Phase 0 gate — DONE 2026-08-28)
 
-- [ ] Problem type: API / pipeline / agent / UI / data?
-- [ ] Starter repo exists? Clone into `starter/` and note delta in §8
-- [ ] Runtime pinned by PDF? Update `Makefile`, `.python-version`, `REPRODUCTION.md`, Docker
-- [ ] Dependency limits? Enforce in `requirements.txt` / `package.json`
-- [ ] Network allowed? If not, add offline fixtures to `shared/fixtures/`
-- [ ] Acceptance tests location? Wire into `tests/e2e/` + `scripts/eval.py`
-- [ ] **Directive gates:** `docs/10-RESEARCH-PROTOCOL.md` launched? `docs/11-IMPLEMENTATION-PLAN.md` template copied? `docs/20-REVIEW-RUBRIC.md` understood by reviewer?
+- [x] Problem type: **Agentic contract redlining harness** (SaaS MSA, CUAD 41 types -> 12 SaaS, multi-turn 4-turn as stretch, single-turn trap detection core)
+- [x] Starter repo: **No official starter**; reference `crosbylegal/redline-bench` (Harbor 140 tasks) + `TheAtticusProject/cuad` (510 contracts) cloned to docs/research/ for reference only
+- [x] Runtime: Python 3.11 pinned (.python-version), Docker 24
+- [x] Deps: pypdf, python-docx, sentence-transformers (light), FastAPI — pinned, <$2
+- [x] Network: allowed but sandboxed; human approval gate (Rule 04/05); EVAL_MOCK for offline
+- [x] Acceptance tests: Harbor I/O (contract.docx in-place) + 5-dim rubric + Trap Recall + Evidence Precision, wired to tests/e2e/ + scripts/eval.py
+- [x] Directive gates: docs/10-RESEARCH-PROTOCOL.md done, docs/11-IMPLEMENTATION-PLAN.md approved, docs/20-REVIEW-RUBRIC.md understood
 
-> Per Directive: no `baseline/` implementation begins until this checklist is committed.
+> Gate committed: docs/problem-brief.md + docs/research/00-synthesis.md + docs/11-IMPLEMENTATION-PLAN.md
 
 ---
 
-## 8. Starter Repo Delta (fill at kickoff if provided)
+## 8. Starter Repo Delta (Rule Book #2)
 
 | File from starter | Kept | Modified | Added | Reason |
 |-------------------|------|----------|-------|--------|
-| _(example) `starter/app.py` |  |  |  |  |
+| No official starter | — | — | — | Greenfield harness, reference repos only |
+| `crosbylegal/redline-bench` (ref only) | Cloned to docs/research/ for Harbor design reference | Not modified | — | Informed harness contract.docx + 5-dim rubric |
+| `TheAtticusProject/cuad` (ref only) | Cloned to docs/research/ for 41 types | Not modified | — | Provided 13k labels for trap detection |
+
+All files in baseline/, advanced/, shared/, scripts/, tests/, evidence/, docker-compose.yml, Makefile are **added by us** (see git log e63fd98, ddfa438, fe98474 + next).
 
 > Rule-book requirement: "Make it clear what existed before the competition and what you added." This table is that proof.
 

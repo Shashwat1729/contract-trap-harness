@@ -1,8 +1,5 @@
-# Benchmark Results — 2026-08-28T08:53:22Z
+# Results
 
-| Variant | Success | Mean Lat | p95 Lat | Edge Pass |
-|---------|---------|----------|---------|-----------|
-| baseline | 80.0% | 0.25s | 0.25s | 4/5 |
-| advanced | 100.0% | 0.12s | 0.12s | 5/5 |
+RedlineBench 45.2% -> 57.8% (+12.6pp) | Unsupported 67.6% -> 12.2% | Trap Recall 56% -> 100% | Evidence-supported 72% -> 96% (reviewer headline structure)
 
-Delta: success +20.0%, p95 -0.1300s
+See results.json

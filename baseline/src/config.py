@@ -1,15 +1,16 @@
-"""Baseline config — env only, no secrets committed."""
+"""Baseline config — production-grade, no secrets committed."""
 import os
 from pathlib import Path
 
-# Load .env if present (python-dotenv optional)
 try:
     from dotenv import load_dotenv
     load_dotenv(Path(__file__).parents[2] / ".env")
 except ImportError:
     pass
 
-PORT = int(os.getenv("PORT", "8000"))
-LOG_LEVEL = os.getenv("LOG_LEVEL", "info")
-# Add problem-specific keys at kickoff, e.g.:
-# API_KEY = os.getenv("API_KEY", "")
+PORT: int = int(os.getenv("PORT", "8000"))
+LOG_LEVEL: str = os.getenv("LOG_LEVEL", "info")
+OPENAI_API_KEY: str | None = os.getenv("OPENAI_API_KEY")
+ANTHROPIC_API_KEY: str | None = os.getenv("ANTHROPIC_API_KEY")
+MODEL: str = os.getenv("MODEL", "gpt-4o-mini")
+MAX_CHARS: int = int(os.getenv("MAX_CHARS", "120000"))

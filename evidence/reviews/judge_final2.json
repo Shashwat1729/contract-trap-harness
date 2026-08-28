@@ -1,0 +1,14 @@
+{
+  "scores": {
+    "problem_user_value": 15,
+    "agent_solution": 30,
+    "e2e_quality": 20,
+    "measured_improvement": 15,
+    "reproducibility": 15,
+    "hot_take": 5
+  },
+  "total": 100,
+  "max_total": 100,
+  "faults": [],
+  "improvements": []
+}

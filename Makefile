@@ -63,13 +63,19 @@ run-all:
 	@echo "baseline http://localhost:8000/health  advanced http://localhost:8001/health"
 
 eval:
-	bash scripts/eval.sh 2>/dev/null || python scripts/eval.py
+	bash scripts/eval.sh 2>/dev/null || python scripts/eval_harness.py
 
 eval-mock:
-	EVAL_MOCK=1 bash scripts/eval.sh 2>/dev/null || python scripts/eval.py
+	EVAL_MOCK=1 bash scripts/eval.sh 2>/dev/null || python scripts/eval_harness.py
+
+eval-full:
+	python scripts/eval_harness.py
 
 reproduce:
-	bash scripts/reproduce.sh 2>/dev/null || (echo "[reproduce] bash not found — running Windows fallback: tests + EVAL_MOCK=1 eval"; cd baseline && python -m pytest tests -v && cd ../advanced && python -m pytest tests -v && EVAL_MOCK=1 python scripts/eval.py)
+	bash scripts/reproduce.sh 2>/dev/null || (echo "[reproduce] bash not found — running Windows fallback: tests + EVAL_MOCK=1 eval"; cd baseline && python -m pytest tests -v && cd ../advanced && python -m pytest tests -v && python scripts/eval_harness.py)
+
+harness-monitor:
+	streamlit run app/streamlit_app.py --server.port 8501 --server.headless true
 
 docker-build:
 	docker compose build

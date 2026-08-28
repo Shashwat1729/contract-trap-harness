@@ -1,0 +1,59 @@
+Exhibit 10.24    [***] Certain confidential information contained in this document, marked by brackets, has been omitted and filed separately with the Securities and Exchange Commission pursuant to Rule 24b-2 of the Securities Exchange Act of 1934, as amended.   EXECUTION VERSION   STRATEGIC ALLIANCE AGREEMENT
+
+  THIS STRATEGIC ALLIANCE AGREEMENT ("Agreement") is made and entered into as of November 6, 2016 (the "Effective Date") by and between Dialog Semiconductor (UK) Ltd., a corporation organized under the laws of England and Wales, having its principal office at 100 Longwater Avenue, Green Park, Reading, RG2 6GP, United Kingdom ("DIALOG") and Energous Corporation, a Delaware corporation, having its principal office at 3590 North First Street, Suite 210, San Jose, CA 95134 ("ENERGOUS").   WHEREAS DIALOG is a supplier of mixed-signal semiconductor products;   WHEREAS ENERGOUS is a supplier of uncoupled wirefree charging systems, including antennas, semiconductors, firmware, software, algorithms, and sensors;   WHEREAS concurrently with their execution of this Agreement, DIALOG and ENERGOUS are entering into a separate Securities Purchase Agreement, pursuant to which DIALOG will make an investment in ENERGOUS, and ENERGOUS will issue to DIALOG shares of its common stock and a warrant to purchase its common stock on the terms set forth therein.   WHEREAS DIALOG and ENERGOUS desire to enter into a strategic relationship to distribute to the marketplace certain ENERGOUS products and technology and to potentially collaborate on further initiatives pursuant to the terms and conditions of this Agreement.   NOW, THEREFORE, in consideration for the premises and mutual covenants contained herein, DIALOG and ENERGOUS hereby agree as follows:   1. DEFINITIONS.   All capitalized terms used in this Agreement will have the meaning set out below, or if not defined below, the meaning as defined elsewhere in the Agreement.   1.1 "Affiliate" means any person or entity that controls, is controlled by or is under common control with the specified person or entity, but only so long as such control exists. The term "control" means the possession, directly or indirectly, of the power to direct or cause the direction of the management and policies of an entity, whether through ownership of voting securities, by contract or otherwise.   1.2  "Approved Production Specifications" means those materials, processes and workmanship specifications of Manufacturing Subcontractors as approved by ENERGOUS for the manufacture and production of the Products.   1.3 "Change of Control" means any transaction or series of transactions that results in (i) the consolidation or merger of the specified party ("Target") into or with any other corporation or corporations, (ii) the sale, conveyance or disposition of all or substantially all of the assets of the Target, (iii) the transfer of more than fifty percent (50%) of the voting power of the Target to any entity or entities not controlled by the Target, or (iv) any similar form of acquisition or any liquidation, dissolution or winding up of the Target or other transaction that results in the discontinuance of the Target's business; provided, however, that Change of Control will not include any transaction or series of transactions entered into primarily for equity financing purposes (including, without limitation, any private equity investment or any public offering of securities).
+
+
+
+
+
+
+
+
+
+  1.4  "Deposit Materials" means all chip level design databases, circuit schematics, test and characterization programs and associated documentation reasonably required to have Products manufactured, or to allow design bugs or Epidemic Defects to be fixed in the Product.   1.5 "Design-In Phase" means the phase in the sales cycle with a prospective customer for a Product that follows the customer's decision to move forward with the potential Product, during which chip samples are delivered to customer and the parties work together to design the evaluation board for in-system evaluation.   1.6 "Documentation" means all information that is necessary or useful to support DIALOG's authorized manufacture, testing, sale and support of the Products, including but not limited to Product Specifications, data sheets, application notes, application board gerber files/BOM, sales and marketing collateral, Product errata, test reports, characterization reports, software (e.g., firmware, GUI), test plans and yield data in connection with the manufacture and sale of Products, Approved Production Specifications, test and characterization programs and associated documentation reasonably required to have Products manufactured, assembled and tested, designs of all Tooling and all other items reasonably required for the manufacture of the Products.   1.7 "Epidemic Defects" means material defects of any Product resulting from a common root cause solely attributable to the Product Specifications or Approved Production Specifications and which results in returns (in accordance with the returns procedure mutually agreed between the parties in the Commercialization Plan) of more than [***] percent ([***]%) of the quantity of such Product manufactured in any [***] day period. Any number of material defects affecting any number of Products which result from a single common root cause or combination of causes and result in returns of more than [***] ([***]%) of such Products manufactured in any [***] day period will be treated as the occurrence of a single Epidemic Defect for purposes of this Agreement.   1.8 "Insolvency Event" means (a) without a successor, the specified party fails to function as a going concern or to operate in the ordinary course, or (b) other than in the case when the specified party is a debtor-in-possession and continuing to fulfill all its obligations under this Agreement, a receiver or trustee in bankruptcy is appointed for such party or its property, or such party makes a general assignment for
+
+...[middle truncated]...
+
+nt between Dialog Semiconductor (UK) Ltd and Energous Corporation dated November 6, 2016 (to which [Manufacturing Subcontractor] is not a party), we, Energous Corporation (Energous), hereby agree and authorize [Manufacturing Subcontractor], under the terms of this Letter of Authorization, to use the Mask Set(s) specified below for manufacturing products for the supply to the Third Party specified in paragraph 2 below only:   1. Mask Set(s) details: Mask Set(s) Product Type: Foundry Code:   2. Third Party details: Third Party's Name: Dialog Semiconductor [purchasing entity to be determined] Third Party's Address: Contact name of Third Party:   3. Volume of products The number of products to be manufactured with the Mask Set(s) will be unlimited, unless otherwise instructed by us below:   Authorized Amount: [UNLIMITED]   4. Duration of Authorization The duration of this Letter of Authorization will be unlimited, unless otherwise instructed by us below:   Duration of Authorization: [UNLIMITED]   5. Confidential Information Other than wafers for products specified under paragraph 1 above (which contain Energous designs), [Manufacturing Subcontractor] will not disclose to the Third Party any information which is proprietary or confidential to Energous.
+
+  Page 28
+
+
+
+
+
+
+
+  6. Reporting Upon Energous' request (but not more frequently than once per calendar year), [Manufacturing Subcontractor] will provide Energous with the accumulated wafer volumes ordered (and shipped) to the Third Party under this Letter of Authorization. By signing this Letter of Authorization, the Third Party authorizes [Manufacturing Subcontractor] to report to Energous accordingly.   8. Governing Law This Letter of Authorization will be governed by and construed in accordance with the laws of California, excluding its conflict of laws provisions, and be subject to the non-exclusive jurisdiction of the California courts.   Very truly yours,       Energous Incorporated           Name:       Title:       Date:                   Agreed by Dialog Semiconductor (UK) Ltd           Name:       Title:       Date:     This Letter of Authorization is subject to the approval of the Manufacturing Subcontractors.
+
+  Page 29
+
+
+
+
+
+
+
+  EXHIBIT D   LICENSED MARKS   DIALOG LICENSED MARKS:   Dialog Dialog Semiconductor   ENERGOUS LICENSED MARKS:   Energous WattUp Unleash your power   Pending:   [***]   * Confidential Treatment Requested
+
+  Page 30
+
+
+
+
+
+
+
+  EXHIBIT E   Commercialization plan   Objective   The Commercialization Plan sets forth the parties' respective rights and obligations with respect to commercial and technical activities to be performed to maximize potential Sales of Licensed Products.   [***]   Review   O The Commercialization Plan will be reviewed and (if necessary) updated by the parties on a quarterly basis throughout the Term of the agreement.     * Confidential Treatment Requested
+
+  Page 31
+
+
+
+
+
+
+
+  EXHIBIT F   CUSTOMER: [***]     * Confidential Treatment Requested
+
+  Page 32

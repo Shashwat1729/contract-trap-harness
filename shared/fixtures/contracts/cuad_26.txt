@@ -1,0 +1,139 @@
+Exhibit 10.22
+
+
+
+                      1
+
+                   Strategic Alliance Agreement                     Intricon Corporation  1260 Red Fox Road  Arden Hills, Minnesota 55112  United States                   and                   Dynamic Hearing Pty Ltd  2 Chapel Street, Richmond, VIC 3121  AUSTRALIA
+
+
+
+
+
+      AGREEMENT     This Agreement is entered into and is effective as of the 1st day of October, 2008 (Commencement Date) by and between IntriCon  Corporation, a Pennsylvania Corporation having a place of business at 1260 Red Fox Road, Arden Hills, Minnesota 55112 USA (hereinafter  IntriCon) and Dynamic Hearing Pty Ltd a Corporation organized under the laws of Victoria, Australia and having a place of business at 2 Chapel  Street, Richmond, Victoria 3121, Australia (hereinafter Dynamic Hearing) agree to collaborate with each other as a Strategic Alliance. As such, this  Strategic Alliance Agreement (SAA) outlines the principles and the understanding of the parties and defines related terms and conditions.     WHEREAS, Dynamic Hearing has developed technology useful for products in the Hearing Health (HH) Assisted Listening Device  (ALD) and Professional Communications (PADA) markets and DSP platforms which are hereinafter defined.     WHEREAS, IntriCon has also developed technology for the HH, ALD and PADA markets and DSP platforms.
+
+   1.1 The purpose of this alliance is to exploit the parties' complimentary capabilities for producing DSP Technology products for the HH,  ALD, and PADA markets.
+
+   The following terms in the context of this SAA shall have the following meanings:
+
+   An Assisted Listening Device ("ALD") is a
+
+
+
+   Hearing Aids are amplification devices primarily designed to compensate for hearing loss, designed for listening only (through a  microphone, telecoil, Direct Audio Input or other similar audio pathways and run on a low power hybrid circuit. Hearing Aids may include in-the- ear Hearing Aids (ITE), behind-the-ear Hearing Aids (BTE), or completely-in-the-canal Hearing Aids (CIC).
+
+   Professional Audio/Communication Devices ("PADA")  are wired or wireless headsets or other devices used for one-way or two-way  communications in professional or industrial settings such as law enforcement, sport events, professional performances, search and rescue, and  military operations.     2
+
+  1.0    Purpose
+
+  2.0    Definitions
+
+       2.1    Assisted Listening Devices
+
+       1.    One way communications device           2.    Used for hearing protection or listening in challenging environments, and           3.    Contains Ultra Low Power (ULP) DSP and or ULP Wireless technology
+
+       2.2    Hearing Aids:
+
+       2.3    Professional Audio/Communication Devices
+
+
+
+
+
+
+
+   DSP means digital signal processing. More specifically, for the purposes of this SAA, DSP Technology shall mean ON Semiconductor  hardware and firmware algorithms used for the HH, PADA and ALD markets. Hardware shall include the ON Semiconductor Ezairo DSP, and the  Single Chip Hearing Amplifier (SCHA) from ON Semiconductor.
+
+   IntriCon Technology is that technology:
+
+
+
+
+
+
+
+   Dynamic Hearing Technology is that technology:
+
+
+
+
+
+
+
+   K/S HIMPP (hereinafter HIMPP) is a Danish partnership that owns numerous patents relating to Hearing Aids and associated  technologies.
+
+   HIMSA otherwise known as Hearing Instruments Manufacturers'  Software Association is a privately owned company that has  developed a standardized hearing care software system.     3
+
+       2.4    DSP Technology:
+
+       2.5    IntriCon Technology:
+
+       (i)    for which a patent(s) has been granted and all fees relating to the grant including any associated maintenance  or annuity fees have been paid. A granted patent does not include pending applications including those  pending applications which are associated with a granted patent through a claim of priority;
+
+       (ii)    or has a patent pending, or
+
+       (iii)    is Technology under "record of invention".
+
+       2.6    Dynamic Hearing Technology:
+
+       (i)    for which a patent(s) has been granted and all fees relating to the grant including any associated maintenance  or annuity fees have been paid. A granted patent does not include pending applications including those  pending applications which are associated with a granted patent through a claim of priority; or
+
+       (ii)    has a patent application pending, or
+
+       (iii)    is Technology under "record of invention".
+
+       2.7    K/S HIMPP:
+
+       2.8    HIMSA:
+
+
+
+
+
+
+
+   Base Product means the DSP Technology including the ON Semiconductor Ezairo or SCHA chips, the EEPROM and the firmware loaded  onto the EEPROM and the minimum printed circuit board package necessary to connect and house these items. The Base Product does not  include additional PCB or flex circuits necessary to connect to other components of an Enhanced Product.
+
+   Enhanced Product means a value added assembly or completed Hearing Aid or Assistive Listening Device which includes the Base  Product as one of the component devices. The Enhanced Product may include other electronic components, flex circuitry, microphones, a receiver,  plastic housings, volume controls, trimmer potentiometers, push button switches, programming connectors and other components.
+
+   Contact Center means a group of people who use Contact Center Products and provide telemarketing, mail ordering, customer care,  technical support and similar functions either directly for an enterprise or on an outsourced basis by using automatic call directors for inbound  centers and predictive dialers for outbound centers. A Contact Center may also use software-based systems rather than physical equipment.
+
+   Contact Center Products means any product, including without limitation, headsets (cordless or corded), amplifiers, telephones, soft  phones, and software-based systems that are used in Contact Centers. For purposes of clarification, no product shall be deemed a "Contact Ce
+
+...[middle truncated]...
+
+detected in that band as  more particularly described in European Patent Application 04734786.9 entitled "Oscillation Suppression".
+
+                 (The Active Feedback Cancellation Technology, Oscillation Detection Technology a n d  Oscillation  Suppression Technology are collectively known as the Feedback Technology).
+
+                 Datalogging Technology means software that allows recording of events occurring during use of the device  to non-volatile memory.
+
+                 Dynamic Display is a feature that allows parameters of each DSP module to be accessed and displayed in  real time without interrupting normal operation of the device.
+
+                 Environmental Noise Reduction means digital signal processing that suppresses environmental noise.
+
+
+
+
+
+      EXHIBIT B  HEARING AID DESIGNER SOFTWARE
+
+          23
+
+                          Software    The Hearing Aid DesignerTM is software comprising the DSP Software, the Manufacturers'  Toolkit, the  designCOMTM applications programming interface, and source code sufficient to enable the development and  integration of new DSP modules by the Licensee.                   (DSP Software means the embedded software that implements the Technology on the DSP Platform.)                   Library Software means the designCOM software that runs on the Applications Software Platform to  communicate with, and configure, the DSP Software on the DSP Platform, and the ADROpredict software  that provides initial estimates of the ADRO fittings for a given audiogram and comfortable level measures.                   Manufacturers'  Toolkit means the manufacturing software that allows configuration and calibration of  Products.                   Unless expressly specified in this Exhibit, Dynamic Hearing will have no obligation to provide updates or  revisions to, or new versions of, any software.                   (Collectively, the above software is known as the Hearing Aid Designer SoftwareTM).              Applications  Software Platform
+
+The Applications Software Platform for Library Software is:  Windows 2000, Windows XP, or Windows Vista operating system running on a Personal Computer  connected to the Hearing Aid via a HiPro, or NOAHLink interface device.
+
+
+
+
+
+      EXHIBIT C  Dynamic Hearing's Identified Customers                                                              GN RESOUND GROUP and INTERTON ELECTRONIC HÖRGERÄTE GMBH    Existing License Agreement         RION CO. LTD.    Existing License Agreement         SONIC INNOVATIONS INC.    Existing License Agreement         AUDIO CONTROLE INC.    Existing License Agreement         EARLENS CORPORATION    Existing License Agreement         AUSTRALIA HEARS PTY LTD    Existing License Agreement
+
+
+
+
+
+         24
+
+       AMERICA HEARS INC.    Existing License Agreement         VITASOUND AUDIO INC.    Existing License Agreement         SONOMAX HEARING HEALTH INC.    Existing License Agreement         PANASONIC    Commercial negotiations underway
