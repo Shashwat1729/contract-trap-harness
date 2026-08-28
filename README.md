@@ -10,6 +10,8 @@
 
 This repo is a **pre-kickoff scaffold** — fully structured so that the moment the problem PDF drops at kickoff, you paste it into `PROBLEM.md` and start building. Nothing is wasted: every folder maps to a submission-package requirement and every script is `make` -reproducible.
 
+> **Execution standard:** Top 3 minimum, **1st place target** — per [`docs/00-EXECUTION-DIRECTIVE.md`](docs/00-EXECUTION-DIRECTIVE.md). No coding before research + plan are reviewed. Every decision is judged on 10 dimensions: relevance · depth · novelty · impact · execution · evidence · demo · documentation · scalability · judgeability.
+
 ---
 
 ## Table of Contents
@@ -140,6 +142,10 @@ micro1-front/
 │   └── screenshots/
 │
 ├── docs/
+│   ├── 00-EXECUTION-DIRECTIVE.md  # Master directive — Top 3 min / 1st target, 6 phases (§2)
+│   ├── 10-RESEARCH-PROTOCOL.md    # Phase 1: 5-track deep research (papers·OSS·eng·community·compete)
+│   ├── 11-IMPLEMENTATION-PLAN-TEMPLATE.md # Phase 2: research-backed plan (copy to 11-IMPLEMENTATION-PLAN.md)
+│   ├── 20-REVIEW-RUBRIC.md        # Phases 5–6: 10 dimensions + 9 lenses + triage + final gate
 │   ├── problem-brief.md      # Your distilled problem + constraints + acceptance tests
 │   ├── evaluation-criteria.md
 │   ├── submission-checklist.md
@@ -257,7 +263,10 @@ Registrations stay open after kickoff. Only the **latest complete submission** i
 - **Main failure mode:** _"If the starter repo prescribes a hidden dependency or rate-limited API, our current scaffold's happy-path eval will fail silently — mitigated by Day 1 contract tests and a sandboxed fallback in `advanced/src/fallback/`."_
 - **Hot take:** _"Agentic AI wins not by generating more code, but by generating verifiable code — the team with the best eval harness, not the longest feature list, takes the prize."_
 
-_Update both at T+6h after first baseline run._
+_Update both at T+6h after first baseline run. Final gate answers (per [`docs/20-REVIEW-RUBRIC.md`](docs/20-REVIEW-RUBRIC.md)):_  
+> _If submitted today, is there a credible reason judges would place this in Top 3? What specifically prevents #1?_
+
+_See [`docs/00-EXECUTION-DIRECTIVE.md` §5–6](docs/00-EXECUTION-DIRECTIVE.md) for the review loop that answers those._
 
 ---
 

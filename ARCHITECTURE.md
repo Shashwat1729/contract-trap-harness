@@ -1,6 +1,7 @@
 # Architecture
 
-> Decisions, trade-offs, and system design. Update at kickoff once the real problem is known. Pre-kickoff this records *why the scaffold is shaped this way* so you don't waste time re-deciding.
+> Decisions, trade-offs, and system design. Governed by [`docs/00-EXECUTION-DIRECTIVE.md`](docs/00-EXECUTION-DIRECTIVE.md) — no code before research + plan are reviewed.  
+> Update at kickoff once the real problem is known. Pre-kickoff this records *why the scaffold is shaped this way* so you don't waste time re-deciding.
 
 ---
 
@@ -72,14 +73,17 @@ advanced   ──┘                      ─► evidence/benchmarks/comparison.
 
 ---
 
-## 7. What to decide at kickoff (T+0 checklist)
+## 7. What to decide at kickoff (T+0 checklist — Phase 0 gate)
 
 - [ ] Problem type: API / pipeline / agent / UI / data?
-- [ ] Starter repo exists? Clone into `starter/` and note delta in `ARCHITECTURE.md` §8
+- [ ] Starter repo exists? Clone into `starter/` and note delta in §8
 - [ ] Runtime pinned by PDF? Update `Makefile`, `.python-version`, `REPRODUCTION.md`, Docker
 - [ ] Dependency limits? Enforce in `requirements.txt` / `package.json`
 - [ ] Network allowed? If not, add offline fixtures to `shared/fixtures/`
 - [ ] Acceptance tests location? Wire into `tests/e2e/` + `scripts/eval.py`
+- [ ] **Directive gates:** `docs/10-RESEARCH-PROTOCOL.md` launched? `docs/11-IMPLEMENTATION-PLAN.md` template copied? `docs/20-REVIEW-RUBRIC.md` understood by reviewer?
+
+> Per Directive: no `baseline/` implementation begins until this checklist is committed.
 
 ---
 
@@ -93,10 +97,21 @@ advanced   ──┘                      ─► evidence/benchmarks/comparison.
 
 ---
 
-## 9. Future ADRs
+## 9. Future ADRs (and Directive traceability)
 
 Record significant reversals as ADRs in `docs/architecture-decisions.md`:
 
 - ADR-001: Baseline/advanced split
 - ADR-002: Evaluation metric choice (at kickoff)
 - ADR-003: ... etc.
+
+**Phase traceability (Directive §5):**
+```
+Phase 0 → PROBLEM.md + problem-brief.md + this §7–8
+Phase 1 → docs/research/*.md + 10-RESEARCH-PROTOCOL.md
+Phase 2 → 11-IMPLEMENTATION-PLAN.md + ADRs
+Phase 3 → baseline/ + advanced/ + CHANGELOG.md
+Phase 4 → evidence/benchmarks/reproduce.log
+Phase 5 → docs/20-REVIEW-RUBRIC.md
+Phase 6 → CHANGELOG final gate + README hot take
+```
