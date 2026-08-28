@@ -1,60 +1,63 @@
-# Evaluation Criteria — Mapping to Evidence (10 Dimensions)
+# Evaluation Criteria — Mapping to Evidence (Official Rubric)
 
-> Scored **out of 100** after a strict qualification gate. The brief reveals 4 pillars via tie-break; this doc maps them to the **10 competition dimensions** from the Execution Directive — because 1st-place teams optimize for all 10.
+> **Source:** `PROBLEM.md` §5 — official judging rubric (100 pts). Prior inferred 4-pillar tie-break is superseded by the explicit 6-dimension weights below.  
+> **Directive:** `docs/00-EXECUTION-DIRECTIVE.md` Phases 1, 11.
 
-## Qualification Gate (MUST pass before scoring — per brief)
+## Qualification Gate (implicit — before scoring)
 
 | Check | How we satisfy | Evidence |
 |-------|---------------|----------|
-| Eligibility | Individual, 18+, one submission | registration + README |
-| Completeness | All submission package files present | `docs/submission-checklist.md` |
-| Integrity | Original work, licences respected, no secrets | `ARCHITECTURE.md` §8 delta table + `.env` not committed |
-| Trace | Agent trajectories submitted | `evidence/trajectories/` + `.agent/instructions/` |
-| Reproducibility | Clean-env run succeeds | `make reproduce` green + `REPRODUCTION.md` |
+| Eligibility | Individual, open globally (18+, not micro1/judge/household), one submission (latest counts) | registration |
+| Completeness | Four deliverables present (code+changelog, reproduction guide, video, trajectories) | `docs/submission-checklist.md` |
+| Integrity | Licences respected, what-existed vs added clear, no secrets, ethical use, public/synthetic data | `ARCHITECTURE.md` §8 + `.env.example` |
+| Trace | Agent trajectories for every agent with instructions→result | `evidence/trajectories/` + `.agent/instructions/` |
+| Reproducibility | Clean-env path documented and runnable | `REPRODUCTION.md` + `make reproduce` |
 
-**If any gate fails → disqualified before rubric scoring. This is non-negotiable.**
+**Fail any → not scored.**
 
-## Rubric — 4 Pillars (from brief) → 10 Dimensions (from Directive)
+## Official Rubric — 6 Dimensions (100 pts)
 
-| Pillar (tie-break order) | Likely weight | Maps to Directive dimensions | What judges look for | Our evidence |
-|--------------------------|---------------|------------------------------|----------------------|--------------|
-| **1. Agent Solution & Engineering** | ~35 | 2 Technical depth, 3 Novelty, 5 Execution quality, 9 Scalability | Correctness, edge cases, failure modes, technical judgment, sandboxing, human-in-loop | `baseline/tests` + `advanced/tests` + `advanced/src/fallback/` + `ARCHITECTURE.md` + `docs/research/` |
-| **2. Reproducibility** | ~25 | 5 Execution quality, 8 Documentation, 10 Judgeability | Clean-env setup, pinned versions, Docker, exact commands, cold-clone drill | `REPRODUCTION.md` + `make reproduce` + `docker-compose.yml` + `evidence/benchmarks/reproduce.log` |
-| **3. Measured Improvement** | ~25 | 3 Novelty, 6 Evidence, 10 Judgeability | Baseline vs advanced with **numbers**, not cosmetics; ≥2 axes | `evidence/benchmarks/comparison.md` + `CHANGELOG.md` + `scripts/eval.py` |
-| **4. End-to-End Quality** | ~15 | 1 Relevance, 4 Impact, 7 Demo, 8 Documentation, 10 Judgeability | README clarity, video, trajectory readability, polish, real-world potential | `README.md` + `docs/video-script.md` + `evidence/trajectories/` + `docs/00-EXECUTION-DIRECTIVE.md` |
+| # | Criterion | Pts | What strong (from PDF) | Self-check | Our evidence |
+|---|-----------|-----|------------------------|------------|--------------|
+| 1 | **Problem & User Value** | **15** | Meaningful problem for a clearly defined user | *Who has the bottleneck and why does solving it matter?* | `README.md` (user/bottleneck/value) + `docs/problem-brief.md` + `PROBLEM.md` §1, §8 examples |
+| 2 | **Agent Solution & Engineering** | **30** | Uses agents **purposefully**, technically sound; context/tools/memory/verification/skills/orchestration only if they help | *Which design choices helped the agent solve the problem?* | `baseline/` vs `advanced/` + `advanced/src/verify.py`, `cache.py`, `fallback/` + `docs/11-IMPLEMENTATION-PLAN.md` + `ARCHITECTURE.md` |
+| 3 | **End-to-End Quality** | **20** | Realistic, self-contained execution; result a user could use / sign their name to, not an obvious AI draft | *Would the user consider this high quality or clearly AI-generated?* | `tests/e2e` + `advanced/tests` + polish, error handling, explainability |
+| 4 | **Measured Improvement** | **15** | Fair baseline, same cases, changelog connects each iteration to evidence | *Which changes truly improved the outcome?* | `evidence/benchmarks/comparison.md` + `CHANGELOG.md` + `scripts/eval.py` (10+ cases incl. one hard) |
+| 5 | **Reproducibility** | **15** | Another person can run solution + baseline and reach main result from clean env | *Could they from a clean environment?* | `REPRODUCTION.md` + `make reproduce` + `evidence/benchmarks/reproduce.log` + pinned versions |
+| 6 | **Hot Take / Insights** | **5** | Observed failure → practical lesson for more reliable agents | *What did you learn and how would it change next build?* | `CHANGELOG.md` 🗑️ entry + `README.md` Hot Take + `evidence/benchmarks/` |
 
-### The 10 dimensions in full (Directive §3)
+**Weight order:** 2 (30) ≫ 3 (20) ≫ 1/4/5 (15) ≫ 6 (5). When time-constrained, prioritize in that order — but Top 3 requires strength across all six.
 
-1. **Problem relevance** — Important, clearly defined, worth solving.
-2. **Technical depth** — Real engineering/research substance, not glue code.
-3. **Novelty** — Clear differentiation from obvious / existing solutions.
-4. **Impact & usefulness** — Value is immediate and undeniable.
-5. **Execution quality** — Robust, clean, reproducible.
-6. **Evidence** — Claims are proven with numbers/logs, not adjectives.
-7. **Demo quality** — Sophistication is *shown* convincingly.
-8. **Documentation & presentation** — Judge can grasp problem → solution → architecture → results → differentiation in minutes.
-9. **Scalability & real-world potential** — Beyond a hackathon prototype.
-10. **Judgeability** — Strongest aspects are demonstrable within limited judging time.
+## How to Maximize (1st-place tactics)
 
-**Every major decision must increase at least one dimension without harming another.** The 9-lens review in `docs/20-REVIEW-RUBRIC.md` enforces this.
+- **Problem & User Value (15):** Name a real user, concrete bottleneck, and value in seconds (the 1-paragraph test from Directive Phase 0). Avoid artificial or overly broad problems.
+- **Agent Solution (30):** Smallest purposeful set — every agent/tool/skill must have a measurable purpose. Purposeful > numerous (PDF §2). Ground choices in Phase 2 research, not hype.
+- **End-to-End (20):** One realistic execution start-to-finish, polished, explains its work, handles edge cases gracefully. Demo shows this live, not slides.
+- **Measured Improvement (15):** Define primary metric before optimizing; same 10+ cases for baseline + agent; report *all* results incl. failures; changelog ties each kept/removed change to +/− delta.
+- **Reproducibility (15):** Hostile-clone drill before submission (Directive Phase 8): `git clone` → `cp .env.example .env` → `make reproduce`. Document exact commands, data, versions, runtime, cost.
+- **Hot Take (5):** One genuine insight from a failure you observed and fixed (or explicitly scoped), not a generic platitude.
 
-## How to Maximize Each Pillar (1st-place tactics)
+## Internal Scorecard (use before submission — Directive Phase 11)
 
-- **Engineering (tie-break #1):** Contract tests on Day 1 against *every* acceptance test. Log every failure mode in `ARCHITECTURE.md` §6. Show human checkpoint in trajectories.
-- **Reproducibility:** Never say "it works on my machine" — `make reproduce` is the contract. Run the hostile-clone drill (`git clone` → `make reproduce`) before the final hour (Directive Phase 4).
-- **Measured Improvement:** The advanced delta must be **≥2 axes** and visible in `comparison.md` at a glance. One axis = reviewer flags "cosmetic" → `FAIL` (risk per brief: "not a cosmetic variation").
-- **E2E Quality:** Video ≤4:30 live execution (not slides); README one paragraph per required prompt (user/bottleneck/value/changelog/failure/hot-take); trajectories show retries + checkpoints; research-backed novelty wedge stated in one sentence.
+| Criterion | Max | Current assessment | Evidence | Remaining gap |
+|-----------|-----|--------------------|----------|---------------|
+| Problem & User Value | 15 | | | |
+| Agent Solution & Engineering | 30 | | | |
+| End-to-End Quality | 20 | | | |
+| Measured Improvement | 15 | | | |
+| Reproducibility | 15 | | | |
+| Hot Take / Insights | 5 | | | |
+| **Total** | **100** | | **conservative — evidence required** | |
 
-## Tie-Break Order (from brief)
+> Award points only with convincing evidence. Be conservative — judges will be.
 
-1. Higher Agent Solution & Engineering
-2. Higher Reproducibility
-3. Higher Measured Improvement
-4. Higher End-to-End Quality
-5. Final panel review of documented evidence
+## Self-Check Before Ship (from PDF, per criterion)
 
-→ **Implication:** If short on time, prioritize pillars in exactly this order (and within, prioritize dimensions 1→10). That is the directive.
+- 15 — *Who experiences the bottleneck and why does solving it matter?*
+- 30 — *Which design choices helped the agent solve the problem?*
+- 20 — *Would the user consider this high quality, or clearly AI-generated?*
+- 15 — *Which changes truly improved the outcome?*
+- 15 — *Could they do it from a clean environment?*
+- 5 — *What did you learn and how would it change what you build next?*
 
-## Self-Check Before Submission
-
-Ask per dimension: *"If a skeptical reviewer attacked this dimension alone, would we survive?"* If any dimension scores ≤2/5 in `docs/20-REVIEW-RUBRIC.md`, it is **MUST FIX** — loop again through `Review → Fix → Test → Reproduce → Review`.
+If any answer is weak, it is **MUST FIX** per `docs/20-REVIEW-RUBRIC.md`.
