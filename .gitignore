@@ -1,0 +1,58 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+*.whl
+.pytest_cache/
+.coverage
+htmlcov/
+coverage.xml
+.mypy_cache/
+.ruff_cache/
+
+# Node
+node_modules/
+dist/
+.next/
+out/
+npm-debug.log*
+yarn-debug.log*
+
+# Env / secrets — NEVER commit
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+credentials.json
+secrets/
+
+# Evidence — keep structure but ignore large outputs
+evidence/benchmarks/*.log
+evidence/screenshots/*.mp4
+evidence/screenshots/*.mov
+# Keep json/md in git for reviewer diff
+
+# OS
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# IDE
+.idea/
+.vscode/
+*.code-workspace
+
+# Build
+*.zip
+*.tar.gz
+submission.zip
+
+# Temp
+tmp/
+temp/
+.opencode/

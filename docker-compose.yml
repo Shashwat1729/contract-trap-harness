@@ -1,0 +1,27 @@
+version: "3.9"
+services:
+  baseline:
+    build: ./baseline
+    ports:
+      - "8000:8000"
+    env_file: .env
+    environment:
+      PORT: 8000
+    volumes:
+      - ./evidence:/app/evidence
+
+  advanced:
+    build: ./advanced
+    ports:
+      - "8001:8001"
+    env_file: .env
+    environment:
+      PORT: 8001
+    volumes:
+      - ./evidence:/app/evidence
+
+  # Add DB/cache here at kickoff if PDF prescribes:
+  # postgres:
+  #   image: postgres:15
+  #   environment:
+  #     POSTGRES_PASSWORD: challenge

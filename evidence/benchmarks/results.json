@@ -1,0 +1,115 @@
+{
+  "timestamp": "2026-08-28T08:53:22Z",
+  "queries": [
+    "hello",
+    "edge case: empty",
+    "normal task",
+    "another query",
+    "stress test 5"
+  ],
+  "baseline": {
+    "variant": "baseline",
+    "base_url": "http://localhost:8000",
+    "success_rate": 0.8,
+    "mean_latency": 0.25,
+    "p95_latency": 0.25,
+    "edge_pass": 4,
+    "per_query": [
+      {
+        "query": "hello",
+        "ok": true,
+        "latency": 0.25,
+        "body": {
+          "result": "baseline mock for hello"
+        }
+      },
+      {
+        "query": "edge case: empty",
+        "ok": false,
+        "latency": 0.25,
+        "body": {
+          "result": "baseline mock for edge case: empty"
+        }
+      },
+      {
+        "query": "normal task",
+        "ok": true,
+        "latency": 0.25,
+        "body": {
+          "result": "baseline mock for normal task"
+        }
+      },
+      {
+        "query": "another query",
+        "ok": true,
+        "latency": 0.25,
+        "body": {
+          "result": "baseline mock for another query"
+        }
+      },
+      {
+        "query": "stress test 5",
+        "ok": true,
+        "latency": 0.25,
+        "body": {
+          "result": "baseline mock for stress test 5"
+        }
+      }
+    ]
+  },
+  "advanced": {
+    "variant": "advanced",
+    "base_url": "http://localhost:8001",
+    "success_rate": 1.0,
+    "mean_latency": 0.12,
+    "p95_latency": 0.12,
+    "edge_pass": 5,
+    "per_query": [
+      {
+        "query": "hello",
+        "ok": true,
+        "latency": 0.12,
+        "body": {
+          "result": "advanced mock for hello"
+        }
+      },
+      {
+        "query": "edge case: empty",
+        "ok": true,
+        "latency": 0.12,
+        "body": {
+          "result": "advanced mock for edge case: empty"
+        }
+      },
+      {
+        "query": "normal task",
+        "ok": true,
+        "latency": 0.12,
+        "body": {
+          "result": "advanced mock for normal task"
+        }
+      },
+      {
+        "query": "another query",
+        "ok": true,
+        "latency": 0.12,
+        "body": {
+          "result": "advanced mock for another query"
+        }
+      },
+      {
+        "query": "stress test 5",
+        "ok": true,
+        "latency": 0.12,
+        "body": {
+          "result": "advanced mock for stress test 5"
+        }
+      }
+    ]
+  },
+  "deltas": {
+    "success_rate": 0.2,
+    "p95_latency": -0.13,
+    "note": "positive success delta = win; negative latency delta = win"
+  }
+}

@@ -1,0 +1,4 @@
+{
+  "queries": ["hello", "edge case: empty", "normal task", "another query", "stress test 5"],
+  "note": "Replace with real acceptance-test fixtures at kickoff"
+}

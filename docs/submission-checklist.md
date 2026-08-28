@@ -1,0 +1,65 @@
+# Submission Package Checklist
+
+> Single source of truth for submission. Check each item before zipping/uploading. From the brief: "A valid submission must be timely, complete, original, policy compliant, and reproducible, and include the required repository, archive, tests, README, agent-use evidence, and demo video."
+
+## Timely
+
+- [ ] Submitted by **Aug 31, 2026 18:00 UTC** (11:30 PM IST) — only the latest complete submission counts
+- [ ] No duplicate registrations
+
+## Complete — Repository & Archive
+
+- [ ] Full project pushed to GitHub (or required archive)
+- [ ] `README.md` includes: intended user, current bottleneck, why solving it is valuable, Improvement Changelog pointer, main failure mode, hot take
+- [ ] `REPRODUCTION.md` clean-env guide with exact commands, required data, expected output, versions, runtime, cost
+- [ ] `CHANGELOG.md` — clearly labelled Improvement Changelog, entry for every meaningful iteration linked to evidence
+- [ ] `ARCHITECTURE.md` — what existed before vs what you added (Rule Book)
+- [ ] Both `baseline/` and `advanced/` present and independently runnable
+- [ ] `shared/` only where justified
+- [ ] No secrets committed (`make pre-submit` secret scan green)
+
+## Tests & Reproducibility
+
+- [ ] `make test` green (unit + integration + e2e)
+- [ ] `make eval` produces `evidence/benchmarks/results.json` + `comparison.md`
+- [ ] `make reproduce` green from a fresh clone (or Docker)
+- [ ] `evidence/benchmarks/expected_outputs.json` committed for judge diff
+- [ ] Pinned versions (`.python-version`, `requirements.txt`, `Dockerfile`)
+
+## Demo Video (≤ 5 min)
+
+- [ ] Script in `docs/video-script.md` timed ≤ 4:30
+- [ ] Chapters: problem + baseline → realistic execution → final comparison → changelog highlight → removed experiment
+- [ ] Shows one realistic execution end-to-end (not slides)
+- [ ] Highlights the change that contributed most (⭐ in CHANGELOG)
+- [ ] Mentions one experiment removed (🗑️ in CHANGELOG)
+- [ ] Exported as `evidence/screenshots/demo.mp4` or linked unlisted YouTube
+
+## Agent Trajectories
+
+- [ ] `docs/agent-instructions.md` — exact instructions that shaped each agent (the "what you told it")
+- [ ] `.agent/instructions/*.md` — per-agent prompt files
+- [ ] `evidence/trajectories/*.json` — representative trajectories for **every** agent used
+- [ ] Each trajectory shows: instruction → actions → tool responses → feedback → retries → human checkpoints → final result
+- [ ] Disclosed all tools used in `README.md` § Agent Trajectories
+
+## Policy & Rule Book
+
+- [ ] Licence respected for every tool/component (note in `ARCHITECTURE.md`)
+- [ ] Consequential actions sandboxed / simulation + human approval gated (trajectories show checkpoints)
+- [ ] Human reviewer part of any high-impact solution (noted in README)
+- [ ] Legal/ethical use case, responsible data (public/synthetic or approved anonymous)
+- [ ] Submission governed by Hackathon Participation Agreement (accepted at registration)
+
+## Bonus — micro1 opportunities (up to 50 paid)
+
+- [ ] Valid submission → digital participation certificate (every eligible entrant)
+- [ ] Strong entries → accelerated AI interview invite
+- [ ] Top performers → considered for paid flexible engineering work (separate verification)
+
+## Pre-submit run (automated)
+
+```bash
+make pre-submit
+# → secret scan + reproduce + delta check + trajectory coverage + video length
+```
