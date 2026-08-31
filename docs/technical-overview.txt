@@ -1,0 +1,213 @@
+CONTRACT TRAP HARNESS -- TECHNICAL OVERVIEW
+=============================================
+A verification-gated, agentic contract-review system.
+(Plain-text companion to docs/notebooklm-source.md and docs/hackathon-pitch.pdf --
+technical architecture only, written for a NotebookLM video source.)
+
+
+1. WHAT IT IS
+--------------
+A system that reads vendor MSAs (Master Service Agreements) and other commercial
+contracts, finds the clause types that matter to a reviewer (renewal terms, liability
+caps, audit rights, non-competes, and more), checks each one against a risk playbook,
+and proposes a redline -- but only after that proposal has survived a real, multi-layer
+verification gate. Nothing is ever auto-applied to a contract; every output is a
+candidate edit with an exact citation a human can check in seconds.
+
+The project ships two independently runnable systems on purpose:
+  - BASELINE: a single-pass, best-effort extractor. The honest floor.
+  - ADVANCED: the full verification-gated harness. The real system.
+Both run on the same fixtures and are measured the same way, so every improvement
+claim is a real, apples-to-apples delta, not a number from a vacuum.
+
+
+2. TECH STACK
+--------------
+Language: Python 3.11 across both services and the harness.
+API layer: FastAPI (advanced/src/main.py) -- REST endpoints for redlining, trap
+  detection, harness streaming, and per-contract memory.
+Dashboard: Streamlit (app/streamlit_app.py) -- a 7-tab live control panel: Overview,
+  Metrics, Trap Suite Explorer, Harness Monitor, Reproducibility, Market, Tests.
+Agentic engine: LangGraph (StateGraph) for the graph-execution mode, with
+  langgraph-checkpoint-sqlite for real, persistent pause/resume state.
+LLM access: litellm -- a single, provider-agnostic interface, so swapping between
+  Gemini, OpenAI, and Anthropic models is one environment variable
+  (LLM_MODEL), not a code change.
+Document parsing: pypdf and python-docx, so both PDF and .docx contracts are
+  supported natively.
+Lexical/semantic layers: rank-bm25 for the BM25 hybrid extraction layer; a hosted
+  embedding model for the optional semantic layer.
+Testing: pytest, with mypy running in --strict mode across every source file in
+  advanced/src.
+Charts & visuals: matplotlib for evidence-driven charts, Playwright for live
+  dashboard screenshots and PDF generation -- both regenerate straight from the
+  real evidence files, never hand-edited.
+
+
+3. THE ADVANCED PIPELINE -- FIVE STAGES
+------------------------------------------
+Every contract that enters the advanced system moves through the same five
+conceptual stages, whichever execution engine runs it:
+
+  STAGE 1 -- EXTRACTION
+  Scans the contract text against a library of clause patterns covering 41 CUAD
+  clause categories, collapsed into 12 SaaS-relevant clause types the risk
+  playbook actually cares about. Every match carries a precise page:line
+  citation back into the source document. This is the always-on, $0, no-API
+  baseline layer; three additional layers are available as opt-in additions
+  (see Section 5).
+
+  STAGE 2 -- RISK ASSESSMENT
+  Each extracted clause is checked against a 12-rule risk playbook (P-01
+  through P-12). Each rule encodes a specific, real commercial trap -- for
+  example, a renewal term that auto-locks past 12 months, a notice period to
+  terminate that's unreasonably short, or a liability clause that's silently
+  uncapped. A rule firing produces a proposed redline plus a precedent
+  reference (a comparable clause from a reference contract) and a plain-English
+  commercial rationale.
+
+  STAGE 3 -- EVIDENCE / DUAL VERIFICATION
+  Two independent checks gate every candidate finding before it can be shown
+  to anyone:
+    (a) A deterministic check -- confirms the cited contract_span is a real,
+        exact substring of the source contract at the cited page:line, and
+        runs a surgical-edit check at two confidence thresholds. Always on,
+        $0, no network call.
+    (b) A real LLM cross-check -- an actual call to the configured model
+        (via litellm) reviews the evidence and can downgrade a deterministic
+        PASS to REJECT if it disagrees. Routed selectively by confidence
+        (LLM_VERIFY_SKIP_CONFIDENCE) so the expensive check is spent where it
+        adds the most value, not on every finding uniformly.
+
+  STAGE 4 -- ROUTER
+  A finding that survives both verification layers becomes an APPROVED
+  CANDIDATE. A finding that fails either layer becomes REJECTED and is either
+  discarded, revised (graph engine, see Section 4), or -- if human-in-the-loop
+  is enabled -- held for a real pause-and-review decision.
+
+  STAGE 5 -- HUMAN APPROVAL
+  Approved candidates are the harness's final output: a redline proposal, never
+  an auto-committed change. Every one carries {contract_span, page:line,
+  playbook_rule} so a human reviewer can verify it in seconds against the
+  actual contract text.
+
+
+4. TWO EXECUTION ENGINES
+--------------------------
+DIRECT ENGINE (advanced/src/core.py::process_contract_advanced)
+  A single, straight-line verification-gated function. This is the certified,
+  always-reproducible default path used for every headline metric in this
+  project.
+
+AGENTIC ENGINE (advanced/src/harness/graph.py -- LangGraph StateGraph)
+  The same five stages, plus one more, expressed as an explicit six-node state
+  machine: extract -> risk -> evidence -> verify -> revise -> human_review.
+    - The REVISE node implements a real Reflection pattern (Shinn et al.,
+      "Reflexion: Language Agents with Verbal Reinforcement Learning," 2023):
+      a REJECTed finding is given one real retry with the verifier's own
+      rejection reason fed back into the next extraction attempt, rather than
+      being dropped outright.
+    - The HUMAN_REVIEW node implements a genuine human-in-the-loop pattern
+      using LangGraph's real interrupt() primitive: when enabled, a run with
+      any REJECTed finding actually pauses -- not a simulated wait -- and
+      persists its state via a SQLite checkpointer until a human supplies a
+      resume decision (per-finding approve/deny), at which point the graph
+      resumes from exactly where it paused.
+  Selecting the agentic engine (vs. direct) is a runtime choice exposed
+  directly in the Streamlit dashboard's Harness Monitor tab, so the node-by-
+  node trace is visible live.
+
+
+5. LAYERED, OPT-IN EXTRACTION
+--------------------------------
+Beyond the always-on regex baseline, three additional extraction layers can be
+enabled independently, each merging its hits into the same downstream
+risk/verification pipeline so a reviewer cannot tell from the output alone
+which layer found a clause -- only an internal match_kind tag discloses it:
+
+  SEMANTIC LAYER -- a hosted embedding model retrieves clauses by meaning
+  rather than exact pattern, catching clause types phrased in ways the regex
+  layer doesn't anticipate.
+
+  BM25 LEXICAL LAYER -- a classic lexical-hybrid ranking layer (rank-bm25),
+  $0 and always available (no API, never quota-blocked), that finds clauses
+  regex misses due to phrasing variance.
+
+  LLM-AS-GENERATOR LAYER -- for any playbook clause type with zero hits from
+  every other layer, this asks the configured LLM to locate a verbatim excerpt
+  of that clause type directly in the contract text. The critical design
+  constraint: any span the model returns must pass an exact-substring
+  anti-hallucination check against the real contract text before it can even
+  become a candidate -- and a candidate that passes still has to clear the
+  full risk-assessment and dual-verification gate like any other hit. This is
+  the only layer in the entire harness where an LLM call can originate a new
+  finding rather than only judge one someone else proposed.
+
+
+6. RISK PLAYBOOK
+-------------------
+12 rules (P-01 through P-12), each mapping one or two clause types to a
+specific, real commercial trap condition, a preferred redline, a precedent
+citation, and a plain-English rationale a non-lawyer reviewer can act on.
+Two rules (P-04 and P-12) share the "Cap on Liability" / "Limitation of
+Liability" clause pair; every other rule maps one-to-one to its own clause
+type.
+
+
+7. API SURFACE
+-----------------
+FastAPI (advanced/src/main.py) exposes:
+  GET  /health                        -- service liveness
+  POST /api/redline                   -- run the full advanced pipeline on a contract
+  POST /api/trap-detect                -- trap-suite detection endpoint
+  POST /api/harness/resume             -- resume a paused human-in-the-loop graph run
+  GET  /api/harness/stream             -- live stage-by-stage streaming of a run
+  GET  /api/memory/{contract_id}       -- per-contract memory/history lookup
+  POST /api/memory/{contract_id}/reset -- reset stored memory for a contract
+The baseline service exposes an equivalent, minimal /api/redline endpoint on its
+own port, so the two systems can be run and compared side by side.
+
+
+8. EVALUATION -- REAL, EXTERNAL, NOT SELF-GRADED
+----------------------------------------------------
+The primary metric is measured against CUAD (Hendrycks, Burns, Chen, Ball --
+NeurIPS 2021): 510 real contracts, expert-annotated by lawyers, that this
+project did not create and did not write labels for. Clause-type detection
+(does the clause exist) is checked directly against those independent labels
+-- a genuinely external validation, not a benchmark tuned to look good.
+A secondary, $0, always-reproducible regression suite (the "Trap Suite," 30
+CUAD-derived contracts with curated gold labels) supports fast, free
+iteration between full external-validation runs. A tertiary LLM-judge signal
+(5-dimension rubric, scored by a real model call) provides a third,
+independent read on output quality.
+
+
+9. ENGINEERING RIGOR
+------------------------
+- 97+ passing tests across baseline, advanced (unit + integration), and
+  dashboard smoke suites (streamlit.testing.v1.AppTest actually runs the live
+  app, not a mock).
+- mypy --strict clean across every source file in advanced/src.
+- Full end-to-end reproducibility: `make reproduce` runs setup, every test
+  suite, the generalization and stress suites, the full 510-contract CUAD
+  ground-truth evaluation, and the fixture eval harness, from a clean
+  environment, in one command.
+- Every chart, every dashboard number, and every screenshot in this
+  submission's supporting documents is generated directly from the real
+  evidence files (evidence/benchmarks/*.json) by a script -- nothing is
+  hand-typed, and everything regenerates identically from the same source of
+  truth.
+
+
+10. DESIGN PRINCIPLES, IN ONE LINE EACH
+-------------------------------------------
+- Verification-gated: no finding reaches a human without surviving two
+  independent checks first.
+- Anti-hallucination by construction: any LLM-proposed text must be a real,
+  verbatim substring of the actual contract before it can become a finding.
+- Human-in-the-loop, not auto-commit: the system's final output is always a
+  reviewable candidate, never an applied change.
+- Provider-agnostic: swapping the underlying LLM is a one-line config change,
+  not a rewrite.
+- Externally measured: the number that matters is checked against labels this
+  project did not write.

@@ -362,6 +362,13 @@ this document cites): `evidence/benchmarks/charts/headline_recall_precision.png`
 `per_rule_recall.png`, `changelog_progression.png`, `test_health.png`. Regenerate any time with
 `python scripts/generate_charts.py`.
 
+**Supplementary pitch PDF and technical-overview text** — upload both alongside this document:
+`docs/hackathon-pitch.pdf` (8-page, image-heavy, positioning-focused highlight reel — real
+numbers and real screenshots, minimal detail on open issues) and `docs/technical-overview.txt`
+(plain-text architecture walkthrough — pipeline stages, both execution engines, the extraction
+layers, the API surface — written the same way, pros-first, for a producer who wants the
+system's mechanics without wading through the full development history below).
+
 **Supplementary dashboard screenshots** (real Playwright capture of the live, running
 `app/streamlit_app.py` — not mockups or design comps; captured with
 `scripts/capture_screenshots.py`, which drives the system-installed Chrome against the actual
