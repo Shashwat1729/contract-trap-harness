@@ -308,10 +308,9 @@ def assess_risk(hit: ClauseHit) -> RiskFinding | None:
                         _log_thinking("risk/assess", hit.span_text[:200], "no trap (non-compete narrow/short)", "Non-Compete clause is scoped and <=12mo, no finding")
                         return None
                 elif hit.clause_type == "Post-Termination Services":
-                    # P-11's actual trap is "no transition assistance / conflicting retention" --
-                    # was previously (wrongly) checked against the License/Non-Compete/IP keyword
-                    # set above, which has nothing to do with deletion-vs-retention conflicts, so
-                    # this rule could never fire correctly. Check the real condition directly.
+                    # P-11's trap is "no transition assistance / conflicting retention" -- checked
+                    # directly against deletion/retention language, independent of the License/
+                    # Non-Compete/IP keyword set above (which targets a different clause family).
                     has_delete = re.search(r"delet|eras|purg|destroy", hit.span_text, flags=re.IGNORECASE)
                     # Note: deliberately excludes bare "transition" -- "transition assistance/
                     # services" is the GOOD, expected thing, not the retention conflict; only

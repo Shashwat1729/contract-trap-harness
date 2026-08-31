@@ -225,9 +225,8 @@ def process_contract_advanced(
                 pass
 
     t_start = time.perf_counter()
-    # Real per-stage latency, not the fabricated placeholder numbers a dashboard used to
-    # show -- each entry is measured wall-clock ms for that stage on THIS call, aggregated
-    # across the fixture suite by eval_harness.py into evidence/benchmarks/results.json.
+    # Per-stage wall-clock latency, measured on THIS call, aggregated across the fixture
+    # suite by eval_harness.py into evidence/benchmarks/results.json.
     stage_ms: dict[str, float] = {}
     _t_prev = t_start
     if not contract_text or not contract_text.strip():

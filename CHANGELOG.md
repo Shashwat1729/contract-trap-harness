@@ -437,6 +437,16 @@
 
 ---
 
+### #25 — Pitch PDF for Video Generation + Source-Comment Cleanup — 2026-08-31 — Phase 6
+
+- **What was asked:** a single, upbeat, image-heavy PDF (real data only) to upload alongside `docs/notebooklm-source.md` as a NotebookLM video source, plus a pass over source-code comments to trim history-narrating "bug/fix" language down to the current design rationale.
+- **Built `scripts/generate_pitch_pdf.py` -> `docs/hackathon-pitch.pdf`:** an 8-page PDF (Playwright + system Chrome, same technique as `capture_screenshots.py`) combining the real headline numbers, both generated charts, and 4 of the real dashboard screenshots from #24, each with a captioned figure. Positioning-focused by design -- unlike `README.md`/`CHANGELOG.md`, which stay fully detailed on record for judges -- but every number and image in it is pulled from the same real evidence files as everything else in this submission; nothing hand-typed.
+- **Source-comment pass:** 4 comments in `advanced/src/core.py`, `advanced/src/harness/extract.py`, `advanced/src/harness/risk.py`, and `app/streamlit_app.py` narrated past-bug history ("used to show fabricated numbers," "was previously (wrongly) checked," "this is the exact same bug class CHANGELOG #21 found and fixed") rather than just explaining the current invariant. Rewritten to state the current design and its rationale directly, with no loss of the underlying technical information -- re-verified with `py_compile` and the relevant unit tests (21 passed) after the edit; comment-only, no behavior change.
+- **What this does NOT change:** `README.md` and `CHANGELOG.md` keep the full, detailed development record (explicitly kept as-is per direct confirmation, since the submission checklist requires a disclosed "main failure mode" and this project's own credibility rests on not hiding real bugs there) -- this entry's PDF is a supplementary asset, not a replacement.
+- **Links:** `scripts/generate_pitch_pdf.py` (new), `docs/hackathon-pitch.pdf` (new), `advanced/src/core.py`, `advanced/src/harness/extract.py`, `advanced/src/harness/risk.py`, `app/streamlit_app.py` (comment cleanup).
+
+---
+
 ### Final Gate — TBD (Phase 6) — fill before submission
 
 > **If submitted to a highly competitive hackathon today, is there a credible reason judges would place this in Top 3?** — Yes/No + evidence: __

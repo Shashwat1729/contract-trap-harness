@@ -189,14 +189,11 @@ def parse_days(text: str) -> int | None:
 TRAP_VALUES: dict[str, dict[str, Any]] = {
     "Renewal Term": {"threshold": 12, "op": "gt", "trap_risk": "High"},
     "Notice Period to Terminate Renewal": {"threshold": 60, "op": "lt", "trap_risk": "High"},
-    # Cap on Liability / Limitation of Liability used to also carry a "keywords" list here
-    # ("unlimited", "uncapped", ...), scanned document-wide with no clause-context check at
-    # all -- so ANY unrelated use of the word "unlimited" anywhere in a real contract (e.g.
-    # "unlimited right to export your own data", "unlimited storage") was misclassified as a
-    # liability-cap trap. Removed: assess_risk() in risk.py already checks for these keywords
-    # within the properly extracted Cap/Limitation-of-Liability clause's own span (the
-    # CLAUSE_PATTERNS header-phrase match), so the document-wide scan was redundant on real
-    # traps and a false-positive source on everything else. See shared/fixtures/stress/stress_04.
+    # Cap on Liability / Limitation of Liability deliberately has no document-wide keyword
+    # scan here: assess_risk() in risk.py checks trap keywords ("unlimited", "uncapped", ...)
+    # only within the properly extracted clause's own span (the CLAUSE_PATTERNS header-phrase
+    # match), which keeps an unrelated document-wide mention of "unlimited" (e.g. "unlimited
+    # storage") from being misread as a liability trap. See shared/fixtures/stress/stress_04.
 }
 
 

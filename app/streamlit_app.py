@@ -1003,12 +1003,10 @@ with tab_harness:
                     import advanced.src.config as _cfg
                     # LangGraph replays human_review_node's ENTIRE body from the top on
                     # resume, including the `if ENABLE_GRAPH_INTERRUPT:` guard around the
-                    # interrupt()/override-handling logic -- found by this exact scenario
-                    # silently no-op'ing (approve_keys correctly built and passed, but
-                    # every finding stayed REJECT) before this fix. The flag must read the
-                    # SAME way on resume as it did on the original pausing call, so it is
-                    # re-applied here rather than left reset to whatever the initial
-                    # call's `finally` restored it to. See CHANGELOG #21.
+                    # interrupt()/override-handling logic, so the flag must read the SAME
+                    # way on resume as it did on the original pausing call -- re-applied
+                    # here rather than left at whatever the initial call's `finally`
+                    # restored it to. See CHANGELOG #21.
                     _prev_interrupt_resume = _cfg.ENABLE_GRAPH_INTERRUPT
                     _cfg.ENABLE_GRAPH_INTERRUPT = st.session_state.get("harness_enable_interrupt", False)
                     try:
@@ -1037,12 +1035,9 @@ with tab_harness:
             badge_cols[2].info("🟢 BM25 extraction ON" if ENABLE_BM25_EXTRACTION else "⚪ BM25 extraction OFF (regex only)")
             badge_cols[3].info("🟢 LLM cross-check ON" if llm_available() else "⚪ LLM cross-check OFF")
             # Read from session_state (what the run actually used), NOT the live
-            # ENABLE_LLM_EXTRACT import -- the run's try/finally already restored that
-            # to its pre-run default by the time this badge renders, so reading it live
-            # here would always show the restored (usually OFF) value regardless of what
-            # the run itself used. This is the exact same bug class CHANGELOG #21 found
-            # and fixed for the interrupt-resume toggle; caught here by a follow-up
-            # strict-judge audit before it shipped instead of by a live demo.
+            # ENABLE_LLM_EXTRACT import -- the run's try/finally already restores that
+            # to its pre-run default before this badge renders, so session_state is the
+            # only value that reflects what this specific run actually did.
             llm_gen_n = a_res.get("llm_extract_generated", 0)
             llm_extract_was_on = st.session_state.get("harness_enable_llm_extract", False)
             badge_cols[4].info(f"🟠 LLM-generator ON ({llm_gen_n} found)" if llm_extract_was_on else "⚪ LLM-generator OFF (filters only)")
