@@ -285,6 +285,7 @@ Full log: **[CHANGELOG.md](CHANGELOG.md)** — each entry links to the benchmark
 | 20 | Confidence-based LLM-verify routing | Cost concern + "harness should be high-level" | Real ~75%-on-fixture reduction in LLM calls, routed to low-confidence findings only |
 | 21 | Real human-in-the-loop (LangGraph `interrupt()`/`Command(resume=...)`) + README/ARCHITECTURE honesty fixes | Strict audit: stale scaffold docs + no real pause-for-review | 3 real bugs found & fixed end-to-end (GraphInterrupt swallowed, checkpointer cross-run leak, resume-toggle bug) |
 | 22 ⭐ | LLM-as-generator: proposes candidates for playbook clause types with zero hits, gated by exact-substring anti-hallucination check + full assess_risk/dual_verify/llm_verify pipeline | Strict audit: "LLM only ever filters, never proposes" | 1 real live call verified end-to-end (correctly located real span); 2 more honestly quota-blocked, not hidden |
+| 23 🗑️ | Removed a second, never-committed instance of self-graded judge theater (subagent-based, loop-until-100/100) found sitting on disk | Final "no fake synthetic things" review pass | 16 files removed (3 scripts, 1 rubric doc, 12 score/review artifacts); real `llm_judge.py` + its trajectories left untouched |
 
 ---
 
