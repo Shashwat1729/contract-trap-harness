@@ -425,6 +425,18 @@
 
 ---
 
+### #24 — Real Dashboard Screenshots for the NotebookLM Video, Captured Live via Playwright — 2026-08-31 — Phase 6
+
+- **What was asked:** "add screenshots or similar video snippets of the dashboard and other things with results and so on so notebook llm can include those as well" -- visual grounding for the video-generation source document, on top of the 4 already-existing evidence-driven charts.
+- **Built `scripts/capture_screenshots.py`:** launches `app/streamlit_app.py` for real (not a mock), drives it with Playwright using the system-installed Chrome (`channel="chrome"` -- no extra browser binary download needed), clicks through all 7 dashboard tabs, and for the Harness Monitor tab specifically loads a real fixture contract (`Reynolds Consumer Products` MSA from the 30-contract trap suite) and clicks the real "Run Harness" button, waiting for the actual pipeline to finish before capturing.
+- **9 real PNGs saved to `evidence/screenshots/`:** overview (live KPI strip), metrics (baseline vs advanced bar chart), trap suite explorer, harness monitor at 3 stages (empty / contract loaded / results), reproducibility, market, tests. `06_harness_monitor_results.png` is the most evidentially important -- it shows an actual completed live run (baseline 2 findings vs advanced 1 approved/0 rejected) with the `LLM cross-check ON` badge, meaning a genuine API call was made during capture, not simulated or hardcoded.
+- **Wired into both documents:** README gained a "Live dashboard screenshots" subsection (4 of the 9 embedded inline, full set linked) directly after the existing charts table; `docs/notebooklm-source.md` §11 gained a full annotated list of all 9 screenshots with a one-line description of what each is good for in a narration cut, explicitly instructing the video producer to upload them alongside the document as sources.
+- **What this does NOT claim:** this is a one-off visual-asset capture tool, not part of `make reproduce` or any correctness check -- it requires `playwright` (not added to `app/requirements.txt`, since it's a tooling dependency for refreshing submission visuals, not a runtime dependency of the product itself) and a running dashboard instance.
+- **Links:** `scripts/capture_screenshots.py` (new), `evidence/screenshots/*.png` (new, 9 files), `README.md` (new subsection), `docs/notebooklm-source.md` (§11 expanded).
+- **Research tie:** direct response to the explicit request for visual assets beyond the existing matplotlib charts, captured the same way this project captures every other number in this submission -- by actually running the real thing and recording what happened, not staging a mockup.
+
+---
+
 ### Final Gate — TBD (Phase 6) — fill before submission
 
 > **If submitted to a highly competitive hackathon today, is there a credible reason judges would place this in Top 3?** — Yes/No + evidence: __

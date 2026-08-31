@@ -361,3 +361,28 @@ one more time in the final hour before submission.
 this document cites): `evidence/benchmarks/charts/headline_recall_precision.png`,
 `per_rule_recall.png`, `changelog_progression.png`, `test_health.png`. Regenerate any time with
 `python scripts/generate_charts.py`.
+
+**Supplementary dashboard screenshots** (real Playwright capture of the live, running
+`app/streamlit_app.py` — not mockups or design comps; captured with
+`scripts/capture_screenshots.py`, which drives the system-installed Chrome against the actual
+app and clicks through each tab): 9 PNGs in `evidence/screenshots/`, upload all of them as
+sources alongside this document so a video producer can cut to the real UI, not just charts.
+
+- `01_overview.png` — the dashboard's landing view: headline KPI strip (42.2%/92.7% CUAD
+  recall/precision, evidence-supported edit rate, LLM judge score, p95 latency) plus the
+  "who/what bottleneck/why it matters" framing — good for the open.
+- `02_metrics.png` — baseline vs advanced bar chart, same 30 contracts, rendered live from
+  `results.json` — good for the "land on the headline number" beat.
+- `03_trap_suite_explorer.png` — the 30 CUAD-derived contracts with curated trap gold labels,
+  filterable — good for showing the evaluation is built on real, inspectable fixtures.
+- `04_harness_monitor_empty.png` / `05_harness_monitor_loaded.png` /
+  `06_harness_monitor_results.png` — a genuine, in-order sequence: select a real fixture
+  contract → load it → run the real pipeline live. `06` shows the actual outcome of that live
+  run (baseline 2 findings vs advanced 1 approved candidate, 0 rejected, with the
+  "LLM cross-check ON" badge showing a real API call was made) — this is the single best shot
+  for "walk the pipeline" and proving the system runs live, not from a recording.
+- `07_reproducibility.png` — the reproducibility tab (what `make reproduce` verifies).
+- `08_market.png` — the external market-anchoring comparison (published CUAD/ContractEval
+  reference points alongside this project's own measured numbers).
+- `09_tests.png` — live test-suite counts, matching the `test_health.png` chart but from inside
+  the running product itself.
