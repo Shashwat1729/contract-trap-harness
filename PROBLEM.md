@@ -1,8 +1,6 @@
 # micro1 — Agentic Workflows Hackathon — Official Problem Statement
 
-> **Source:** `micro1 - First Hackathon97ce7c5.pdf` (10 pages, 648 KB) — extracted 2026-08-28, 14,279 chars  
-> **Original file:** `micro1 - First Hackathon97ce7c5.pdf` (Title: *micro1 - Hackathon Uno*, Creator: Chrome/151, Skia/PDF m151, 2026-08-27)  
-> **Raw extraction:** [`PROBLEM_RAW.txt`](PROBLEM_RAW.txt) · [`PROBLEM_EXTRACTED.md`](PROBLEM_EXTRACTED.md)
+> **Source:** [`micro1 - First Hackathon97ce7c5.pdf`](micro1%20-%20First%20Hackathon97ce7c5.pdf) (10 pages, 648 KB) — extracted 2026-08-28, 14,279 chars, official PDF included in this repository for provenance.
 
 > **Nature of challenge:** Open-ended. You choose a specific, meaningful problem you understand. Judges evaluate on the four questions and six criteria below — not on a single prescribed task.
 

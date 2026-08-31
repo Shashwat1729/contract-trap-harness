@@ -447,11 +447,11 @@
 
 ---
 
-### Final Gate — TBD (Phase 6) — fill before submission
+### Final Gate — 2026-08-31 (Phase 6)
 
-> **If submitted to a highly competitive hackathon today, is there a credible reason judges would place this in Top 3?** — Yes/No + evidence: __
+> **If submitted to a highly competitive hackathon today, is there a credible reason judges would place this in Top 3?** — Yes. Three things most agentic-workflow submissions don't have together: (1) a primary metric measured against real, independent, expert-labeled ground truth (CUAD, NeurIPS 2021 — 510 contracts) rather than self-authored gold labels, with the self-graded metric explicitly demoted to a secondary regression signal; (2) real agentic depth — a genuine LangGraph state machine with a working `interrupt()` human-in-the-loop pause and a Reflection-pattern revise loop, not a single prompt call; (3) a development record that shows the same self-audit discipline applied repeatedly and late — CHANGELOG #21–#23 found and fixed real bugs and a recurrence of self-graded scoring theater in the final review pass, not just at kickoff.
 
-> **What specifically prevents it from being #1?** — One weakness: __ (if fixable, fix and re-loop per Directive §5).
+> **What specifically prevents it from being #1?** — One weakness: several individual playbook rules (Post-Termination Services 8.2% recall, Termination for Convenience 13.7%, Notice Period 19.8%) are still well below the 42.2% headline average against real CUAD ground truth — the regex/keyword extraction layer has a real recall ceiling on broadly-worded clause categories that the opt-in semantic/BM25/LLM-generator layers narrow but don't fully close yet (see `evidence/benchmarks/comparison.md` per-rule table). Fixable, and scoped: the next iteration is a disjoint train/test split for regex pattern tuning (closing the methodology caveat in CHANGELOG #12) plus a full-dataset BM25-style validation run for the LLM-generator layer once daily API quota resets.
 
 ---
 
