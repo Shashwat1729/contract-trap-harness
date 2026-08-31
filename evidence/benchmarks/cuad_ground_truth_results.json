@@ -1,0 +1,233 @@
+{
+  "n_contracts": 510,
+  "n_requested": 510,
+  "partial": false,
+  "hybrid": false,
+  "hybrid_threshold": null,
+  "bm25": false,
+  "bm25_threshold": null,
+  "source": "docs/research/cuad/CUADv1.json -- real, expert-annotated (Hendrycks et al., NeurIPS 2021), not authored by us, not tuned against",
+  "note": "Measures clause-type PRESENCE detection against CUAD's real expert labels, not threshold/policy judgment (renewal-term length, notice-period length, etc. are our playbook's own policy choices with no external ground truth to check them against).",
+  "advanced": {
+    "per_rule": {
+      "Renewal Term": {
+        "tp": 109,
+        "fp": 11,
+        "fn": 67,
+        "tn": 323,
+        "n_gold_present": 176,
+        "recall": 0.619,
+        "precision": 0.908
+      },
+      "Notice Period to Terminate Renewal": {
+        "tp": 22,
+        "fp": 1,
+        "fn": 89,
+        "tn": 398,
+        "n_gold_present": 111,
+        "recall": 0.198,
+        "precision": 0.957
+      },
+      "Termination for Convenience": {
+        "tp": 25,
+        "fp": 2,
+        "fn": 158,
+        "tn": 325,
+        "n_gold_present": 183,
+        "recall": 0.137,
+        "precision": 0.926
+      },
+      "Cap/Uncapped Liability": {
+        "tp": 142,
+        "fp": 8,
+        "fn": 133,
+        "tn": 227,
+        "n_gold_present": 275,
+        "recall": 0.516,
+        "precision": 0.947
+      },
+      "Audit Rights": {
+        "tp": 57,
+        "fp": 3,
+        "fn": 157,
+        "tn": 293,
+        "n_gold_present": 214,
+        "recall": 0.266,
+        "precision": 0.95
+      },
+      "Governing Law": {
+        "tp": 324,
+        "fp": 3,
+        "fn": 113,
+        "tn": 70,
+        "n_gold_present": 437,
+        "recall": 0.741,
+        "precision": 0.991
+      },
+      "License Grant": {
+        "tp": 108,
+        "fp": 2,
+        "fn": 147,
+        "tn": 253,
+        "n_gold_present": 255,
+        "recall": 0.424,
+        "precision": 0.982
+      },
+      "Non-Compete": {
+        "tp": 38,
+        "fp": 17,
+        "fn": 81,
+        "tn": 374,
+        "n_gold_present": 119,
+        "recall": 0.319,
+        "precision": 0.691
+      },
+      "Non-Disparagement": {
+        "tp": 9,
+        "fp": 2,
+        "fn": 29,
+        "tn": 470,
+        "n_gold_present": 38,
+        "recall": 0.237,
+        "precision": 0.818
+      },
+      "IP Ownership Assignment": {
+        "tp": 44,
+        "fp": 7,
+        "fn": 80,
+        "tn": 379,
+        "n_gold_present": 124,
+        "recall": 0.355,
+        "precision": 0.863
+      },
+      "Post-Termination Services": {
+        "tp": 15,
+        "fp": 14,
+        "fn": 167,
+        "tn": 314,
+        "n_gold_present": 182,
+        "recall": 0.082,
+        "precision": 0.517
+      }
+    },
+    "overall": {
+      "tp": 893,
+      "fp": 70,
+      "fn": 1221,
+      "tn": 3426,
+      "recall": 0.422,
+      "precision": 0.927
+    }
+  },
+  "baseline": {
+    "per_rule": {
+      "Renewal Term": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 176,
+        "tn": 334,
+        "n_gold_present": 176,
+        "recall": 0.0,
+        "precision": null
+      },
+      "Notice Period to Terminate Renewal": {
+        "tp": 50,
+        "fp": 136,
+        "fn": 61,
+        "tn": 263,
+        "n_gold_present": 111,
+        "recall": 0.45,
+        "precision": 0.269
+      },
+      "Termination for Convenience": {
+        "tp": 14,
+        "fp": 2,
+        "fn": 169,
+        "tn": 325,
+        "n_gold_present": 183,
+        "recall": 0.077,
+        "precision": 0.875
+      },
+      "Cap/Uncapped Liability": {
+        "tp": 235,
+        "fp": 129,
+        "fn": 40,
+        "tn": 106,
+        "n_gold_present": 275,
+        "recall": 0.855,
+        "precision": 0.646
+      },
+      "Audit Rights": {
+        "tp": 28,
+        "fp": 15,
+        "fn": 186,
+        "tn": 281,
+        "n_gold_present": 214,
+        "recall": 0.131,
+        "precision": 0.651
+      },
+      "Governing Law": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 437,
+        "tn": 73,
+        "n_gold_present": 437,
+        "recall": 0.0,
+        "precision": null
+      },
+      "License Grant": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 255,
+        "tn": 255,
+        "n_gold_present": 255,
+        "recall": 0.0,
+        "precision": null
+      },
+      "Non-Compete": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 119,
+        "tn": 391,
+        "n_gold_present": 119,
+        "recall": 0.0,
+        "precision": null
+      },
+      "Non-Disparagement": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 38,
+        "tn": 472,
+        "n_gold_present": 38,
+        "recall": 0.0,
+        "precision": null
+      },
+      "IP Ownership Assignment": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 124,
+        "tn": 386,
+        "n_gold_present": 124,
+        "recall": 0.0,
+        "precision": null
+      },
+      "Post-Termination Services": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 182,
+        "tn": 328,
+        "n_gold_present": 182,
+        "recall": 0.0,
+        "precision": null
+      }
+    },
+    "overall": {
+      "tp": 327,
+      "fp": 282,
+      "fn": 1787,
+      "tn": 3214,
+      "recall": 0.155,
+      "precision": 0.537
+    }
+  }
+}

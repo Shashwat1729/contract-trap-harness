@@ -1,0 +1,11 @@
+ENTERPRISE SERVICES AGREEMENT
+
+Between Cobalt Meridian Technologies ("Vendor") and Customer.
+
+Section 22 -- Audit Rights
+
+Customer may, at any time and without advance notice to Vendor, inspect Vendor's records, facilities, and systems relevant to this Agreement to confirm Vendor's compliance with its security and confidentiality obligations. Vendor will provide reasonable cooperation with any such inspection.
+
+Section 23 -- Confidentiality
+
+Each party will protect the other's Confidential Information using at least the same degree of care it uses to protect its own confidential information, and in no event less than reasonable care.

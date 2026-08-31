@@ -1,0 +1,17 @@
+[
+  {"id": "gen_01", "rule_id": "P-01", "name": "Renewal Term >12mo (isolated, safe notice)", "trap_expected": true},
+  {"id": "gen_02", "rule_id": "P-02", "name": "Notice <60d (isolated, safe renewal)", "trap_expected": true},
+  {"id": "gen_03", "rule_id": "P-04", "name": "Uncapped liability, literal 'unlimited'", "trap_expected": true},
+  {"id": "gen_04", "rule_id": "P-12", "name": "Cap carve-out via 'shall not apply to' phrasing", "trap_expected": true},
+  {"id": "gen_05", "rule_id": "P-05", "name": "Audit rights, 'at any time' no cadence limit", "trap_expected": true},
+  {"id": "gen_06", "rule_id": "P-06", "name": "Governing law: Texas (non-CA/NY, tests hardcoding fix)", "trap_expected": true},
+  {"id": "gen_07", "rule_id": "P-07", "name": "License grant, perpetual + irrevocable", "trap_expected": true},
+  {"id": "gen_08", "rule_id": "P-08", "name": "Non-compete, 24mo worldwide", "trap_expected": true},
+  {"id": "gen_09", "rule_id": "P-09", "name": "Non-disparagement, one-way only", "trap_expected": true},
+  {"id": "gen_10", "rule_id": "P-10", "name": "IP ownership, vendor owns customer content (paraphrased)", "trap_expected": true},
+  {"id": "gen_11", "rule_id": "P-11", "name": "Post-termination: delete vs retain conflict (fresh wording)", "trap_expected": true},
+  {"id": "gen_12", "rule_id": "P-03", "name": "No Termination for Convenience clause anywhere (coverage gap, not a finding)", "trap_expected": "coverage_gap"},
+  {"id": "gen_13", "rule_id": null, "name": "Clean MSA #1 -- all terms market-safe, no traps", "trap_expected": false},
+  {"id": "gen_14", "rule_id": null, "name": "Clean MSA #2 -- all terms market-safe, no traps", "trap_expected": false},
+  {"id": "gen_15", "rule_id": "P-04", "name": "ADVERSARIAL: uncapped liability phrased without 'unlimited/uncapped' keyword (known gap, expected to be MISSED)", "trap_expected": true, "known_gap": true}
+]

@@ -56,6 +56,44 @@ def test_verify_gates():
     ver = verify_finding(hit.span_text, finding, pkg, contract)
     assert ver.status == "PASS"
 
+def test_llm_verify_confidence_routing_skips_high_confidence_only(monkeypatch):
+    """
+    CHANGELOG #20: the LLM cross-check should be skipped only for findings the dual
+    verifier agreed PASS on AND whose playbook confidence is already high (>=
+    LLM_VERIFY_SKIP_CONFIDENCE, default 0.85) -- routed (real call attempted) for
+    lower-confidence findings even when dual-agree-pass. This fixture's own findings
+    span both sides of that line for real (not contrived): two Renewal Term regex hits
+    (0.88 each -- a real, pre-existing duplicate-span quirk in extract.py, unrelated to
+    this routing logic and out of this test's scope) and Cap-on-Liability
+    (carve-out-bypass, 0.91) skip; Notice Period (0.84) routes to a real call.
+    """
+    import src.core as core_mod
+
+    monkeypatch.setattr(core_mod, "ENABLE_LLM_VERIFY", True)
+    calls = {"n": 0}
+
+    def _fake_llm_verify_finding(*args, **kwargs):
+        calls["n"] += 1
+        from src.harness.llm_verify import LLMVerifyResult
+        return LLMVerifyResult(ran=True, supported=True, confidence=0.9, concern="", mock=True)
+
+    monkeypatch.setattr(core_mod, "llm_verify_finding", _fake_llm_verify_finding)
+
+    contract = """
+    SaaS Agreement
+    Renewal Term: This Agreement shall automatically renew for successive 24 month periods.
+    Notice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.
+    Cap On Liability: Liability is capped at 12 months fees, except carve-outs for data breach are excluded from cap and not subject to limitation.
+    """
+    pages = [Page(num=1, text=contract, start=0, end=len(contract))]
+    res = process_contract_advanced(contract, pages, contract_id="routing_test", turn=1)
+
+    assert res["dual_stats"]["agree_pass"] == 4  # all 4 findings pass the deterministic gate
+    assert res["llm_stats"]["skipped_high_confidence"] == 3  # 2x Renewal (0.88) + Cap-on-Liability (0.91)
+    assert calls["n"] == 1  # only Notice Period (0.84) actually reaches the real call
+    assert res["llm_stats"]["ran"] == 1
+
+
 def test_verify_rejects_hallucinated():
     from src.harness.verify import verify_finding
     from src.harness.risk import RiskFinding
@@ -64,3 +102,76 @@ def test_verify_rejects_hallucinated():
     pkg = {"contract_span": "hallucinated span not in contract", "contract_page": 99, "playbook_rule": "P-01", "precedent": {"id":"PR-01"}, "confidence": 0.9}
     ver = verify_finding("hallucinated span not in contract", finding, pkg, contract)
     assert ver.status == "REJECT"
+
+
+def test_llm_extract_generates_candidate_that_becomes_a_real_approved_finding(monkeypatch):
+    """
+    CHANGELOG #22 (strengthened after a strict-audit finding: the original version of
+    this test used Termination for Convenience, whose only playbook rule triggers on
+    ABSENCE not presence, so assess_risk necessarily returned None and the test never
+    actually proved a generated candidate could become a real finding -- it only proved
+    the hit didn't crash). This version uses Cap on Liability with a real "uncapped"
+    trap keyword, which DOES trigger P-04 in assess_risk -- so this test proves the
+    full, novel claim: an LLM-generated candidate flows through assess_risk (real
+    trap logic fires), dual_verify_finding (real span-in-contract check passes,
+    because the span genuinely is a substring of contract_text), and comes out the
+    other end as a real approved (PASS) finding, exactly like a regex hit would.
+    llm_extract_missing_clauses itself is mocked here (its own anti-hallucination
+    substring logic is covered by test_llm_extract.py); this test verifies core.py's
+    WIRING end to end through the real downstream pipeline.
+    """
+    import src.core as core_mod
+    from src.harness.extract import ClauseHit
+
+    monkeypatch.setattr(core_mod, "ENABLE_LLM_EXTRACT", True)
+
+    # Deliberately avoids the literal phrase "cap on liability" / "liability cap" (extract.py's
+    # own regex pattern for this clause type -- see extract.py's CLAUSE_PATTERNS) so the
+    # real regex layer does NOT also independently tag this sentence -- keeping this a clean
+    # test of the generated candidate alone, not a coincidental double-match.
+    contract = (
+        "SaaS Agreement\n"
+        "Renewal Term: This Agreement shall automatically renew for successive 24 month periods.\n"
+        "Section 9. Liability arising under this Agreement shall be uncapped for any claim.\n"
+    )
+    cap_span = "Liability arising under this Agreement shall be uncapped for any claim."
+    start = contract.index(cap_span)
+
+    def _fake_generate(contract_text, pages, existing_hits, max_calls=6):
+        # llm_extract_missing_clauses itself is fully mocked here -- this test verifies
+        # core.py's WIRING (merge into clause_hits -> real assess_risk/dual_verify), not
+        # the real function's own "only generate for missing types" filtering logic
+        # (covered separately in test_llm_extract.py).
+        return [ClauseHit(
+            clause_type="Cap on Liability", span_text=cap_span,
+            start=start, end=start + len(cap_span), page=1, line=1,
+            confidence=0.55, match_kind="llm_generated",
+        )]
+
+    monkeypatch.setattr("src.harness.llm_extract.llm_extract_missing_clauses", _fake_generate)
+
+    pages = [Page(num=1, text=contract, start=0, end=len(contract))]
+    res = process_contract_advanced(contract, pages, contract_id="llm_extract_test", turn=1)
+
+    assert res["llm_extract_generated"] == 1
+    cap_findings = [f for f in res["findings"] if f["clause_type"] == "Cap on Liability"]
+    assert len(cap_findings) == 1  # assess_risk's "uncapped" trap genuinely fired for the generated hit
+    assert cap_findings[0]["rule_id"] == "P-04"
+    assert cap_findings[0]["verification"] == "PASS"  # dual_verify's real span-in-contract check passed
+    assert cap_findings[0] in res["approved_candidates"]
+
+
+def test_llm_extract_disabled_by_default_leaves_clause_hits_unchanged(monkeypatch):
+    import src.core as core_mod
+    called = {"n": 0}
+
+    def _should_not_be_called(*a, **kw):
+        called["n"] += 1
+        return []
+
+    monkeypatch.setattr("src.harness.llm_extract.llm_extract_missing_clauses", _should_not_be_called)
+    contract = "SaaS Agreement\nRenewal Term: This Agreement shall automatically renew for successive 24 month periods.\n"
+    pages = [Page(num=1, text=contract, start=0, end=len(contract))]
+    res = process_contract_advanced(contract, pages, contract_id="llm_extract_off_test", turn=1)
+    assert called["n"] == 0
+    assert res["llm_extract_generated"] == 0

@@ -1,0 +1,31 @@
+{
+  "scores": {
+    "problem_user_value": 15,
+    "agent_solution": 25.0,
+    "e2e_quality": 20,
+    "measured_improvement": 15,
+    "reproducibility": 15,
+    "hot_take": 5
+  },
+  "total": 95.0,
+  "max_total": 100,
+  "faults": [
+    {
+      "judge": "Judge A \u2014 Latency/Market/Code",
+      "field": "agent_solution",
+      "severity": "must_fix",
+      "deduction": 3.0,
+      "evidence": "Harness is low-level single function, no LangGraph StateGraph"
+    },
+    {
+      "judge": "Judge A \u2014 Latency/Market/Code",
+      "field": "agent_solution",
+      "severity": "should_fix",
+      "deduction": 2.0,
+      "evidence": "No ToolNode/tool calling \u2014 harness not agentic"
+    }
+  ],
+  "improvements": [
+    "No real SOTA comparison (DeBERTa 47.8% AUPR, GPT-4.1 F1 0.644) \u2014 add for real comparison (+0.3)"
+  ]
+}

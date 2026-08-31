@@ -1,0 +1,15 @@
+CLOUD SERVICES ORDER AGREEMENT
+
+Between Ferrous Data Corp. ("Vendor") and Customer.
+
+Article 12 -- Limitation of Liability
+
+Except for a breach of the confidentiality obligations in Article 15, Vendor's liability under this Agreement shall be unlimited for any claim brought by Customer, regardless of the theory of liability asserted.
+
+Article 13 -- Indemnification
+
+Each party will indemnify the other against third-party claims arising from its own gross negligence, subject to the process described in Article 14.
+
+Article 14 -- Claims Process
+
+A party seeking indemnification must provide prompt written notice of any claim.

@@ -1,0 +1,11 @@
+SOFTWARE LICENSE AND SERVICES AGREEMENT
+
+Between Basalt Harbor Software ("Vendor") and Customer.
+
+Section 4 -- License Grant
+
+Vendor grants Customer a perpetual, irrevocable license to use the Software, which survives termination or expiration of this Agreement for any reason, including termination for Customer's material breach.
+
+Section 5 -- Restrictions
+
+Customer will not reverse engineer, decompile, or resell the Software except as expressly permitted by this Agreement.

@@ -15,7 +15,7 @@ Use the **micro1 Agentic Workflows Hackathon problem statement and judging crite
 |---|----------|--------------------|
 | **01** | **Who has this problem?** | `README.md` → Intended user + `docs/problem-brief.md` |
 | **02** | **What bottleneck makes it worth solving?** | `README.md` → Bottleneck + `CHANGELOG.md` baseline |
-| **03** | **Does the agent solve it well?** | `evidence/benchmarks/comparison.md` + `scripts/eval.py` |
+| **03** | **Does the agent solve it well?** | `evidence/benchmarks/comparison.md` + `scripts/eval_harness.py` |
 | **04** | **Can another person reproduce the result?** | `REPRODUCTION.md` + `make reproduce` + `evidence/benchmarks/reproduce.log` |
 
 Final deliverables must also satisfy the four required artifacts: **code + changelog · reproduction guide · video · trajectories** (`PROBLEM.md` §7).

@@ -1,4 +1,4 @@
-# Python
+﻿# Python
 __pycache__/
 *.py[cod]
 *.egg-info/
@@ -58,3 +58,20 @@ temp/
 .opencode/
 docs/research/cuad/
 docs/research/redline-bench/
+
+# Research clones — nested git repos (do not stage their .git)
+docs/research/cuad/.git/
+docs/research/cuad/.git/**
+docs/research/redline-bench/.git/
+docs/research/redline-bench/.git/**
+docs/research/**/.git/
+docs/research/**/.git/**
+
+# Harness thinking logs & temp artifacts (regenerated, large)
+advanced/evidence/reviews/thinking_*.json
+advanced/evidence/reviews/test_redlined*
+advanced/evidence/reviews/thinking_*.jsonl
+Contract_Trap_Harness.pptx
+.secrets.baseline
+tmp_fix.py
+fix_ingest.ps1

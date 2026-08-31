@@ -64,7 +64,7 @@ User -> POST /api/redline {"contract_id":"saas_msa_01","party":"AgentCo","turn":
 | advanced/src/fallback/handler.py | Sandbox graceful fallback |
 | shared/fixtures/contracts/ | 12 contracts (pdf/docx) + expected.json (CUAD labels as goldens) + playbook.md |
 | shared/schemas/ | contract.schema.json, redline.schema.json |
-| scripts/eval.py | Trap Recall + Evidence Precision + 5-dim rubric scoring |
+| scripts/eval_harness.py | Trap Recall + Evidence Precision + 5-dim rubric scoring |
 | evidence/benchmarks/ | results.json, comparison.md, reproduce.log |
 
 **Baseline vs advanced boundary:** Baseline has no verify, no memory, no gating, block edits; advanced has all three and surgical edits. Auditable via git diff.

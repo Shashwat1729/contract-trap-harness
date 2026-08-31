@@ -45,10 +45,37 @@ Defensible, measurable, not "only team".
 * Q2: CUAD as ground truth? -> RESOLVED: No. CUAD for retrieval/trap candidate finding; RedlineBench golds + trap suite golds are truth.
 * Q3: Tier-aware main? -> RESOLVED: No. Supporting experiment.
 
-## Sources (added reviewer citations)
+## Microsoft Best Overall Winner — RiskWise Learnings (Directly Applicable)
+
+**RiskWise (Best Overall, 18k devs, 570 projects, Python+React/Next.js+Azure AI Agent Service+Semantic Kernel+SQL)** won on end-to-end excellence for supply chain risk with 4 specialized agents (Scheduler, Political Risk, Reporting, Assistant) + Manager (Chatbot Manager) + Plugins (Schedule, Risk, Logging, Report File, Citation Handler) + FastAPI + Streamlit + SQL.
+
+**What RiskWise did to win that we now adopt:**
+1. **Specialized multi-agent collaboration with Manager layer** — We upgrade our harness from 4 flat agents to 4 specialized + 1 Manager orchestrator (like RiskWise Chatbot Manager) using Semantic Kernel ChatbotSelectionStrategy pattern.
+2. **Plugin layer** — We formalize our 5 harness modules as plugins (Ingest, Risk, Verify, Memory, Report File) with clear interfaces, like RiskWise's 5 plugins.
+3. **Professional report generation (Word)** — RiskWise auto-generates formatted Word docs via Spire.Doc.Free and stores in Azure Storage with history. We enhance our `python-docx` to generate tracked changes + comments + Word report management (history, filter by contract, date).
+4. **Advanced visualization** — RiskWise has heatmaps, variance charts, matrices, trend analysis. We add contract risk distribution heatmap, trap recall trend, surgical vs block matrix.
+5. **Transparent AI reasoning** — RiskWise has Thinking Log Explorer, session management, error visualization built into Streamlit Developer View. We add thinking logs per harness stage.
+6. **Conversational interface** — RiskWise allows natural language query ("What are political risks?") via Chatbot Manager. We add conversational query for contracts ("What if we change liability cap?").
+7. **Bing Search grounding** — RiskWise uses Bing Search for geopolitical risk. We add optional Bing Search for legal precedent grounding (vs static corpus).
+8. **Responsible AI** — RiskWise has transparency, accountability, citation handling. We already have citation provenance, now add Responsible AI panel.
+
+**Other winners we steal from:**
+* **Apollo (Best C#):** Multi-agent orchestration (Apollo coordinator + Athena research + Hermes analyzer), self-reflective RAG (iterative gathering + knowledge gap check via pgvector), Bing/Exa search, two-stage synthesis, state machine & async. We add self-reflective RAG to our Risk module: iterative clause retrieval until trap coverage complete.
+* **ModelProof (Best JS/TS):** Dual-LM consistency check (two models in parallel, compare, flag discrepancies) + real-time auditing for hallucinations/bias/toxicity + risk insight report. We add dual-LM verification (two prompts on same clause, compare) as second verifier gate.
+* **TARIFFED! (Best Azure AI Agent):** Custom SQL Tariff Schedule DB + Blazor + Docker. We mirror with custom SQL for playbook/precedents and Dockerized reproduce.
+* **Konveyor (Best Python):** Knowledge transfer via Semantic Kernel planners + memory + vector DB for Q&A. We mirror for precedent Q&A.
+
+**Upgrade thesis (still verification-gated core, now RiskWise-level):**
+> **We introduce a verification-gated redlining workflow with self-reflective RAG and dual-LM consistency, orchestrated via Manager+Plugins, that requires each substantive redline to carry auditable evidence and only then produces a Word-tracked draft for human approval — measured by RiskWise-style end-to-end visualization and transparent thinking logs.**
+
+## Sources (added reviewer + RiskWise citations)
 
 * CUAD: atticusprojectai.org/cuad, github.com/TheAtticusProject/cuad, NeurIPS 2021, CC BY 4.0
 * RedlineBench: crosbylegal/redline-bench GitHub, HuggingFace crosbylegal/RedlineBench, HyperAI 140 Harbor tasks, Crosby Intelligence results 50.5/47.3/45.1/44.4
 * HEAT-24: arxiv.org/abs/2605.26731 harness sensitivity non-monotone
 * Sirion: 60% faster redlining, 40% faster negotiation, 3x issues (sirion.ai/platform/create/ai-contract-redline)
-* Reviewer feedback: Corrected headline, CUAD misuse, benchmark hierarchy, thesis scope, human approval framing ("before recommendation reaches human reviewer as approved candidate" not "before human sees it")
+* RiskWise Best Overall: techcommunity.microsoft.com 2025-05-19 (18k devs, 570 projects, Python+React/Next.js+Azure AI+Semantic Kernel+SQL, 4 agents+Manager+5 plugins+Streamlit+Report Gen+Visualization+Thinking Logs)
+* Apollo Best C#: Deep Research Meta Agent (Semantic Kernel multi-agent, self-reflective RAG, pgvector, Bing/Exa, two-stage synthesis, state machine)
+* ModelProof Best JS/TS: Dual-LM consistency check + real-time auditing
+* TARIFFED! Best Azure: Tariff SQL DB + Blazor
+* Reviewer feedback: Corrected headline, CUAD misuse, benchmark hierarchy, thesis scope, human approval framing

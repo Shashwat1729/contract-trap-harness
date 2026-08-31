@@ -12,14 +12,17 @@ import os
 from dataclasses import dataclass, asdict
 from typing import Optional
 
+import logging
 from rapidfuzz import fuzz
+
+logger = logging.getLogger("baseline.core")
 
 # Canonical SaaS playbook rules grounded in CUAD + RedlineBench SaaS MSA scenarios
 # Each rule defines what constitutes a trap for that clause type.
 PLAYBOOK: dict[str, dict] = {
     "Renewal Term": {
         "clause_types": ["Renewal Term"],
-        "trap_pattern": r"renewal term[\s\S]{0,150}?(\d+)\s*months?",
+        "trap_pattern": r"renewal term[\s\S]{0,150}?\(?\s*(\d+)\s*\)?\s*months?",
         "trap_threshold_months": 12,
         "risk": "High",
         "rule_id": "P-01",
@@ -29,7 +32,7 @@ PLAYBOOK: dict[str, dict] = {
     },
     "Notice Period to Terminate Renewal": {
         "clause_types": ["Notice Period to Terminate Renewal"],
-        "trap_pattern": r"notice[\s\S]{0,150}?(\d+)\s*days?",
+        "trap_pattern": r"notice[\s\S]{0,150}?\(?\s*(\d+)\s*\)?\s*days?",
         "trap_threshold_days": 60,
         "risk": "High",
         "rule_id": "P-02",
@@ -116,22 +119,20 @@ def _find_spans(contract_text: str, pattern: str, page_map: list[tuple[int, int,
     out = []
     for m in re.finditer(pattern, contract_text, flags=re.IGNORECASE | re.MULTILINE):
         start, end = m.start(), m.end()
-        page, line = _offset_to_page_line(start, page_map)
+        page, line = _offset_to_page_line(start, page_map, contract_text)
         snippet = contract_text[max(0, start - 80): min(len(contract_text), end + 80)].strip()
         out.append((snippet, start, end, page, line))
     return out
 
 
-def _offset_to_page_line(offset: int, page_map: list[tuple[int, int, int]]) -> tuple[int, int]:
+def _offset_to_page_line(offset: int, page_map: list[tuple[int, int, int]], contract_text: str = "") -> tuple[int, int]:
     """page_map: list of (page_num, start_offset, end_offset)"""
     for page, s, e in page_map:
         if s <= offset < e:
             # line approx: count newlines from page start
-            return page, contract_text_global[ s : offset ].count("\n") + 1 if (contract_text_global := globals().get("_last_contract_text", "")) else 1
+            line = contract_text[s:offset].count("\n") + 1 if contract_text else 1
+            return page, line
     return 1, 1
-
-# Keep last contract for page_map helper (simple, avoids passing closed var)
-_last_contract_text = ""
 
 
 def build_page_map(contract_text: str, chars_per_page: int = 2500) -> list[tuple[int, int, int]]:
@@ -146,12 +147,26 @@ def build_page_map(contract_text: str, chars_per_page: int = 2500) -> list[tuple
 
 def detect_clauses(contract_text: str, page_map: list[tuple[int, int, int]] | None = None) -> list[Evidence]:
     """Single-pass clause detection: regex + keyword fuzzy. Production, deterministic."""
-    global _last_contract_text
-    _last_contract_text = contract_text
     if page_map is None:
         page_map = build_page_map(contract_text)
     findings: list[Evidence] = []
     for clause_name, rule in PLAYBOOK.items():
+        # Termination for Convenience: the trap is its ABSENCE, not its presence
+        # (see rule["description"]: "Missing Termination for Convenience removes exit option").
+        # There's no span to cite for something that isn't there, so this is the one
+        # document-level (start=end=0) finding baseline emits.
+        if clause_name == "Termination for Convenience":
+            if not re.search(rule["trap_pattern"], contract_text, flags=re.IGNORECASE):
+                findings.append(Evidence(
+                    clause_type=clause_name,
+                    span_text="[No 'Termination for Convenience' clause found anywhere in the document]",
+                    page=1, line=1,
+                    start=0, end=0,
+                    confidence=0.60,
+                    rule_id=rule["rule_id"],
+                    precedent=rule["precedent"],
+                ))
+            continue
         # Pattern-based types
         if "trap_pattern" in rule:
             spans = _find_spans(contract_text, rule["trap_pattern"], page_map)
@@ -164,15 +179,14 @@ def detect_clauses(contract_text: str, page_map: list[tuple[int, int, int]] | No
                         val = int(m.group(1))
                     except:  # noqa
                         val = None
-                # Decide trap: for renewal/notice, check threshold
+                # Decide trap: renewal/notice are the only two remaining trap_pattern
+                # rules (Termination for Convenience is handled above), both threshold-gated.
                 is_trap = False
                 if clause_name == "Renewal Term" and val is not None:
                     is_trap = val > rule["trap_threshold_months"]
                 elif clause_name == "Notice Period to Terminate Renewal" and val is not None:
                     # will be checked cross-wise, but also flag if <60 alone
                     is_trap = val < rule["trap_threshold_days"]
-                else:
-                    is_trap = True
                 if is_trap:
                     findings.append(Evidence(
                         clause_type=clause_name,
@@ -189,7 +203,7 @@ def detect_clauses(contract_text: str, page_map: list[tuple[int, int, int]] | No
                 # fuzzy to tolerate variations, threshold 88
                 for m in re.finditer(re.escape(kw), contract_text, flags=re.IGNORECASE):
                     start, end = m.start(), m.end()
-                    page, line = _offset_to_page_line(start, page_map)
+                    page, line = _offset_to_page_line(start, page_map, contract_text)
                     snippet = contract_text[max(0, start - 80): min(len(contract_text), end + 80)].strip()
                     findings.append(Evidence(
                         clause_type=clause_name,

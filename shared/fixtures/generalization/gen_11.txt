@@ -1,0 +1,11 @@
+MANAGED SERVICES AGREEMENT
+
+Between Copperfield Systems Group ("Vendor") and Customer.
+
+Section 21 -- Post-Termination Services
+
+Upon termination or expiration of this Agreement, Vendor will permanently erase all Customer Data from its production systems within fifteen (15) days. Notwithstanding the foregoing, Vendor will continue to hold a backup copy of Customer Data for up to six (6) months following termination in order to support Customer's transition to a replacement provider, and will make that backup available to Customer upon request during that window.
+
+Section 22 -- Return of Property
+
+Each party will return or destroy the other party's Confidential Information within thirty (30) days of termination.

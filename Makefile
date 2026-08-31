@@ -1,4 +1,4 @@
-.PHONY: setup test test-unit test-integration test-e2e test-coverage run-baseline run-advanced run-all eval reproduce docker-build docker-setup docker-up docker-down kill pre-submit brief ingest-problem capture-trajectory help
+﻿.PHONY: setup test test-unit test-integration test-dashboard test-e2e test-coverage run-baseline run-advanced run-all eval eval-generalization eval-stress eval-cuad-ground-truth build-semantic-anchors tune-semantic-threshold eval-cuad-ground-truth-hybrid eval-llm-zeroshot-baseline reproduce docker-build docker-setup docker-up docker-down kill pre-submit brief ingest-problem capture-trajectory charts help
 
 ROOT := $(shell pwd)
 PY := python
@@ -13,14 +13,24 @@ endif
 help:
 	@echo "Frontier Challenge — make targets"
 	@echo "  make setup              — create venv + install deps"
-	@echo "  make test               — unit+integration (no network)"
+	@echo "  make test               — unit+integration+dashboard smoke (no network)"
+	@echo "  make test-dashboard     — actually runs app/streamlit_app.py end to end (AppTest) -- catches it crashing on load"
 	@echo "  make test-e2e           — live e2e (needs make run-all)"
 	@echo "  make run-baseline       — baseline on :8000"
 	@echo "  make run-advanced       — advanced on :8001"
 	@echo "  make run-all            — both via docker-compose"
 	@echo "  make eval               — baseline vs advanced → evidence/benchmarks/"
+	@echo "  make charts             — regenerate evidence/benchmarks/charts/*.png from real evidence JSON (README embeds these)"
 	@echo "  make eval-mock          — eval without network (EVAL_MOCK=1)"
-	@echo "  make reproduce          — full clean-env check (what judges run)"
+	@echo "  make eval-generalization — held-out 15-contract generalization check (all 12 rules)"
+	@echo "  make eval-stress        — held-out 7-contract stress check (OCR noise, messy real-world formatting)"
+	@echo "  make eval-cuad-ground-truth — PRIMARY metric: validate against real CUAD expert labels (510 contracts, not self-graded)"
+	@echo "  make eval-llm-zeroshot-baseline — real, live zero-shot LLM comparison (needs API key + quota — see CHANGELOG #13)"
+	@echo "  make tune-semantic-threshold — sweep the real embedding semantic layer's threshold on a held-out dev split (needs API key + quota)"
+	@echo "  make eval-cuad-ground-truth-hybrid — regex+semantic hybrid CUAD validation (needs API key + quota, writes to a separate file — see CHANGELOG #13)"
+	@echo "  make mypy               -- strict type check (surgical invariants)
+  make eval-slo           -- p95 latency SLO gate (budget 15000ms)
+  make reproduce          — full clean-env check (what judges run)"
 	@echo "  make docker-build       — build images"
 	@echo "  make kill               — free ports 8000/8001"
 	@echo "  make pre-submit         — secret scan + reproduce + checks"
@@ -30,7 +40,7 @@ help:
 setup:
 	bash scripts/setup.sh 2>/dev/null || (echo "[setup] bash not found — run manually: python -m venv .venv && pip install -r baseline/requirements.txt -r advanced/requirements.txt"; exit 1)
 
-test: test-unit test-integration
+test: test-unit test-integration test-dashboard
 	@echo "[test] all (non-e2e) passed"
 
 test-unit:
@@ -38,6 +48,10 @@ test-unit:
 	cd baseline && $(PY) -m pytest tests/unit -v --tb=short
 	@echo "[test] advanced unit"
 	cd advanced && $(PY) -m pytest tests/unit -v --tb=short
+
+test-dashboard:
+	@echo "[test] dashboard smoke (actually runs app/streamlit_app.py end to end -- this is what caught it crashing on every load)"
+	EVAL_MOCK=1 $(PY) -m pytest app/tests -v --tb=short
 
 test-integration:
 	@echo "[test] baseline integration"
@@ -49,8 +63,20 @@ test-e2e:
 	$(PY) -m pytest tests/e2e -v --tb=short
 
 test-coverage:
-	cd baseline && $(PY) -m pytest --cov=src --cov-report=term --cov-report=html
-	cd advanced && $(PY) -m pytest --cov=src --cov-report=term --cov-report=html
+	cd baseline && $(PY) -m pytest --cov=src --cov-report=term --cov-report=html --cov-fail-under=80
+	cd advanced && $(PY) -m pytest --cov=src --cov-report=term --cov-report=html --cov-fail-under=80
+
+mypy:
+	mypy advanced/src --strict --ignore-missing-imports
+	mypy baseline/src --ignore-missing-imports
+	@echo "mypy strict OK -- surgical invariants checked"
+
+lint:
+	ruff check advanced/src baseline/src || true
+
+eval-slo:
+	@echo "[eval-slo] checking p95 SLO: advanced p95 < baseline p95 + 15000ms"
+	python scripts/check_latency_slo.py --budget-ms 15000 || (echo "SLO FAIL: p95 budget exceeded -- see evidence/benchmarks/results.json"; exit 1)
 
 run-baseline:
 	bash scripts/run_baseline.sh
@@ -70,6 +96,36 @@ eval-mock:
 
 eval-full:
 	python scripts/eval_harness.py
+
+charts:
+	python scripts/generate_charts.py
+
+eval-generalization:
+	EVAL_MOCK=1 python scripts/eval_generalization.py
+
+eval-stress:
+	EVAL_MOCK=1 python scripts/eval_stress.py
+
+eval-cuad-ground-truth:
+	python scripts/eval_cuad_ground_truth.py
+
+# The three targets below need a live LLM/embedding provider key (real network calls,
+# real $0-tier-quota-gated) -- not part of the offline `make reproduce` path. See
+# CHANGELOG #13: all three are built and correct but were quota-blocked when last run.
+build-semantic-anchors:
+	python scripts/build_semantic_anchors.py
+
+tune-semantic-threshold:
+	python scripts/tune_semantic_threshold.py --dev-size 40
+
+eval-cuad-ground-truth-hybrid:
+	python scripts/eval_cuad_ground_truth.py --hybrid --out evidence/benchmarks/cuad_ground_truth_hybrid_results.json
+
+eval-llm-zeroshot-baseline:
+	python scripts/eval_llm_zeroshot_baseline.py --sample 30
+
+pitch-deck:
+	python scripts/build_pitch_deck.py
 
 reproduce:
 	bash scripts/reproduce.sh 2>/dev/null || (echo "[reproduce] bash not found — running Windows fallback: tests + EVAL_MOCK=1 eval"; cd baseline && python -m pytest tests -v && cd ../advanced && python -m pytest tests -v && python scripts/eval_harness.py)

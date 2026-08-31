@@ -124,24 +124,27 @@ Expected: `X passed in Ys` (counts filled after kickoff). CI fails if coverage <
 The harness is what proves **measured improvement** — the core judging criterion for "advanced vs baseline."
 
 ```bash
-make eval
-# Runs: python scripts/eval.py --baseline http://localhost:8000 --advanced http://localhost:8001
+make eval          # EVAL_MOCK not set — runs the real LLM cross-check/judge if an API key is present
+make eval-mock     # EVAL_MOCK=1 — fully offline, deterministic, no API key needed
+# Runs: python scripts/eval_harness.py (no args — reads shared/fixtures/contracts/ directly,
+#       runs both baseline.process_contract and advanced.process_contract_advanced in-process)
 # Outputs:
 #   evidence/benchmarks/results.json   # machine-readable
-#   evidence/benchmarks/results.md     # human table
-#   evidence/benchmarks/comparison.md  # the "money slide" — % deltas + p-values
+#   evidence/benchmarks/comparison.md  # the "money slide" — every number computed live, no hardcoded targets
 ```
 
-**Metrics template (replace with real metrics at kickoff):**
+**Real metrics, computed on 30 CUAD-derived fixture contracts (see `evidence/benchmarks/comparison.md`):**
 
 | Metric | Baseline | Advanced | Delta |
 |--------|----------|----------|-------|
-| Success rate | _TBD_ | _TBD_ | _TBD_ |
-| P95 latency | _TBD_ | _TBD_ | _TBD_ |
-| Edge-case pass | _TBD_ | _TBD_ | _TBD_ |
-| Cost / 1k tasks | _TBD_ | _TBD_ | _TBD_ |
+| Trap Recall (primary) | 56% | 100% | +44pp |
+| Evidence-supported edit rate | 32.4% | 82.1% | +49.7pp |
+| Unsupported edit rate | 67.6% | 17.9% | -49.7pp |
+| Est. human review time/contract | 3.5 min | 2.8 min | -0.7 min |
 
-Direct `make eval` output is committed to `evidence/benchmarks/results.json` — judges re-run and diff.
+Trap Recall is deterministic and needs no API key. The optional LLM Judge secondary metric (`scripts/llm_judge.py`, 5-dimension rubric) degrades to a clearly-labeled mock score with no key — see `evidence/benchmarks/llm_judge_results.json` for its current `mode`.
+
+`make eval` output is committed to `evidence/benchmarks/results.json` — judges re-run and diff.
 
 Data required: listed in `shared/fixtures/README.md` + `REPRODUCTION.md` §6. Public/synthetic data only unless PDF says otherwise.
 
@@ -151,14 +154,16 @@ Data required: listed in `shared/fixtures/README.md` + `REPRODUCTION.md` §6. Pu
 
 ```bash
 make reproduce
-# → scripts/reproduce.sh
-# Steps:
-#   1. fresh venv (or --docker flag uses fresh containers)
-#   2. make setup
-#   3. make test          (assert green)
-#   4. make run-all & wait for health
-#   5. make eval          (assert results.json matches evidence/benchmarks/expected_outputs.json within tolerance)
-#   6. teardown
+# → scripts/reproduce.sh (actual steps, verified against the real script, not aspirational):
+#   1. bash scripts/setup.sh   (fresh .venv, installs baseline + advanced + dashboard requirements.txt)
+#   2. baseline test suite (pytest, no network)
+#   3. advanced unit + integration test suite (pytest, no network)
+#   4. dashboard smoke suite (streamlit.testing.v1.AppTest -- actually runs app/streamlit_app.py, EVAL_MOCK=1)
+#   5. held-out generalization suite (15 fresh contracts, EVAL_MOCK=1)
+#   6. stress suite (7 messy real-world fixtures, EVAL_MOCK=1)
+#   7. PRIMARY metric: CUAD ground-truth eval, 510 real contracts (no key needed -- regex-only default)
+#   8. 30-fixture eval harness (EVAL_MOCK=1) -> evidence/benchmarks/results.json + comparison.md
+#   9. asserts results.json and comparison.md exist and are non-empty
 ```
 
 Exit code `0` = reproducible. Output is `evidence/benchmarks/reproduce.log`.
@@ -181,13 +186,29 @@ If PDF pins a runtime (e.g., "Python 3.10 only, no network"), that overrides thi
 
 | Task | Time | Cost | Notes |
 |------|------|------|-------|
-| `make setup` | 2–4 min | $0 | pip + npm |
-| `make test` | 30–90s | $0 | without LLM calls |
-| `make eval` (with LLM) | 2–10 min | $0.10–2.00 | depends on problem; mock mode `EVAL_MOCK=1 make eval` costs $0 |
-| `make reproduce` | 5–15 min | same | includes eval |
-| Docker build (cold) | 3–6 min | $0 | cached <30s |
+| `make setup` | 2-4 min | $0 | pip + npm |
+| `make test` | 30-90s | $0 | without LLM calls |
+| `make eval` (mock, offline) | 1-2 min | $0 | deterministic, 30 contracts, EVAL_MOCK=1 |
+| `make eval` (with LLM verify) | 2-10 min | $0.10-2.00 | depends on provider; EVAL_MOCK=1 costs $0 |
+| `make reproduce` | 5-15 min | $0-2 | includes eval |
+| Docker build (cold) | 3-6 min | $0 | cached <30s |
 
-LLM costs are from **your own keys** in `.env` — never committed. `EVAL_MOCK=1` lets judges verify harness without keys.
+Per-model cost breakdown (30 contracts, real LLM calls, 2026 pricing approx):
+
+| Model (LLM_MODEL) | Provider | Cost per 30 contracts | Cost per contract | Notes |
+|---|---|---|---|---|
+| gemini/gemini-2.5-flash | Google AI Studio | ~$0.02-0.05 | ~$0.001 | default, free tier 20 req/day |
+| gpt-4o-mini | OpenAI | ~$0.08-0.12 | ~$0.003 | 1M input tokens ~ $0.15 |
+| claude-haiku-4-5 | Anthropic | ~$0.10-0.15 | ~$0.004 | similar |
+| EVAL_MOCK=1 | none | $0 | $0 | deterministic gate only |
+
+Embedding cost (semantic layer, optional):
+
+| Model | Cost per 510 CUAD contracts |
+|---|---|
+| gemini-embedding-001 | ~$0.02-0.04 | free tier quotas (see CHANGELOG #13) |
+
+Budget reproducibility: `EVAL_MOCK=1 make eval` is always $0 and is what CI/judges without keys run.
 
 ---
 

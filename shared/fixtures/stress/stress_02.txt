@@ -1,0 +1,15 @@
+SOFTWARE AS A SERVICE AGREEMENT
+
+This Agreement is entered into between Ridgeline Cloud Corp. ("Company") and the customer named in the Order Form ("Customer").
+
+ARTICLE 7 -- SUBSCRIPTION TERM
+
+The initial subscription term is twelve (12) months. This Agreement will thereafter renew automatically for additional twelve (12) month renewal terms.
+
+ARTICLE 8 -- NOTICE OF NON-RENEWAL
+
+EITHER PARTY MAY DECLINE TO RENEW BY PROVIDING WRITTEN NOTICE NO LESS THAN THIRTY (30) DAYS PRIOR TO THE END OF THE THEN-CURRENT TERM. IF NEITHER PARTY GIVES SUCH NOTICE, THE AGREEMENT RENEWS AUTOMATICALLY UNDER ARTICLE 7.
+
+ARTICLE 9 -- FEES
+
+Customer shall pay all fees set forth in the Order Form within thirty (30) days of invoice.

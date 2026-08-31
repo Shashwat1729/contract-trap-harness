@@ -1,0 +1,73 @@
+ENTERPRISE SOFTWARE LICENSE AND SERVICES AGREEMENT
+
+This Enterprise Software License and Services Agreement (this "Agreement") is entered into as of the Effective Date by and between Corvid Systems, Inc., a Delaware corporation ("Company"), and the customer identified on the applicable Order Form ("Customer"). Company and Customer are each a "Party" and collectively the "Parties."
+
+RECITALS
+
+WHEREAS, Company has developed and owns certain proprietary software-as-a-service offerings; and WHEREAS, Customer desires to obtain a subscription to such offerings on the terms set forth herein;
+
+NOW, THEREFORE, in consideration of the mutual covenants contained herein, the Parties agree as follows.
+
+1. Definitions
+
+"Confidential Information" means any non-public information disclosed by one Party to the other, whether orally or in writing, that is designated as confidential or that reasonably should be understood to be confidential given the nature of the information. "Documentation" means the user guides, manuals, and other materials provided by Company describing the use of the Service. "Order Form" means an ordering document specifying the Service to be provided hereunder. "Service" means the hosted software service made available by Company under this Agreement. "Users" means Customer's employees, consultants, and contractors authorized to use the Service.
+
+2. Provision of Service
+
+Subject to the terms of this Agreement, Company will use commercially reasonable efforts to make the Service available to Customer pursuant to the Order Form, and to provide the applicable support services described in the Documentation. Company reserves the right to modify the Service from time to time provided such modifications do not materially degrade the core functionality purchased by Customer.
+
+3. Customer Responsibilities
+
+Customer is responsible for its Users' compliance with this Agreement, for the accuracy and legality of data submitted to the Service, and for maintaining the confidentiality of any login credentials issued to its Users. Customer shall promptly notify Company of any known or suspected unauthorized access to the Service.
+
+4. Fees and Payment
+
+Customer shall pay all fees specified in the applicable Order Form. Except as otherwise provided, fees are non-refundable. Company may suspend Service if payment is more than thirty (30) days past due, following written notice to Customer of the delinquency.
+
+5. Confidentiality
+
+Each Party agrees to protect the other Party's Confidential Information using the same degree of care it uses for its own confidential information of similar nature, but no less than a reasonable degree of care. The confidentiality obligations in this Section 5 shall survive termination of this Agreement for a period of twelve (12) months.
+
+6. Intellectual Property
+
+Company retains all right, title, and interest in and to the Service, including all software, algorithms, and user interface designs, and all intellectual property rights therein. Customer retains all right, title, and interest in the data and content it submits to the Service.
+
+7. Warranties and Disclaimers
+
+Company warrants that the Service will perform materially in accordance with the Documentation. EXCEPT AS EXPRESSLY SET FORTH HEREIN, THE SERVICE IS PROVIDED "AS IS" AND COMPANY DISCLAIMS ALL OTHER WARRANTIES, WHETHER EXPRESS, IMPLIED, OR STATUTORY, INCLUDING WITHOUT LIMITATION ANY IMPLIED WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
+
+8. Limitation of Liability
+
+NOTWITHSTANDING ANYTHING TO THE CONTRARY, COMPANY'S TOTAL LIABILITY ARISING OUT OF OR RELATED TO THIS AGREEMENT SHALL BE UNLIMITED, AND COMPANY SHALL BE LIABLE FOR ALL DIRECT, INDIRECT, INCIDENTAL, AND CONSEQUENTIAL DAMAGES ARISING FROM ANY BREACH OF THIS AGREEMENT, REGARDLESS OF THE THEORY OF LIABILITY.
+
+9. Indemnification
+
+Customer shall indemnify, defend, and hold harmless Company from and against any third-party claims arising out of Customer's misuse of the Service or breach of Section 3.
+
+10. Term and Termination
+
+This Agreement commences on the Effective Date and continues until terminated as provided herein. Either Party may terminate this Agreement for material breach if the breaching Party fails to cure such breach within thirty (30) days of written notice.
+
+11. Force Majeure
+
+Neither Party shall be liable for any failure or delay in performance under this Agreement to the extent such failure or delay is caused by circumstances beyond its reasonable control, including acts of God, natural disaster, war, or governmental action, provided the affected Party gives notice within thirty (30) days of the onset of such event.
+
+12. Notices
+
+All notices under this Agreement shall be in writing and delivered to the address specified in the applicable Order Form, and shall be deemed effective five (5) business days after mailing or upon confirmed electronic delivery.
+
+13. Assignment
+
+Neither Party may assign this Agreement without the prior written consent of the other Party, except in connection with a merger, acquisition, or sale of substantially all assets.
+
+14. Governing Law
+
+This Agreement shall be governed by the laws of the State of Delaware, without regard to its conflict of laws principles.
+
+15. Entire Agreement
+
+This Agreement, together with all Order Forms, constitutes the entire agreement between the Parties and supersedes all prior or contemporaneous agreements, whether written or oral, relating to its subject matter.
+
+16. Miscellaneous
+
+If any provision of this Agreement is held invalid or unenforceable, the remaining provisions shall continue in full force and effect. This Agreement may be executed in counterparts, each of which shall be deemed an original.

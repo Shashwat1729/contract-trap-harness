@@ -7,8 +7,17 @@ services:
     env_file: .env
     environment:
       PORT: 8000
+      EVAL_MOCK: ${EVAL_MOCK:-0}
+      LLM_TIMEOUT: ${LLM_TIMEOUT:-30}
+      RETRY_MAX_WAIT: ${RETRY_MAX_WAIT:-4}
     volumes:
       - ./evidence:/app/evidence
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
 
   advanced:
     build: ./advanced
@@ -17,8 +26,18 @@ services:
     env_file: .env
     environment:
       PORT: 8001
+      EVAL_MOCK: ${EVAL_MOCK:-0}
+      LLM_TIMEOUT: ${LLM_TIMEOUT:-30}
+      RETRY_MAX_WAIT: ${RETRY_MAX_WAIT:-4}
+      LLM_MODEL: ${LLM_MODEL:-gemini/gemini-2.5-flash}
     volumes:
       - ./evidence:/app/evidence
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 15s
 
   # Add DB/cache here at kickoff if PDF prescribes:
   # postgres:

@@ -1,5 +1,5 @@
 # Results
 
-RedlineBench 45.2% -> 57.8% (+12.6pp) | Unsupported 67.6% -> 12.2% | Trap Recall 56% -> 100% | Evidence-supported 72% -> 96% (reviewer headline structure)
+CUAD ground truth (real, 510 contracts): recall 15.5% -> 42.2% | precision 53.7% -> 92.7% || Trap Recall (self-graded regression suite) 56% -> 100% (+44pp) | Unsupported 78.6% -> 16.3% | Evidence-supported 21.4% -> 83.7% | LLM Judge 52 -> 44/100 (partial-live (9/16 calls reached the model, rest fell back to mock -- likely a provider quota limit hit mid-run))
 
 See results.json

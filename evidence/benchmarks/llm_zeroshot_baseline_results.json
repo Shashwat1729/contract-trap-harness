@@ -1,0 +1,183 @@
+{
+  "model": "gemini/gemini-2.5-flash",
+  "source": "docs/research/cuad/CUADv1.json -- real, expert-annotated (Hendrycks et al., NeurIPS 2021)",
+  "note": "Real, live zero-shot LLM calls, one per contract (all 11 rules asked together). n_requested is the sample size requested; n_scored is how many actually returned a real (non-mock, non-error) response and were scored -- if these differ, some contracts hit a rate limit or transient error and were excluded from the scored stats rather than silently counted as failures either direction.",
+  "n_requested": 10,
+  "n_scored": 1,
+  "per_rule": {
+    "Renewal Term": {
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "tn": 1,
+      "recall": null,
+      "precision": null
+    },
+    "Notice Period to Terminate Renewal": {
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "tn": 1,
+      "recall": null,
+      "precision": null
+    },
+    "Termination for Convenience": {
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "tn": 1,
+      "recall": null,
+      "precision": null
+    },
+    "Cap/Uncapped Liability": {
+      "tp": 0,
+      "fp": 0,
+      "fn": 1,
+      "tn": 0,
+      "recall": 0.0,
+      "precision": null
+    },
+    "Audit Rights": {
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "tn": 0,
+      "recall": 1.0,
+      "precision": 1.0
+    },
+    "Governing Law": {
+      "tp": 0,
+      "fp": 0,
+      "fn": 1,
+      "tn": 0,
+      "recall": 0.0,
+      "precision": null
+    },
+    "License Grant": {
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "tn": 1,
+      "recall": null,
+      "precision": null
+    },
+    "Non-Compete": {
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "tn": 1,
+      "recall": null,
+      "precision": null
+    },
+    "Non-Disparagement": {
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "tn": 1,
+      "recall": null,
+      "precision": null
+    },
+    "IP Ownership Assignment": {
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "tn": 1,
+      "recall": null,
+      "precision": null
+    },
+    "Post-Termination Services": {
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "tn": 1,
+      "recall": null,
+      "precision": null
+    }
+  },
+  "overall": {
+    "tp": 1,
+    "fp": 0,
+    "fn": 2,
+    "tn": 8,
+    "recall": 0.333,
+    "precision": 1.0
+  },
+  "per_contract": [
+    {
+      "title": "WestPharmaceuticalServicesInc_20200116_8-K_EX-10.1_11947529_EX-10.1_Supply Agreement",
+      "ran": true,
+      "gold": {
+        "Renewal Term": false,
+        "Notice Period to Terminate Renewal": false,
+        "Termination for Convenience": false,
+        "Cap/Uncapped Liability": true,
+        "Audit Rights": true,
+        "Governing Law": true,
+        "License Grant": false,
+        "Non-Compete": false,
+        "Non-Disparagement": false,
+        "IP Ownership Assignment": false,
+        "Post-Termination Services": false
+      },
+      "predicted": {
+        "Renewal Term": false,
+        "Notice Period to Terminate Renewal": false,
+        "Termination for Convenience": false,
+        "Cap/Uncapped Liability": false,
+        "Audit Rights": true,
+        "Governing Law": false,
+        "License Grant": false,
+        "Non-Compete": false,
+        "Non-Disparagement": false,
+        "IP Ownership Assignment": false,
+        "Post-Termination Services": false
+      },
+      "latency_ms": 9895
+    },
+    {
+      "title": "VIOLINMEMORYINC_12_12_2012-EX-10.14-SPONSORSHIP AGREEMENT",
+      "ran": false,
+      "error": "ValueError: no JSON object found in LLM response: '```json\\n{\\n  \"Renewal Term\": true,\\n  \"Notice Period to Terminate Renewal\": false,\\n  \"Termination for Convenience\": false,\\n  \"Cap/Un'"
+    },
+    {
+      "title": "TELKOMSALTD_01_30_2003-EX-10-LICENCE AND MAINTENANCE AGREEMENT",
+      "ran": false,
+      "error": "ValueError: no JSON object found in LLM response: '```json\\n{\"Renewal Term\": false, \"Notice Period to Terminate Renewal\": false, \"Termination for Convenience\": false, \"Cap/Uncapped Liability\": false, \"Audit Rights\":'"
+    },
+    {
+      "title": "ELFBEAUTY,INC_07_02_2020-EX-10.1-COOPERATION AGREEMENT",
+      "ran": false,
+      "error": "ValueError: no JSON object found in LLM response: '```json\\n{\"Renewal Term\": false, \"Notice Period to Terminate Renewal\": false, \"Termination for Convenience\": false, \"Cap/Uncapped Liability\": false, \"Audit Rights'"
+    },
+    {
+      "title": "CORALGOLDRESOURCES,LTD_05_28_2020-EX-4.1-CONSULTING AGREEMENT",
+      "ran": false,
+      "error": "ValueError: no JSON object found in LLM response: '```json\\n{\"Renewal Term\": false, \"Notice Period to Terminate Renewal\": false, \"Termination for Convenience\": true, \"Cap/Uncapped Liability\": false, \"Audit Rights'"
+    },
+    {
+      "title": "N2KINC_10_16_1997-EX-10.16-SPONSORSHIP AGREEMENT",
+      "ran": false,
+      "error": "RateLimitError: litellm.RateLimitError: litellm.RateLimitError: geminiException - {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 26.897633741s.\",\n    \"status\": \"RESOURCE_EXHAUSTED\",\n    \"details\": [\n      {\n        \"@type\": \"type.googleapis.com/google.rpc.Help\",\n        \"links\": [\n          {\n            \"description\": \"Learn more about Gemini API quotas\",\n            \"url\": \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n          }\n        ]\n      },\n      {\n        \"@type\": \"type.googleapis.com/google.rpc.QuotaFailure\",\n        \"violations\": [\n          {\n            \"quotaMetric\": \"generativelanguage.googleapis.com/generate_content_free_tier_requests\",\n            \"quotaId\": \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\",\n            \"quotaDimensions\": {\n              \"model\": \"gemini-2.5-flash\",\n              \"location\": \"global\"\n            },\n            \"quotaValue\": \"20\"\n          }\n        ]\n      },\n      {\n        \"@type\": \"type.googleapis.com/google.rpc.RetryInfo\",\n        \"retryDelay\": \"26s\"\n      }\n    ]\n  }\n}\n"
+    },
+    {
+      "title": "IMPCOTECHNOLOGIESINC_04_15_2003-EX-10.65-JOINT VENTURE AGREEMENT",
+      "ran": false,
+      "error": "LLMCallError: no Gemini API keys available (all exhausted or none configured)"
+    },
+    {
+      "title": "LECLANCHÉ S.A. - JOINT DEVELOPMENT AND MARKETING AGREEMENT",
+      "ran": false,
+      "error": "LLMCallError: no Gemini API keys available (all exhausted or none configured)"
+    },
+    {
+      "title": "BUFFALOWILDWINGSINC_06_05_1998-EX-10.3-FRANCHISE AGREEMENT",
+      "ran": false,
+      "error": "LLMCallError: no Gemini API keys available (all exhausted or none configured)"
+    },
+    {
+      "title": "DYNAMEXINC_06_06_1996-EX-10.4-TRANSPORTATION SERVICES AGREEMENT",
+      "ran": false,
+      "error": "LLMCallError: no Gemini API keys available (all exhausted or none configured)"
+    }
+  ]
+}

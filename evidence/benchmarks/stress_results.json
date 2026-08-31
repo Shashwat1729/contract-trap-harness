@@ -1,0 +1,127 @@
+{
+  "summary": {
+    "n_cases": 7,
+    "n_scored": 7,
+    "n_pass": 7,
+    "pass_rate": 1.0,
+    "known_gaps_excluded_from_score": [],
+    "failures": []
+  },
+  "cases": [
+    {
+      "id": "stress_01",
+      "rule_id": "P-01",
+      "name": "OCR-noise contract: irregular whitespace, mid-word line-wrap hyphens, page-break markers",
+      "expected": true,
+      "known_gap": false,
+      "caught": true,
+      "approved_rules_found": [
+        "P-01"
+      ],
+      "all_proposed_rules": [
+        "P-01"
+      ],
+      "coverage_gap_rules_found": [
+        "P-03"
+      ]
+    },
+    {
+      "id": "stress_02",
+      "rule_id": "P-02",
+      "name": "ALL CAPS + em-dash headers ('ARTICLE 8 -- TERM AND RENEWAL')",
+      "expected": true,
+      "known_gap": false,
+      "caught": true,
+      "approved_rules_found": [
+        "P-02"
+      ],
+      "all_proposed_rules": [
+        "P-02"
+      ],
+      "coverage_gap_rules_found": [
+        "P-03"
+      ]
+    },
+    {
+      "id": "stress_03",
+      "rule_id": "P-04",
+      "name": "Long document (~1200 words of boilerplate) with the real trap buried mid-document and decoy numbers (30 days, 12 months) in unrelated sections",
+      "expected": true,
+      "known_gap": false,
+      "caught": true,
+      "approved_rules_found": [
+        "P-04"
+      ],
+      "all_proposed_rules": [
+        "P-04"
+      ],
+      "coverage_gap_rules_found": [
+        "P-03"
+      ]
+    },
+    {
+      "id": "stress_04",
+      "rule_id": "P-04",
+      "name": "Multi-level subsection numbering (8.2/8.3/8.4) adjacent to a clause using 'unlimited' in a safe, non-trap sense -- tests snippet cross-contamination boundary",
+      "expected": true,
+      "known_gap": false,
+      "caught": true,
+      "approved_rules_found": [
+        "P-04"
+      ],
+      "all_proposed_rules": [
+        "P-04"
+      ],
+      "coverage_gap_rules_found": [
+        "P-03"
+      ]
+    },
+    {
+      "id": "stress_05",
+      "rule_id": "P-06",
+      "name": "International/Commonwealth drafting: 'whilst', 'Governing Law: England and Wales', 'twelve (12) calendar months'",
+      "expected": true,
+      "known_gap": false,
+      "caught": true,
+      "approved_rules_found": [
+        "P-06"
+      ],
+      "all_proposed_rules": [
+        "P-06"
+      ],
+      "coverage_gap_rules_found": [
+        "P-03"
+      ]
+    },
+    {
+      "id": "stress_06",
+      "rule_id": "P-01",
+      "name": "'shall automatically renew for successive twenty-four (24) month periods' -- no literal 'renewal term'/'auto-renew' noun phrase",
+      "expected": true,
+      "known_gap": false,
+      "caught": true,
+      "approved_rules_found": [
+        "P-01"
+      ],
+      "all_proposed_rules": [
+        "P-01"
+      ],
+      "coverage_gap_rules_found": [
+        "P-03"
+      ]
+    },
+    {
+      "id": "stress_07",
+      "rule_id": null,
+      "name": "Long, noisy, multi-level-numbered contract with zero traps -- false-positive control under realistic messiness",
+      "expected": false,
+      "known_gap": false,
+      "caught": true,
+      "approved_rules_found": [],
+      "all_proposed_rules": [],
+      "coverage_gap_rules_found": [
+        "P-03"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,254 @@
+{
+  "summary": {
+    "n_cases": 15,
+    "n_scored": 14,
+    "n_pass": 14,
+    "pass_rate": 1.0,
+    "known_gaps_excluded_from_score": [
+      {
+        "id": "gen_15",
+        "rule_id": "P-04",
+        "name": "ADVERSARIAL: uncapped liability phrased without 'unlimited/uncapped' keyword (known gap, expected to be MISSED)",
+        "caught_anyway": false
+      }
+    ],
+    "failures": []
+  },
+  "cases": [
+    {
+      "id": "gen_01",
+      "rule_id": "P-01",
+      "name": "Renewal Term >12mo (isolated, safe notice)",
+      "expected": true,
+      "known_gap": false,
+      "caught": true,
+      "approved_rules_found": [
+        "P-01"
+      ],
+      "all_proposed_rules": [
+        "P-01"
+      ],
+      "coverage_gap_rules_found": [
+        "P-03"
+      ]
+    },
+    {
+      "id": "gen_02",
+      "rule_id": "P-02",
+      "name": "Notice <60d (isolated, safe renewal)",
+      "expected": true,
+      "known_gap": false,
+      "caught": true,
+      "approved_rules_found": [
+        "P-02"
+      ],
+      "all_proposed_rules": [
+        "P-02"
+      ],
+      "coverage_gap_rules_found": [
+        "P-03"
+      ]
+    },
+    {
+      "id": "gen_03",
+      "rule_id": "P-04",
+      "name": "Uncapped liability, literal 'unlimited'",
+      "expected": true,
+      "known_gap": false,
+      "caught": true,
+      "approved_rules_found": [
+        "P-04"
+      ],
+      "all_proposed_rules": [
+        "P-04"
+      ],
+      "coverage_gap_rules_found": [
+        "P-03"
+      ]
+    },
+    {
+      "id": "gen_04",
+      "rule_id": "P-12",
+      "name": "Cap carve-out via 'shall not apply to' phrasing",
+      "expected": true,
+      "known_gap": false,
+      "caught": true,
+      "approved_rules_found": [
+        "P-12"
+      ],
+      "all_proposed_rules": [
+        "P-12"
+      ],
+      "coverage_gap_rules_found": [
+        "P-03"
+      ]
+    },
+    {
+      "id": "gen_05",
+      "rule_id": "P-05",
+      "name": "Audit rights, 'at any time' no cadence limit",
+      "expected": true,
+      "known_gap": false,
+      "caught": true,
+      "approved_rules_found": [
+        "P-05"
+      ],
+      "all_proposed_rules": [
+        "P-05"
+      ],
+      "coverage_gap_rules_found": [
+        "P-03"
+      ]
+    },
+    {
+      "id": "gen_06",
+      "rule_id": "P-06",
+      "name": "Governing law: Texas (non-CA/NY, tests hardcoding fix)",
+      "expected": true,
+      "known_gap": false,
+      "caught": true,
+      "approved_rules_found": [
+        "P-06"
+      ],
+      "all_proposed_rules": [
+        "P-06"
+      ],
+      "coverage_gap_rules_found": [
+        "P-03"
+      ]
+    },
+    {
+      "id": "gen_07",
+      "rule_id": "P-07",
+      "name": "License grant, perpetual + irrevocable",
+      "expected": true,
+      "known_gap": false,
+      "caught": true,
+      "approved_rules_found": [
+        "P-07"
+      ],
+      "all_proposed_rules": [
+        "P-07"
+      ],
+      "coverage_gap_rules_found": [
+        "P-03"
+      ]
+    },
+    {
+      "id": "gen_08",
+      "rule_id": "P-08",
+      "name": "Non-compete, 24mo worldwide",
+      "expected": true,
+      "known_gap": false,
+      "caught": true,
+      "approved_rules_found": [
+        "P-08"
+      ],
+      "all_proposed_rules": [
+        "P-08"
+      ],
+      "coverage_gap_rules_found": [
+        "P-03"
+      ]
+    },
+    {
+      "id": "gen_09",
+      "rule_id": "P-09",
+      "name": "Non-disparagement, one-way only",
+      "expected": true,
+      "known_gap": false,
+      "caught": true,
+      "approved_rules_found": [
+        "P-09"
+      ],
+      "all_proposed_rules": [
+        "P-09"
+      ],
+      "coverage_gap_rules_found": [
+        "P-03"
+      ]
+    },
+    {
+      "id": "gen_10",
+      "rule_id": "P-10",
+      "name": "IP ownership, vendor owns customer content (paraphrased)",
+      "expected": true,
+      "known_gap": false,
+      "caught": true,
+      "approved_rules_found": [
+        "P-10"
+      ],
+      "all_proposed_rules": [
+        "P-10"
+      ],
+      "coverage_gap_rules_found": [
+        "P-03"
+      ]
+    },
+    {
+      "id": "gen_11",
+      "rule_id": "P-11",
+      "name": "Post-termination: delete vs retain conflict (fresh wording)",
+      "expected": true,
+      "known_gap": false,
+      "caught": true,
+      "approved_rules_found": [
+        "P-11"
+      ],
+      "all_proposed_rules": [
+        "P-11"
+      ],
+      "coverage_gap_rules_found": [
+        "P-03"
+      ]
+    },
+    {
+      "id": "gen_12",
+      "rule_id": "P-03",
+      "name": "No Termination for Convenience clause anywhere (coverage gap, not a finding)",
+      "expected": "coverage_gap",
+      "known_gap": false,
+      "caught": true,
+      "approved_rules_found": [],
+      "all_proposed_rules": [],
+      "coverage_gap_rules_found": [
+        "P-03"
+      ]
+    },
+    {
+      "id": "gen_13",
+      "rule_id": null,
+      "name": "Clean MSA #1 -- all terms market-safe, no traps",
+      "expected": false,
+      "known_gap": false,
+      "caught": true,
+      "approved_rules_found": [],
+      "all_proposed_rules": [],
+      "coverage_gap_rules_found": []
+    },
+    {
+      "id": "gen_14",
+      "rule_id": null,
+      "name": "Clean MSA #2 -- all terms market-safe, no traps",
+      "expected": false,
+      "known_gap": false,
+      "caught": true,
+      "approved_rules_found": [],
+      "all_proposed_rules": [],
+      "coverage_gap_rules_found": []
+    },
+    {
+      "id": "gen_15",
+      "rule_id": "P-04",
+      "name": "ADVERSARIAL: uncapped liability phrased without 'unlimited/uncapped' keyword (known gap, expected to be MISSED)",
+      "expected": true,
+      "known_gap": true,
+      "caught": false,
+      "approved_rules_found": [],
+      "all_proposed_rules": [],
+      "coverage_gap_rules_found": [
+        "P-03"
+      ]
+    }
+  ]
+}

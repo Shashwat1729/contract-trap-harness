@@ -1,0 +1,15 @@
+MASTER SUBSCRIPTION AGREEMENT
+
+This Master Subscription Agreement ("Agreement") is entered into between Northwind Analytics, Inc. ("Vendor") and the customer identified on the applicable Order Form ("Customer").
+
+9. Term and Renewal
+
+This Agreement commences on the Effective Date and continues for an initial period of one year (the "Initial Term"). Following the Initial Term, the Agreement will automatically extend for successive Renewal Terms of thirty-six (36) months each, unless a party provides notice of its intent not to renew as described in Section 10.
+
+10. Notice of Non-Renewal
+
+A party that does not wish to renew must notify the other party in writing at least ninety (90) days before the end of the then-current term. Absent such notice, the Agreement renews automatically under the terms of Section 9.
+
+11. Fees
+
+Customer will pay the fees set forth in the applicable Order Form on the schedule specified therein.

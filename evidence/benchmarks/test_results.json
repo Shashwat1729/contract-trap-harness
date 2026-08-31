@@ -1,0 +1,67 @@
+{
+  "generated_at": "2026-08-31T12:14:49.795907+00:00",
+  "all_passed": true,
+  "suites": {
+    "baseline_unit": {
+      "raw_summary_line": "6 passed in 0.46s",
+      "counts": {
+        "passed": 6,
+        "failed": 0,
+        "skipped": 0,
+        "errors": 0
+      },
+      "returncode": 0,
+      "elapsed_s": 1.48
+    },
+    "baseline_integration": {
+      "raw_summary_line": "3 passed, 1 warning in 0.68s",
+      "counts": {
+        "passed": 3,
+        "failed": 0,
+        "skipped": 0,
+        "errors": 0
+      },
+      "returncode": 0,
+      "elapsed_s": 1.84
+    },
+    "advanced_unit": {
+      "raw_summary_line": "77 passed, 1 skipped in 6.35s",
+      "counts": {
+        "passed": 77,
+        "failed": 0,
+        "skipped": 1,
+        "errors": 0
+      },
+      "returncode": 0,
+      "elapsed_s": 7.55
+    },
+    "advanced_integration": {
+      "raw_summary_line": "6 passed, 1 warning in 1.16s",
+      "counts": {
+        "passed": 6,
+        "failed": 0,
+        "skipped": 0,
+        "errors": 0
+      },
+      "returncode": 0,
+      "elapsed_s": 2.39
+    },
+    "dashboard_smoke": {
+      "raw_summary_line": "5 passed in 3.80s",
+      "counts": {
+        "passed": 5,
+        "failed": 0,
+        "skipped": 0,
+        "errors": 0
+      },
+      "returncode": 0,
+      "elapsed_s": 5.46
+    }
+  },
+  "mypy": {
+    "raw_summary_line": "Success: no issues found in 22 source files",
+    "returncode": 0,
+    "elapsed_s": 35.65,
+    "passed": true
+  }
+}

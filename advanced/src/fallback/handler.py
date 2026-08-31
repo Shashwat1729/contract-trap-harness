@@ -7,11 +7,12 @@ Returns a safe, auditable payload for human review.
 from __future__ import annotations
 
 import logging
+from typing import Any
 
 log = logging.getLogger("advanced.fallback")
 
 
-def fallback_response(contract_id: str, reason: str) -> dict:
+def fallback_response(contract_id: str, reason: str) -> dict[str, Any]:
     log.warning("fallback for %s reason=%s", contract_id, reason)
     return {
         "variant": "advanced",

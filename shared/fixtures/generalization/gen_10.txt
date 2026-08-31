@@ -1,0 +1,11 @@
+PLATFORM SUBSCRIPTION AGREEMENT
+
+Between Ironvale Insight Software ("Vendor") and Customer.
+
+Section 9 -- IP Ownership Assignment
+
+All data, materials, and work product uploaded, generated, or created by Customer through use of the Service shall be owned exclusively by Vendor, including any analyses, reports, or derivative outputs generated from that data.
+
+Section 10 -- Feedback
+
+If Customer provides suggestions or feedback about the Service, Vendor may use that feedback without restriction.

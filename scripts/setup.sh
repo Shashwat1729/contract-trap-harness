@@ -13,11 +13,18 @@ fi
 # shellcheck disable=SC1091
 source .venv/Scripts/activate 2>/dev/null || source .venv/bin/activate
 
-pip install --upgrade pip -q
+# `pip install --upgrade pip` (bare) can fail on Windows with "access is denied" --
+# pip cannot always overwrite its own running executable in-place in that shell
+# context. `python -m pip` avoids that (invokes pip as a module, not as the locked
+# executable) and is also non-fatal here: upgrading pip itself is a nice-to-have,
+# not required for the actual dependency installs below to succeed.
+python -m pip install --upgrade pip -q || echo "[setup] pip self-upgrade skipped (non-fatal)"
 echo "[setup] installing baseline deps"
-pip install -r baseline/requirements.txt -q
+python -m pip install -r baseline/requirements.txt -q
 echo "[setup] installing advanced deps"
-pip install -r advanced/requirements.txt -q
+python -m pip install -r advanced/requirements.txt -q
+echo "[setup] installing dashboard deps"
+python -m pip install -r app/requirements.txt -q
 
 if [ -f "package.json" ]; then
   echo "[setup] installing node deps"

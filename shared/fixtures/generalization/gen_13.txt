@@ -1,0 +1,43 @@
+MASTER SUBSCRIPTION AGREEMENT (MARKET-STANDARD)
+
+Between Anchorlight Data Co. ("Vendor") and Customer.
+
+Section 4 -- Term and Renewal
+
+This Agreement has an initial term of twelve (12) months. It renews automatically for successive Renewal Terms of twelve (12) months each, unless either party gives notice of non-renewal at least ninety (90) days before the end of the then-current term.
+
+Section 5 -- Termination for Convenience
+
+Either party may terminate this Agreement for convenience upon thirty (30) days' written notice to the other party.
+
+Section 6 -- Cap on Liability
+
+Each party's total liability under this Agreement will not exceed the fees paid in the twelve (12) months preceding the claim. This cap applies to all claims arising under this Agreement, including claims for breach of confidentiality, fraud, or willful misconduct.
+
+Section 7 -- Audit Rights
+
+Customer may audit Vendor's relevant records once per year upon thirty (30) days' prior written notice.
+
+Section 8 -- Governing Law
+
+This Agreement is governed by the laws of the State of Delaware.
+
+Section 9 -- License Grant
+
+Vendor grants Customer a limited, non-exclusive license to use the Software during the Term, which terminates automatically upon expiration or termination of this Agreement.
+
+Section 10 -- Non-Compete
+
+For six (6) months after this Agreement ends, Customer shall not directly compete with Vendor's core managed-services offering within the United States.
+
+Section 11 -- Non-Disparagement
+
+Neither party will disparage the other, whether during the Term or after termination.
+
+Section 12 -- IP Ownership Assignment
+
+Customer retains all ownership of data and content it uploads to the Service. Vendor retains all ownership of the underlying platform and its intellectual property.
+
+Section 13 -- Post-Termination Services
+
+Upon termination, Vendor will provide thirty (30) days of transition assistance at Customer's request and will delete Customer Data within sixty (60) days of the end of that transition window.

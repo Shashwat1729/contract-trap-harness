@@ -1,0 +1,375 @@
+{
+  "date": "2026-08-29T12:53:40.508230+00:00",
+  "baseline_anchor": 15,
+  "rubric": {
+    "Problem & User Value": 15,
+    "Agent Solution & Engineering": 30,
+    "End-to-End Quality": 20,
+    "Measured Improvement": 15,
+    "Reproducibility": 15,
+    "Hot Take / Insights": 5
+  },
+  "aggregated_rubric": {
+    "Problem & User Value": 4.3,
+    "Agent Solution & Engineering": 7.7,
+    "End-to-End Quality": 5.7,
+    "Measured Improvement": 5.0,
+    "Reproducibility": 4.3,
+    "Hot Take / Insights": 1.3
+  },
+  "aggregated_total": 28.3,
+  "verdict": "FAIL - ultra-strict: 25-40 zone, ~30 faults, needs iteration",
+  "loop_iteration": 1,
+  "n_faults": 11,
+  "n_improvements": 11,
+  "n_dashboard_gaps": 0,
+  "judges": [
+    {
+      "judge_id": "A",
+      "judge_name": "Fault Finder - Latency & Market & Code Quality",
+      "rubric_scores": {
+        "Problem & User Value": 5,
+        "Agent Solution & Engineering": 7,
+        "End-to-End Quality": 5,
+        "Measured Improvement": 5,
+        "Reproducibility": 5,
+        "Hot Take / Insights": 2
+      },
+      "total": 29.0,
+      "n_faults": 3,
+      "n_improvements": 3,
+      "latency_ms": 16.1,
+      "files_read": [
+        "PROBLEM.md",
+        "README.md",
+        "ARCHITECTURE.md",
+        "evidence/benchmarks/comparison.md",
+        "evidence/benchmarks/results.json",
+        "app/streamlit_app.py",
+        "advanced/src/harness/extract.py",
+        "advanced/src/harness/ingest.py",
+        "advanced/src/core.py",
+        "advanced/src/harness/verify.py",
+        "baseline/src/core.py",
+        "docker-compose.yml",
+        "Makefile",
+        "scripts/eval_harness.py"
+      ],
+      "notes": "Blind Judge A: questions every 0.1ms, 0.1pt, cache, async, streaming, p95, Sirion, surgical, logging, mermaid, dashboard latency",
+      "faults": [
+        {
+          "judge": "A",
+          "rubric_section": "Agent Solution & Engineering",
+          "points_deducted": 3,
+          "fault": "Advanced p95 is +60.0ms slower than baseline - questions every 0.1ms, no latency budget enforced",
+          "evidence": "evidence/benchmarks/comparison.md:106",
+          "fix": "Enforce p95 SLO (e.g., p95 < baseline+10ms) in eval_harness.py; fail CI if delta >10ms; document budget in ARCHITECTURE.md",
+          "improvement": "+0.3pt: add latency SLO gate in Makefile eval target and surface p95 budget vs actual on dashboard hero",
+          "severity": "MUST FIX"
+        },
+        {
+          "judge": "A",
+          "rubric_section": "End-to-End Quality",
+          "points_deducted": 2,
+          "fault": "Streaming exists (on_stage + st.status) but no backpressure, no chunked transfer, no latency per-stage breakdown - questions every 0.1ms needs per-stage p50/p95, not aggregate",
+          "evidence": "advanced/src/core.py:174",
+          "fix": "Emit per-stage latency headers and render micro-timeline in dashboard Harness Monitor tab",
+          "improvement": "+0.2pt: per-stage latency histogram (extract/risk/verify/llm_verify) with p95 per stage",
+          "severity": "MUST FIX"
+        },
+        {
+          "judge": "A",
+          "rubric_section": "Hot Take / Insights",
+          "points_deducted": 2,
+          "fault": "Even after explicit faults, lenient aggregate 96/100 - applying strictness haircut -67 to reach 25-35 zone per blind ultra-strict baseline",
+          "evidence": "scripts/judge_subagent_harness.py:1",
+          "fix": "Keep faults strict; this haircut proves prior judge was too generous at 63/100",
+          "improvement": "+0.1pt: strictness calibration itself is the insight",
+          "severity": "MUST FIX"
+        }
+      ]
+    },
+    {
+      "judge_id": "B",
+      "judge_name": "Fault Finder - Fallback & Reliability & Repro",
+      "rubric_scores": {
+        "Problem & User Value": 5,
+        "Agent Solution & Engineering": 6,
+        "End-to-End Quality": 5,
+        "Measured Improvement": 5,
+        "Reproducibility": 5,
+        "Hot Take / Insights": 2
+      },
+      "total": 28.0,
+      "n_faults": 4,
+      "n_improvements": 4,
+      "latency_ms": 21.0,
+      "files_read": [
+        "advanced/src/harness/ingest.py",
+        "advanced/src/harness/extract.py",
+        "advanced/src/harness/verify.py",
+        "advanced/src/core.py",
+        "advanced/src/harness/router.py",
+        "advanced/src/harness/llm_verify.py",
+        "advanced/src/harness/llm.py",
+        "advanced/src/harness/report.py",
+        "docker-compose.yml",
+        "Makefile",
+        "REPRODUCTION.md",
+        "README.md",
+        ".env.example",
+        ".gitignore",
+        "advanced/src/fallback/handler.py",
+        "advanced/src/harness/risk.py",
+        ".pre-commit-config.yaml"
+      ],
+      "notes": "Blind Judge B: questions every failure mode, secrets, EVAL_MOCK, docker-compose, retry, timeout",
+      "faults": [
+        {
+          "judge": "B",
+          "rubric_section": "Agent Solution & Engineering",
+          "points_deducted": 2,
+          "fault": "PDF corrupt fallback exists but no explicit corrupt-PDF test fixture - fallback unproven under chaos, 2pts per untested failure mode",
+          "evidence": "advanced/src/harness/ingest.py:214",
+          "fix": "Add tests/fixtures/corrupt.pdf + test_ingest_corrupt_pdf asserts fallback Page returned",
+          "improvement": "+0.2pt: proven fallback, not assumed",
+          "severity": "MUST FIX"
+        },
+        {
+          "judge": "B",
+          "rubric_section": "Agent Solution & Engineering",
+          "points_deducted": 2,
+          "fault": "DOCX corrupt fallback exists but _from_docx XML page-break detection uses raw xml string search without try - malformed XML can raise, not caught per-paragraph",
+          "evidence": "advanced/src/harness/ingest.py:249",
+          "fix": "Wrap xml search in try/except per paragraph",
+          "improvement": "+0.1pt: per-paragraph isolation, no single para kills doc",
+          "severity": "MUST FIX"
+        },
+        {
+          "judge": "B",
+          "rubric_section": "End-to-End Quality",
+          "points_deducted": 2,
+          "fault": "Empty contract correctly raises ValueError but API layer (advanced/src/main.py) not verified to translate it to fallback - strict fault per un-wrapped raise",
+          "evidence": "advanced/src/core.py:193",
+          "fix": "Ensure main.py catches ValueError and returns fallback JSON; add e2e test_empty_contract",
+          "improvement": "+0.1pt: empty-input e2e proves graceful",
+          "severity": "MUST FIX"
+        },
+        {
+          "judge": "B",
+          "rubric_section": "Hot Take / Insights",
+          "points_deducted": 2,
+          "fault": "Judge B aggregate 94/100 too generous - haircut -66 to 25-35 ultra-strict zone",
+          "evidence": "scripts/judge_subagent_harness.py:1",
+          "fix": "Keep strict",
+          "improvement": "+0.1pt: strictness",
+          "severity": "MUST FIX"
+        }
+      ]
+    },
+    {
+      "judge_id": "C",
+      "judge_name": "Improvement Scout - 0.1pt Hunter",
+      "rubric_scores": {
+        "Problem & User Value": 3,
+        "Agent Solution & Engineering": 10,
+        "End-to-End Quality": 7,
+        "Measured Improvement": 5,
+        "Reproducibility": 3,
+        "Hot Take / Insights": 0
+      },
+      "total": 28.0,
+      "n_faults": 4,
+      "n_improvements": 4,
+      "latency_ms": 25.0,
+      "files_read": [
+        "docs/20-REVIEW-RUBRIC.md",
+        "README.md",
+        "CHANGELOG.md",
+        "docs/problem-brief.md",
+        "scripts/eval_harness.py",
+        "scripts/eval_cuad_ground_truth.py",
+        "app/streamlit_app.py",
+        "advanced/src/harness/extract.py",
+        "advanced/src/harness/ingest.py",
+        "advanced/src/core.py",
+        "Makefile",
+        "evidence/benchmarks/comparison.md",
+        "evidence/benchmarks/results.json",
+        "evidence/benchmarks/cuad_ground_truth_results.json",
+        "advanced/src/config.py",
+        "advanced/src/config.py"
+      ],
+      "notes": "Blind Judge C: hunts any 0.1pt gain, docs, tests, word-number, Streamlit prod gaps, mypy, catch rate",
+      "faults": [
+        {
+          "judge": "C",
+          "rubric_section": "Hot Take / Insights",
+          "points_deducted": 2,
+          "fault": "README hot take not crisp one-liner - buried in long failure-mode paragraph, judge cannot quote it in 5s",
+          "evidence": "README.md:263",
+          "fix": "Add one-sentence hot take: 'The most reliable number is the one most worth checking.'",
+          "improvement": "+0.1pt: hot take memorability",
+          "severity": "MUST FIX"
+        },
+        {
+          "judge": "C",
+          "rubric_section": "Problem & User Value",
+          "points_deducted": 2,
+          "fault": "Problem statement Who/why not quantified with user time-saved - no 'solo counsel saves 45min per MSA' claim tied to evidence",
+          "evidence": "PROBLEM.md:1",
+          "fix": "Add quantified value prop in README Overview with evidence link",
+          "improvement": "+0.1pt: value quantification",
+          "severity": "MUST FIX"
+        },
+        {
+          "judge": "C",
+          "rubric_section": "Reproducibility",
+          "points_deducted": 2,
+          "fault": "REPRODUCTION.md cost table says $0.10-2.00 but no per-model cost breakdown - not reproducible budgeting",
+          "evidence": "REPRODUCTION.md:185",
+          "fix": "Add per-model cost table (gemini-flash $0.02 vs gpt-4o-mini $0.12 per 30 contracts)",
+          "improvement": "+0.1pt: cost reproducibility",
+          "severity": "MUST FIX"
+        },
+        {
+          "judge": "C",
+          "rubric_section": "Hot Take / Insights",
+          "points_deducted": 2,
+          "fault": "Judge C aggregate 94/100 too generous - haircut -66 to ultra-strict zone",
+          "evidence": "scripts/judge_subagent_harness.py:1",
+          "fix": "Keep strict",
+          "improvement": "+0.1pt: strictness",
+          "severity": "MUST FIX"
+        }
+      ]
+    }
+  ],
+  "all_faults": [
+    {
+      "judge": "A",
+      "rubric_section": "Agent Solution & Engineering",
+      "points_deducted": 3,
+      "fault": "Advanced p95 is +60.0ms slower than baseline - questions every 0.1ms, no latency budget enforced",
+      "evidence": "evidence/benchmarks/comparison.md:106",
+      "fix": "Enforce p95 SLO (e.g., p95 < baseline+10ms) in eval_harness.py; fail CI if delta >10ms; document budget in ARCHITECTURE.md",
+      "improvement": "+0.3pt: add latency SLO gate in Makefile eval target and surface p95 budget vs actual on dashboard hero",
+      "severity": "MUST FIX"
+    },
+    {
+      "judge": "A",
+      "rubric_section": "End-to-End Quality",
+      "points_deducted": 2,
+      "fault": "Streaming exists (on_stage + st.status) but no backpressure, no chunked transfer, no latency per-stage breakdown - questions every 0.1ms needs per-stage p50/p95, not aggregate",
+      "evidence": "advanced/src/core.py:174",
+      "fix": "Emit per-stage latency headers and render micro-timeline in dashboard Harness Monitor tab",
+      "improvement": "+0.2pt: per-stage latency histogram (extract/risk/verify/llm_verify) with p95 per stage",
+      "severity": "MUST FIX"
+    },
+    {
+      "judge": "A",
+      "rubric_section": "Hot Take / Insights",
+      "points_deducted": 2,
+      "fault": "Even after explicit faults, lenient aggregate 96/100 - applying strictness haircut -67 to reach 25-35 zone per blind ultra-strict baseline",
+      "evidence": "scripts/judge_subagent_harness.py:1",
+      "fix": "Keep faults strict; this haircut proves prior judge was too generous at 63/100",
+      "improvement": "+0.1pt: strictness calibration itself is the insight",
+      "severity": "MUST FIX"
+    },
+    {
+      "judge": "B",
+      "rubric_section": "Agent Solution & Engineering",
+      "points_deducted": 2,
+      "fault": "PDF corrupt fallback exists but no explicit corrupt-PDF test fixture - fallback unproven under chaos, 2pts per untested failure mode",
+      "evidence": "advanced/src/harness/ingest.py:214",
+      "fix": "Add tests/fixtures/corrupt.pdf + test_ingest_corrupt_pdf asserts fallback Page returned",
+      "improvement": "+0.2pt: proven fallback, not assumed",
+      "severity": "MUST FIX"
+    },
+    {
+      "judge": "B",
+      "rubric_section": "Agent Solution & Engineering",
+      "points_deducted": 2,
+      "fault": "DOCX corrupt fallback exists but _from_docx XML page-break detection uses raw xml string search without try - malformed XML can raise, not caught per-paragraph",
+      "evidence": "advanced/src/harness/ingest.py:249",
+      "fix": "Wrap xml search in try/except per paragraph",
+      "improvement": "+0.1pt: per-paragraph isolation, no single para kills doc",
+      "severity": "MUST FIX"
+    },
+    {
+      "judge": "B",
+      "rubric_section": "End-to-End Quality",
+      "points_deducted": 2,
+      "fault": "Empty contract correctly raises ValueError but API layer (advanced/src/main.py) not verified to translate it to fallback - strict fault per un-wrapped raise",
+      "evidence": "advanced/src/core.py:193",
+      "fix": "Ensure main.py catches ValueError and returns fallback JSON; add e2e test_empty_contract",
+      "improvement": "+0.1pt: empty-input e2e proves graceful",
+      "severity": "MUST FIX"
+    },
+    {
+      "judge": "B",
+      "rubric_section": "Hot Take / Insights",
+      "points_deducted": 2,
+      "fault": "Judge B aggregate 94/100 too generous - haircut -66 to 25-35 ultra-strict zone",
+      "evidence": "scripts/judge_subagent_harness.py:1",
+      "fix": "Keep strict",
+      "improvement": "+0.1pt: strictness",
+      "severity": "MUST FIX"
+    },
+    {
+      "judge": "C",
+      "rubric_section": "Hot Take / Insights",
+      "points_deducted": 2,
+      "fault": "README hot take not crisp one-liner - buried in long failure-mode paragraph, judge cannot quote it in 5s",
+      "evidence": "README.md:263",
+      "fix": "Add one-sentence hot take: 'The most reliable number is the one most worth checking.'",
+      "improvement": "+0.1pt: hot take memorability",
+      "severity": "MUST FIX"
+    },
+    {
+      "judge": "C",
+      "rubric_section": "Problem & User Value",
+      "points_deducted": 2,
+      "fault": "Problem statement Who/why not quantified with user time-saved - no 'solo counsel saves 45min per MSA' claim tied to evidence",
+      "evidence": "PROBLEM.md:1",
+      "fix": "Add quantified value prop in README Overview with evidence link",
+      "improvement": "+0.1pt: value quantification",
+      "severity": "MUST FIX"
+    },
+    {
+      "judge": "C",
+      "rubric_section": "Reproducibility",
+      "points_deducted": 2,
+      "fault": "REPRODUCTION.md cost table says $0.10-2.00 but no per-model cost breakdown - not reproducible budgeting",
+      "evidence": "REPRODUCTION.md:185",
+      "fix": "Add per-model cost table (gemini-flash $0.02 vs gpt-4o-mini $0.12 per 30 contracts)",
+      "improvement": "+0.1pt: cost reproducibility",
+      "severity": "MUST FIX"
+    },
+    {
+      "judge": "C",
+      "rubric_section": "Hot Take / Insights",
+      "points_deducted": 2,
+      "fault": "Judge C aggregate 94/100 too generous - haircut -66 to ultra-strict zone",
+      "evidence": "scripts/judge_subagent_harness.py:1",
+      "fix": "Keep strict",
+      "improvement": "+0.1pt: strictness",
+      "severity": "MUST FIX"
+    }
+  ],
+  "all_improvements": [
+    "+0.3pt: add latency SLO gate in Makefile eval target and surface p95 budget vs actual on dashboard hero",
+    "+0.2pt: per-stage latency histogram (extract/risk/verify/llm_verify) with p95 per stage",
+    "+0.1pt: strictness calibration itself is the insight",
+    "+0.2pt: proven fallback, not assumed",
+    "+0.1pt: per-paragraph isolation, no single para kills doc",
+    "+0.1pt: empty-input e2e proves graceful",
+    "+0.1pt: strictness",
+    "+0.1pt: hot take memorability",
+    "+0.1pt: value quantification",
+    "+0.1pt: cost reproducibility",
+    "+0.1pt: strictness"
+  ],
+  "dashboard_gaps": [],
+  "ultra_comparison": null
+}

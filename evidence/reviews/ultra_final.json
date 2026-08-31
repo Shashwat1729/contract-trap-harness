@@ -10,7 +10,5 @@
   "total": 100,
   "max_total": 100,
   "faults": [],
-  "improvements": [
-    "Human approval wording: change 'before human sees it' to 'before recommendation reaches human reviewer as approved candidate' per reviewer (+0.2pt)"
-  ]
+  "improvements": []
 }

@@ -1,0 +1,78 @@
+{
+  "contract_id": "cuad_06",
+  "gold_traps": [
+    {
+      "id": "Trap-A",
+      "name": "Renewal vs Termination mismatch",
+      "exists": true,
+      "related_clauses": [
+        "Renewal Term",
+        "Notice Period To Terminate Renewal"
+      ],
+      "conflict": "renewal 24m vs notice 30d locks buyer",
+      "supporting_spans": [
+        "Renewal 24 months",
+        "Notice {nv} days"
+      ],
+      "source": "CUAD + full-text trap scan"
+    },
+    {
+      "id": "Trap-B",
+      "name": "Liability cap bypass",
+      "exists": false,
+      "related_clauses": [],
+      "conflict": "no bypass",
+      "supporting_spans": [],
+      "source": "CUAD Cap On Liability spans"
+    },
+    {
+      "id": "Trap-C",
+      "name": "Deletion vs Retention conflict",
+      "exists": false,
+      "related_clauses": [],
+      "conflict": "no conflict",
+      "supporting_spans": [],
+      "source": "CUAD Post-Termination"
+    },
+    {
+      "id": "Trap-D",
+      "name": "Termination right vs notice mechanism difficulty",
+      "exists": false,
+      "related_clauses": [],
+      "conflict": "trap D requires additional commercial context",
+      "supporting_spans": [],
+      "source": "RedlineBench scenario 3"
+    }
+  ],
+  "baseline_findings_count": 3,
+  "advanced_approved_count": 2,
+  "scores": {
+    "baseline": {
+      "trap_coverage": 10,
+      "citation_accuracy": 10,
+      "surgical_precision": 10,
+      "practical_usefulness": 10,
+      "false_positive_control": 10,
+      "total": 50,
+      "notes": "mock -- no LLM call made",
+      "_mock": true,
+      "_ran": false,
+      "_error": "ValueError: no JSON object found in LLM response: '{\"trap_coverage\": 20, \"citation_accuracy\": 13, \"surgical_precision\": 10, \"practical_usefulness\": 15, \"false_positive_control\": 10, \"total\": 68, \"notes\":'",
+      "_latency_ms_total": 8140
+    },
+    "advanced": {
+      "trap_coverage": 20,
+      "citation_accuracy": 0,
+      "surgical_precision": 5,
+      "practical_usefulness": 15,
+      "false_positive_control": 20,
+      "total": 60,
+      "notes": "System caught the",
+      "_mock": false,
+      "_ran": true,
+      "_latency_ms": 8854,
+      "_model": "gemini/gemini-2.5-flash",
+      "_latency_ms_total": 8854
+    }
+  }
+}

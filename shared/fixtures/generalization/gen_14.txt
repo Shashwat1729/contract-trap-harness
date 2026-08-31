@@ -1,0 +1,43 @@
+CLOUD PLATFORM SUBSCRIPTION AGREEMENT (MARKET-STANDARD)
+
+Between Fernhollow Grid Software ("Vendor") and Customer.
+
+Section 2 -- Term and Renewal
+
+The Initial Term is twelve (12) months. This Agreement renews automatically for successive Renewal Terms of twelve (12) months each unless a party gives notice of non-renewal at least sixty (60) days before the then-current term ends.
+
+Section 3 -- Termination for Convenience
+
+Customer may terminate this Agreement for convenience at any time upon thirty (30) days' written notice.
+
+Section 4 -- Limitation of Liability
+
+Neither party's liability will exceed the total fees paid under this Agreement in the preceding twelve (12) months. This cap does not restrict either party's right to seek injunctive relief, and claims of fraud or willful misconduct are handled separately under Section 19.
+
+Section 5 -- Audit Rights
+
+Customer may request one audit per year of Vendor's security controls, with thirty (30) days' advance notice.
+
+Section 6 -- Governing Law
+
+This Agreement is governed by the laws of the State of Delaware, without regard to conflict of law principles.
+
+Section 7 -- License Grant
+
+Vendor grants Customer a non-exclusive license to access the Service during the Term. The license terminates upon expiration or termination of this Agreement.
+
+Section 8 -- Non-Compete
+
+Customer agrees not to launch a directly competing product using Vendor's Confidential Information for six (6) months after termination, limited to the same product category.
+
+Section 9 -- Non-Disparagement
+
+Both parties agree not to disparage one another publicly, whether during the Term or after termination.
+
+Section 10 -- IP Ownership Assignment
+
+Customer owns all data it submits to the Service. Vendor owns the Service platform, its source code, and any aggregated, de-identified analytics Vendor derives from usage of the Service.
+
+Section 11 -- Post-Termination Services
+
+Following termination, Vendor will make Customer Data available for export for thirty (30) days and will then permanently delete it, with no further retention.

@@ -7,4 +7,10 @@ source = ["src"]
 omit = ["tests/*"]
 
 [tool.coverage.report]
-fail_under = 60
+fail_under = 90
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_ignores = true
+ignore_missing_imports = true

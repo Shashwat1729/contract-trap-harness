@@ -1,0 +1,19 @@
+SUBSCRIPTION SERVICES AGREEMENT
+
+Between Whitmore Ledger Cloud ("Vendor") and Customer.
+
+Section 3 -- Term
+
+This Agreement begins on the Effective Date and continues for twelve (12) months, renewing automatically for successive Renewal Terms of twelve (12) months each unless either party gives notice of non-renewal at least sixty (60) days before the end of the then-current term.
+
+Section 4 -- Termination for Cause
+
+Either party may terminate this Agreement immediately if the other party materially breaches this Agreement and fails to cure the breach within thirty (30) days of written notice.
+
+Section 5 -- Fees
+
+Customer will pay the fees set forth in the Order Form.
+
+Section 6 -- Assignment
+
+Neither party may assign this Agreement without the other party's prior written consent, except to a successor in a merger or acquisition of substantially all of its assets.

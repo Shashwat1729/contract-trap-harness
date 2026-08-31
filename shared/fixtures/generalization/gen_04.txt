@@ -1,0 +1,15 @@
+DATA PROCESSING AND SERVICES AGREEMENT
+
+Between Slate Ridge Software Inc. ("Vendor") and Customer.
+
+Section 18 -- Cap on Liability
+
+Except for the exclusions described below, each party's total liability arising out of or related to this Agreement will not exceed the fees paid by Customer in the twelve (12) months preceding the claim. The foregoing limitation shall not apply to claims arising from a breach of confidentiality obligations, a security incident involving Customer Data, or a party's indemnification obligations under Section 20.
+
+Section 19 -- Insurance
+
+Vendor will maintain commercially reasonable insurance coverage throughout the Term.
+
+Section 20 -- Indemnification
+
+Vendor will indemnify Customer for third-party claims arising from Vendor's breach of its data security obligations.
