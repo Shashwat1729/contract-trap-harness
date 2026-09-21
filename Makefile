@@ -40,8 +40,8 @@ help:
 setup:
 	bash scripts/setup.sh 2>/dev/null || (echo "[setup] bash not found — run manually: python -m venv .venv && pip install -r baseline/requirements.txt -r advanced/requirements.txt"; exit 1)
 
-test: test-unit test-integration test-dashboard
-	@echo "[test] all (non-e2e) passed"
+test: test-unit test-integration test-dashboard test-e2e
+	@echo "[test] all passed"
 
 test-unit:
 	@echo "[test] baseline unit"
@@ -60,7 +60,8 @@ test-integration:
 	cd advanced && $(PY) -m pytest tests/integration -v --tb=short
 
 test-e2e:
-	$(PY) -m pytest tests/e2e -v --tb=short
+	@echo "[test] e2e (in-process, no live services needed)"
+	EVAL_MOCK=1 $(PY) -m pytest tests/e2e -v --tb=short
 
 test-coverage:
 	cd baseline && $(PY) -m pytest --cov=src --cov-report=term --cov-report=html --cov-fail-under=80
@@ -124,11 +125,8 @@ eval-cuad-ground-truth-hybrid:
 eval-llm-zeroshot-baseline:
 	python scripts/eval_llm_zeroshot_baseline.py --sample 30
 
-pitch-deck:
-	python scripts/build_pitch_deck.py
-
 reproduce:
-	bash scripts/reproduce.sh 2>/dev/null || (echo "[reproduce] bash not found — running Windows fallback: tests + EVAL_MOCK=1 eval"; cd baseline && python -m pytest tests -v && cd ../advanced && python -m pytest tests -v && python scripts/eval_harness.py)
+	bash scripts/reproduce.sh 2>/dev/null || (echo "[reproduce] bash not found — running fallback: tests + eval (offline-safe, no keys needed)"; cd baseline && python -m pytest tests -v && cd .. && python -m pytest advanced/tests/unit advanced/tests/integration tests/e2e app/tests -v && python scripts/eval_harness.py)
 
 harness-monitor:
 	streamlit run app/streamlit_app.py --server.port 8501 --server.headless true

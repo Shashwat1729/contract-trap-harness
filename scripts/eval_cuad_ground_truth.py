@@ -43,6 +43,42 @@ sys.path.insert(0, str(ROOT))
 CUAD_JSON = ROOT / "docs" / "research" / "cuad" / "CUADv1.json"
 OUT = ROOT / "evidence" / "benchmarks" / "cuad_ground_truth_results.json"
 
+# Official CUAD release (TheAtticusProject/cuad, CC BY 4.0). CUADv1.json (~40 MB)
+# is a downloaded artifact, not committed to git — this script fetches it once
+# on first run so a fresh clone can reproduce the primary metric.
+CUAD_DATA_URL = "https://github.com/TheAtticusProject/cuad/raw/master/data.zip"
+
+
+def ensure_cuad() -> Path:
+    """Ensure CUADv1.json exists locally, downloading the official release if needed."""
+    if CUAD_JSON.exists():
+        return CUAD_JSON
+    import urllib.request
+    import zipfile
+    import tempfile
+
+    CUAD_JSON.parent.mkdir(parents=True, exist_ok=True)
+    print(f"[cuad] {CUAD_JSON} not found — downloading official release (CC BY 4.0, ~18 MB)...")
+    try:
+        with tempfile.TemporaryDirectory() as tmp:
+            zip_path = Path(tmp) / "data.zip"
+            urllib.request.urlretrieve(CUAD_DATA_URL, zip_path)
+            with zipfile.ZipFile(zip_path) as z:
+                names = z.namelist()
+                member = next((n for n in names if n.endswith("CUADv1.json")), None)
+                if member is None:
+                    raise RuntimeError(f"CUADv1.json not found in release archive: {names[:5]}")
+                with z.open(member) as src, open(CUAD_JSON, "wb") as dst:
+                    dst.write(src.read())
+    except Exception as e:
+        raise SystemExit(
+            f"[cuad] download failed ({e}).\n"
+            f"  Download manually from https://github.com/TheAtticusProject/cuad\n"
+            f"  and place CUADv1.json at {CUAD_JSON}."
+        )
+    print(f"[cuad] saved {CUAD_JSON} ({CUAD_JSON.stat().st_size // 1024} KB)")
+    return CUAD_JSON
+
 # Rule -> {CUAD category id-suffixes (OR'd), our advanced clause_type names, our baseline
 # clause_type names}. Baseline's clause_type names differ from advanced's in places (e.g.
 # baseline calls the liability rule "Uncapped Liability" as its own clause_type, advanced
@@ -103,7 +139,7 @@ def main() -> None:
     # going through detect_clauses()'s trap-flag semantics.
     _tfc_pattern = BASELINE_PLAYBOOK["Termination for Convenience"]["trap_pattern"]
 
-    cuad = json.loads(CUAD_JSON.read_text(encoding="utf-8"))["data"]
+    cuad = json.loads(ensure_cuad().read_text(encoding="utf-8"))["data"]
     if args.sample:
         random.Random(args.seed).shuffle(cuad)
         cuad = cuad[: args.sample]

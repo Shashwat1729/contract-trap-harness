@@ -27,8 +27,10 @@ graph TD
 
 > Mermaid above: every stage emits per-stage latency via on_stage callback to SSE streaming. p95 per stage visible in dashboard Harness Monitor.
 
-> Decisions, trade-offs, and system design. Governed by [`docs/00-EXECUTION-DIRECTIVE.md`](docs/00-EXECUTION-DIRECTIVE.md) — no code before research + plan are reviewed.  
-> Chosen problem: SaaS vendor-contract redlining (see `PROBLEM.md`, `docs/problem-brief.md`). Sections below reflect the architecture as actually built and validated — see `CHANGELOG.md` for the iteration history behind each decision.
+> Decisions, trade-offs, and system design for the Contract Trap Harness:
+> SaaS vendor-contract redlining (see `PROBLEM.md`, `docs/problem-brief.md`).
+> Sections below reflect the architecture as actually built and validated —
+> see `CHANGELOG.md` for the iteration history behind each decision.
 
 ---
 
@@ -125,7 +127,7 @@ Sirion Labs (sirion.ai) claims 60pct faster redlining, 40pct faster negotiation,
 | Cosmetic-only advanced (disqualified) | `evidence/benchmarks/comparison.md` must show ≥2-axis delta |
 | Non-reproducible submission | `make reproduce` tested on clean venv + Docker |
 | Missing trajectories | `capture_trajectory.sh` runs on every agentic session |
-| Video over 5 min | `docs/video-script.md` timed to 4:30 with chapter marks |
+| Demo video | AI-generated overview linked in `README.md` (disclosed as AI-generated) |
 
 ---
 

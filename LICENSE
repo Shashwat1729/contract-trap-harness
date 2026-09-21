@@ -20,4 +20,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-Note: Submissions are governed by the Hackathon Participation Agreement (accepted at registration), under which micro1 owns submissions and may use them for AI model training and evaluation. This MIT licence applies to the scaffold only; final submission terms follow the official agreement.
+Note: this project was originally built for the micro1 Frontier Engineering Challenge 2026.
+The CUAD benchmark data used for evaluation (The Atticus Project, CC BY 4.0) is
+downloaded on first use and is not redistributed with this repository.

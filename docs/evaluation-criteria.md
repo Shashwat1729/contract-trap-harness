@@ -1,14 +1,15 @@
 # Evaluation Criteria — Mapping to Evidence (Official Rubric)
 
-> **Source:** `PROBLEM.md` §5 — official judging rubric (100 pts). Prior inferred 4-pillar tie-break is superseded by the explicit 6-dimension weights below.  
-> **Directive:** `docs/00-EXECUTION-DIRECTIVE.md` Phases 1, 11.
+> **Source:** `PROBLEM.md` §5 — official judging rubric (100 pts) from the micro1
+> Agentic Workflows Hackathon. This page maps each dimension to the evidence that
+> backs it.
 
 ## Qualification Gate (implicit — before scoring)
 
 | Check | How we satisfy | Evidence |
 |-------|---------------|----------|
 | Eligibility | Individual, open globally (18+, not micro1/judge/household), one submission (latest counts) | registration |
-| Completeness | Four deliverables present (code+changelog, reproduction guide, video, trajectories) | `docs/submission-checklist.md` |
+| Completeness | Four deliverables present (code+changelog, reproduction guide, video, trajectories) | `README.md` + `CHANGELOG.md` + `REPRODUCTION.md` + `evidence/` |
 | Integrity | Licences respected, what-existed vs added clear, no secrets, ethical use, public/synthetic data | `ARCHITECTURE.md` §8 + `.env.example` |
 | Trace | Agent trajectories for every agent with instructions→result | `evidence/trajectories/` + `.agent/instructions/` |
 | Reproducibility | Clean-env path documented and runnable | `REPRODUCTION.md` + `make reproduce` |

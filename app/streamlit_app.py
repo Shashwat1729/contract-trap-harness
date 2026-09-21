@@ -1144,7 +1144,7 @@ with tab_repro:
     with r1:
         st.markdown("#### One-command reproduction (clean environment)")
         st.code(
-            "git clone <repo-url> && cd micro1-front\n"
+            "git clone https://github.com/Shashwat1729/contract-trap-harness.git && cd contract-trap-harness\n"
             "cp .env.example .env          # optional: add keys for the real LLM layer\n"
             "make reproduce                # what judges run\n"
             "# Steps: fresh venv -> make setup -> make test -> make run-all -> make eval\n"

@@ -1,6 +1,6 @@
 # micro1 — Agentic Workflows Hackathon — Official Problem Statement
 
-> **Source:** [`micro1 - First Hackathon97ce7c5.pdf`](micro1%20-%20First%20Hackathon97ce7c5.pdf) (10 pages, 648 KB) — extracted 2026-08-28, 14,279 chars, official PDF included in this repository for provenance.
+> **Source:** The official micro1 challenge PDF (10 pages, extracted 2026-08-28, 14,279 chars). The original PDF is not distributed with this public repository; the full extracted text below is retained for provenance.
 
 > **Nature of challenge:** Open-ended. You choose a specific, meaningful problem you understand. Judges evaluate on the four questions and six criteria below — not on a single prescribed task.
 
@@ -198,4 +198,5 @@ Include **representative trajectories for every agent you used**:
 
 ---
 
-*End of clean extraction. See raw text in `PROBLEM_RAW.txt` (pages 1–10). Execution directive (`docs/00-EXECUTION-DIRECTIVE.md`) governs how to act on this statement.*
+*End of clean extraction (10 pages). The original challenge PDF is not distributed
+with this public repository; the extracted text above is retained for provenance.*

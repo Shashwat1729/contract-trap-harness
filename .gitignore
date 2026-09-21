@@ -33,6 +33,8 @@ secrets/
 evidence/benchmarks/*.log
 evidence/screenshots/*.mp4
 evidence/screenshots/*.mov
+*.mp4
+*.mov
 # Keep json/md in git for reviewer diff
 
 # OS

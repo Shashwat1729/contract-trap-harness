@@ -1,34 +1,33 @@
-# Baseline — Simple, Correct, Minimal
+# Baseline — single-pass reference detector
 
-> **Purpose:** Qualification gate. Must be correct, reproducible, and pass acceptance tests alone. No cleverness — just happy path done right. Judges can run this in isolation.
+The comparison point for every number in this repo. A deterministic,
+single-pass clause-trap detector with no verification gating, no retries, and
+no memory: regex + keyword rules over paginated contract text.
 
-## What "baseline" means for this challenge
-
-- Solves the core problem with a single approach (one-pass, no retries, no unverified claims)
-- Handles happy path + basic validation; edge cases may return honest errors (not hallucinations)
-- No speculative features — if the PDF doesn't say to do it, baseline doesn't
-- Must be **fully independent** — `cd baseline && make run` works without `advanced/` or `shared/` beyond schemas
+- **Endpoint:** FastAPI on `:8000` — `GET /health`, `POST /api/redline`
+- **Fair by design:** receives the exact same contracts and the exact same
+  scoring as `advanced/` (see `scripts/eval_harness.py`).
+- **Measured:** 15.5% recall / 53.7% precision on 510 real CUAD contracts
+  (`evidence/benchmarks/comparison.md`).
 
 ## Run
 
 ```bash
 # from repo root
 make run-baseline
-# or directly
-./scripts/run_baseline.sh
 # or isolated
 cd baseline && python -m src.main --port 8000
 # health check
 curl http://localhost:8000/health
-curl http://localhost:8000/api/example  # replace with real endpoint at kickoff
+curl -X POST http://localhost:8000/api/redline \
+  -H 'Content-Type: application/json' \
+  -d '{"contract_text": "<full text>", "contract_id": "msa_01"}'
 ```
 
 ## Test
 
 ```bash
-make test-unit        # or: cd baseline && pytest tests/unit -v
-make test-integration # or: cd baseline && pytest tests/integration -v
-pytest --cov=src --cov-report=term-missing
+cd baseline && pytest tests -v   # 9 passed
 ```
 
 ## Structure
@@ -36,29 +35,19 @@ pytest --cov=src --cov-report=term-missing
 ```
 baseline/
 ├── src/
-│   ├── main.py        # FastAPI app factory + entrypoint
-│   ├── config.py      # env loading, no secrets committed
-│   ├── routes.py      # API routes (replace at kickoff)
-│   └── core.py        # domain logic — keep this pure/testable
+│   ├── main.py     # FastAPI app + /api/redline
+│   ├── config.py   # env loading, no secrets committed
+│   └── core.py     # pure detection logic (PLAYBOOK + cross-trap checks)
 ├── tests/
-│   ├── unit/
-│   └── integration/
+│   ├── unit/         # core detection tests
+│   └── integration/  # API contract tests
 ├── pyproject.toml
 ├── requirements.txt
 ├── Dockerfile
 └── run.sh
 ```
 
-## What to build on Day 1
+## Non-goals (by design — this is what `advanced/` adds)
 
-1. Paste problem → define routes/schemas in `shared/schemas/`
-2. Implement `src/core.py` — pure functions, easy to test
-3. Wire `src/routes.py` + `src/main.py`
-4. Contract tests against acceptance tests
-5. `make test && make eval` — record evidence
-
-## Non-goals
-
-- Retries, caching, self-correction (that's advanced)
-- UI polish (unless problem is UI)
-- Anything that needs a claim without evidence
+- Verification gating, retries, self-correction
+- Precedent retrieval, memory, human-in-the-loop

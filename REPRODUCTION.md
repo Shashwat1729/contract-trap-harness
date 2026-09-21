@@ -9,15 +9,15 @@
 | Requirement | Version | Check | Install |
 |-------------|---------|-------|---------|
 | Python | 3.11.x | `python --version` | https://python.org / `pyenv` |
-| Node.js | 20.x LTS | `node --version` | https://nodejs.org / `nvm` |
-| Docker | 24+ | `docker --version` | https://docs.docker.com/get-docker/ |
+| Docker | 24+ (optional) | `docker --version` | https://docs.docker.com/get-docker/ |
 | Docker Compose | v2+ | `docker compose version` | bundled with Docker Desktop |
 | Make | 4.x | `make --version` | `apt install make` / `brew install make` |
 | Git | 2.40+ | `git --version` | https://git-scm.com |
 
 **Optional but recommended:** `ffmpeg` (for video), `pdftotext` (for `make ingest-problem`).
 
-All versions are **pinned** in `Makefile` and `docker-compose.yml`. If the problem PDF prescribes a different runtime at kickoff, this guide and `Makefile` will be updated and the delta logged in `CHANGELOG.md`.
+All versions are **pinned** in `baseline/requirements.txt`, `advanced/requirements.txt`,
+`app/requirements.txt`, and `docker-compose.yml`.
 
 ---
 
@@ -26,8 +26,8 @@ All versions are **pinned** in `Makefile` and `docker-compose.yml`. If the probl
 ### Path A — Native (fastest for development)
 
 ```bash
-git clone <repo-url>
-cd micro1-front
+git clone https://github.com/Shashwat1729/contract-trap-harness.git
+cd contract-trap-harness
 
 # Creates venv, installs pinned deps for root + baseline + advanced, installs hooks
 make setup
@@ -48,8 +48,8 @@ Expected output: `Setup complete. Run 'make test' to verify.`
 ### Path B — Docker (most reproducible, what CI/judges prefer)
 
 ```bash
-git clone <repo-url>
-cd micro1-front
+git clone https://github.com/Shashwat1729/contract-trap-harness.git
+cd contract-trap-harness
 cp .env.example .env
 
 make docker-build
@@ -108,14 +108,14 @@ make docker-up      # docker compose up -d baseline advanced
 ## 4. Tests
 
 ```bash
-make test           # all: unit + integration + e2e
-make test-unit      # pytest baseline/tests/unit advanced/tests/unit
-make test-integration
-make test-e2e       # tests/e2e — hits live services (run `make run-all` first)
-make test-coverage  # coverage report → evidence/benchmarks/coverage.html
+make test           # unit + integration + dashboard smoke + e2e (all offline)
+make test-e2e       # tests/e2e — in-process via TestClient, no live services needed
+make test-coverage  # coverage report (fail-under 80)
+make mypy           # strict type check
 ```
 
-Expected: `X passed in Ys` (counts filled after kickoff). CI fails if coverage < configured threshold (pre-kickoff threshold: 70% — adjust per PDF).
+Expected: baseline 9 passed, advanced 83 passed / 1 skipped, dashboard 5 passed,
+e2e 3 passed. Coverage gate: 80 (`make test-coverage`).
 
 ---
 
@@ -133,14 +133,23 @@ make eval-mock     # EVAL_MOCK=1 — fully offline, deterministic, no API key ne
 #   evidence/benchmarks/comparison.md  # the "money slide" — every number computed live, no hardcoded targets
 ```
 
-**Real metrics, computed on 30 CUAD-derived fixture contracts (see `evidence/benchmarks/comparison.md`):**
+**Real metrics (see `evidence/benchmarks/comparison.md` for full tables):**
+
+Primary — clause presence on 510 real CUAD contracts:
 
 | Metric | Baseline | Advanced | Delta |
 |--------|----------|----------|-------|
-| Trap Recall (primary) | 56% | 100% | +44pp |
-| Evidence-supported edit rate | 32.4% | 82.1% | +49.7pp |
-| Unsupported edit rate | 67.6% | 17.9% | -49.7pp |
-| Est. human review time/contract | 3.5 min | 2.8 min | -0.7 min |
+| Recall | 15.5% | 42.2% | +26.7pp |
+| Precision | 53.7% | 92.7% | +39.0pp |
+
+Secondary — 30-contract trap suite (same cases for both):
+
+| Metric | Baseline | Advanced | Delta |
+|--------|----------|----------|-------|
+| Trap recall | 56% | 100% | +44pp |
+| Evidence-supported edits | 21.4% | 83.7% | +62.3pp |
+| Unsupported edits | 78.6% | 16.3% | -62.3pp |
+| Est. review time/contract | 5.1 min | 3.4 min | -1.7 min |
 
 Trap Recall is deterministic and needs no API key. The optional LLM Judge secondary metric (`scripts/llm_judge.py`, 5-dimension rubric) degrades to a clearly-labeled mock score with no key — see `evidence/benchmarks/llm_judge_results.json` for its current `mode`.
 
@@ -229,14 +238,15 @@ Budget reproducibility: `EVAL_MOCK=1 make eval` is always $0 and is what CI/judg
 Minimum to verify:
 
 ```bash
-git clone <url> && cd micro1-front
+git clone https://github.com/Shashwat1729/contract-trap-harness.git && cd contract-trap-harness
 cp .env.example .env   # add keys only if you want real LLM eval; mock works without
 make reproduce
 # Check evidence/benchmarks/results.json and comparison.md
 ```
 
-If anything fails, open an issue or contact: yeison@micro1.ai + repo owner.
+If anything fails, please open a GitHub issue with your OS, Python version, and the
+relevant section of `evidence/benchmarks/reproduce.log`.
 
 ---
 
-*Last updated: pre-kickoff scaffold — Aug 28, 2026. Updated at kickoff if PDF prescribes env.*
+*Last verified: Aug 2026 via `make reproduce` (see `evidence/benchmarks/reproduce.log`).*
