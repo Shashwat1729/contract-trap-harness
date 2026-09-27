@@ -121,14 +121,11 @@ def evidence_node(state: HarnessState) -> dict[str, Any]:
     """Node 3: cross-clause trap interactions + playbook coverage gaps."""
     t0 = time.perf_counter()
     try:
-        from ..core import _trap_interactions
-        from .risk import PLAYBOOK
+        from ..core import _trap_interactions, _coverage_gaps
         traps = _trap_interactions(state["contract_text"], state.get("clause_hits", []), state["pages"])
-        gaps = []
-        hit_types = {h.clause_type for h in state.get("clause_hits", [])}
-        for rid, rule in PLAYBOOK.items():
-            if not any(ct in hit_types for ct in rule["clause_types"]):
-                gaps.append({"rule_id": rid, "missing": rule["clause_types"]})
+        # Same absence-based checklist as the direct pipeline (P-03 only -- a missing
+        # clause of any other type is not a playbook trap), same shape.
+        gaps = _coverage_gaps(state.get("clause_hits", []))
         # Folded into the "risk" bucket: cross-clause/coverage analysis over the same
         # clause_hits risk_node already scored, matching the direct pipeline's single
         # "risk" stage_ms bucket rather than inventing a stage key the direct path lacks.

@@ -39,7 +39,7 @@ from .harness.verify import verify_finding, dual_verify_finding, get_thinking_lo
 from .harness.llm_verify import llm_verify_finding, llm_cross_check, llm_result_dict, new_llm_stats
 from .harness.memory import NegotiationMemory, select_harness_mode
 from .harness.router import route_findings
-from .config import ENABLE_LLM_VERIFY, ENABLE_SEMANTIC_EXTRACTION, ENABLE_BM25_EXTRACTION, LLM_TIMEOUT, ENABLE_LANGGRAPH, LLM_VERIFY_SKIP_CONFIDENCE, ENABLE_LLM_EXTRACT, LLM_EXTRACT_MAX_CALLS
+from .config import ENABLE_LLM_VERIFY, ENABLE_SEMANTIC_EXTRACTION, ENABLE_BM25_EXTRACTION, ENABLE_LANGGRAPH, LLM_VERIFY_SKIP_CONFIDENCE, ENABLE_LLM_EXTRACT, LLM_EXTRACT_MAX_CALLS, MAX_CHARS
 
 logger = logging.getLogger("advanced.core")
 
@@ -187,6 +187,45 @@ def _trap_interactions(contract_text: str, clause_hits: list[ClauseHit], pages: 
         return []
 
 
+def _prepare_contract_text(contract_text: str | None, contract_id: str) -> str:
+    """Validate and bound the input the same way for both engines: raises ValueError on
+    empty/whitespace-only text, truncates to MAX_CHARS (env-configurable) with a logged
+    warning. Pages beyond the cut are harmless -- offsets past the end are never produced."""
+    if not contract_text or not contract_text.strip():
+        raise ValueError("contract_text must be non-empty")
+    orig_len = len(contract_text)
+    if orig_len > MAX_CHARS:
+        contract_text = contract_text[:MAX_CHARS]
+        logger.warning("truncation: contract %s orig_len=%d truncated_len=%d (limit %d)", contract_id, orig_len, len(contract_text), MAX_CHARS)
+        _log_thinking("core/truncation", f"orig_len={orig_len}", f"truncated_len={len(contract_text)}", f"Large contract truncated {orig_len} -> {len(contract_text)} chars")
+    return contract_text
+
+
+def _coverage_gaps(clause_hits: list[ClauseHit]) -> list[dict[str, Any]]:
+    """
+    Playbook rules whose trap is the ABSENCE of a clause (currently only P-03, "missing
+    TFC") cannot be evidence-gated the way presence-based findings are -- there is no
+    verbatim span to cite for something that is not in the document. Rather than
+    fabricate a citation to get it through dual-verify, surface it as a distinct,
+    honestly-unverified checklist flag. (A missing clause of any other type -- e.g. no
+    audit-rights clause at all -- is not a trap under the playbook, so it is not a gap.)
+    Shared by the direct pipeline and the LangGraph evidence node.
+    """
+    extracted_types = {h.clause_type for h in clause_hits}
+    gaps: list[dict[str, Any]] = []
+    if "Termination for Convenience" not in extracted_types:
+        p03 = PLAYBOOK["P-03"]
+        gaps.append({
+            "rule_id": "P-03",
+            "clause_type": "Termination for Convenience",
+            "gap": p03["trap"],
+            "proposed_change": p03["preferred"],
+            "rationale": p03["commercial"],
+            "note": "No Termination for Convenience clause was found anywhere in the document. This is a checklist flag, not a citation-verified finding -- there is no span to cite for an absence, so it is not gated through dual-verify/LLM-verify and is not counted in trap_count/evidence_supported.",
+        })
+    return gaps
+
+
 def process_contract_advanced(
     contract_text: str,
     pages: list[Page],
@@ -232,13 +271,7 @@ def process_contract_advanced(
     # suite by eval_harness.py into evidence/benchmarks/results.json.
     stage_ms: dict[str, float] = {}
     _t_prev = t_start
-    if not contract_text or not contract_text.strip():
-        raise ValueError("contract_text must be non-empty")
-    orig_len = len(contract_text)
-    if orig_len > 120000:
-        contract_text = contract_text[:120000]
-        logger.warning("truncation: contract %s orig_len=%d truncated_len=%d (limit 120000)", contract_id, orig_len, len(contract_text))
-        _log_thinking("core/truncation", f"orig_len={orig_len}", f"truncated_len={len(contract_text)}", f"Large contract truncated {orig_len} -> {len(contract_text)} chars")
+    contract_text = _prepare_contract_text(contract_text, contract_id)
 
     mode = select_harness_mode(model, harness_mode)
     logger.info("harness mode=%s contract=%s turn=%s chars=%d", mode, contract_id, turn, len(contract_text))
@@ -313,24 +346,9 @@ def process_contract_advanced(
 
     trap_interactions = _trap_interactions(contract_text, clause_hits, pages)
 
-    # Coverage gaps: playbook rules whose trap is the ABSENCE of a clause (currently
-    # P-03 "missing TFC") cannot be evidence-gated the way presence-based findings are --
-    # there is no verbatim span to cite for something that is not in the document. Rather
-    # than fabricate a citation to get it through dual-verify, surface it as a distinct,
-    # honestly-unverified checklist flag instead of forcing it through the citation pipeline.
     coverage_gaps: list[dict[str, Any]] = []
     try:
-        extracted_types = {h.clause_type for h in clause_hits}
-        if "Termination for Convenience" not in extracted_types:
-            p03 = PLAYBOOK["P-03"]
-            coverage_gaps.append({
-                "rule_id": "P-03",
-                "clause_type": "Termination for Convenience",
-                "gap": p03["trap"],
-                "proposed_change": p03["preferred"],
-                "rationale": p03["commercial"],
-                "note": "No Termination for Convenience clause was found anywhere in the document. This is a checklist flag, not a citation-verified finding -- there is no span to cite for an absence, so it is not gated through dual-verify/LLM-verify and is not counted in trap_count/evidence_supported.",
-            })
+        coverage_gaps = _coverage_gaps(clause_hits)
         _emit("coverage", f"{len(coverage_gaps)} missing-clause checklist flag(s)")
     except Exception as e:
         logger.warning("coverage_gaps check failed: %s", e)
@@ -503,6 +521,16 @@ def process_contract_advanced(
     }
 
 
+def _update_memory(memory: NegotiationMemory | None, result: dict[str, Any], turn: int) -> None:
+    """Graph-engine parity with the direct pipeline's negotiation-memory update."""
+    if memory is None:
+        return
+    try:
+        memory.update_from_findings(result.get("findings", []), turn=turn)
+    except Exception as e:
+        logger.warning("memory update failed: %s", e)
+
+
 def _graph_state_to_dict(result: dict[str, Any], contract_id: str, turn: int, harness_mode: str, thread_id: str) -> dict[str, Any]:
     """Convert a completed (non-interrupted) LangGraph state dict to the legacy response shape."""
     return {
@@ -572,18 +600,22 @@ def process_contract_graph(
 
     if contract_text is None or pages is None:
         raise ValueError("contract_text and pages are required unless resume_decision is set")
+    if engine not in ("auto", "direct", "graph"):
+        raise ValueError(f"engine must be one of auto|direct|graph, got {engine!r}")
 
     use_graph = engine == "graph" or (engine == "auto" and ENABLE_LANGGRAPH)
     if not use_graph:
         result = process_contract_advanced(contract_text, pages, contract_id, turn, memory, model, harness_mode, on_stage)
         result["engine"] = "direct"
         return result
+    contract_text = _prepare_contract_text(contract_text, contract_id)
+    mode = select_harness_mode(model, harness_mode)
     try:
         from .harness.graph import build_graph
         graph = build_graph()
         init_state = {
             "contract_text": contract_text, "pages": pages, "contract_id": contract_id,
-            "turn": turn, "mode": harness_mode, "clause_hits": [], "trap_interactions": [],
+            "turn": turn, "mode": mode, "clause_hits": [], "trap_interactions": [],
             "coverage_gaps": [], "proposed": [], "verified": [], "verification_results": [],
             "llm_results": [], "dual_stats": {}, "llm_stats": {}, "routed": [], "findings_out": [],
             "approved": [], "rejected": [], "thinking": [], "latency_ms": 0, "stage_latency_ms": {}, "error": None, "dead_letter": None, "retry_count": 0,
@@ -602,8 +634,10 @@ def process_contract_graph(
         config = {"configurable": {"thread_id": tid}}
         result = graph.invoke(init_state, config=config)
         if "__interrupt__" in result:
-            return _pending_review_response(result, contract_id, turn, harness_mode, tid)
-        return _graph_state_to_dict(result, contract_id, turn, harness_mode, tid)
+            return _pending_review_response(result, contract_id, turn, mode, tid)
+        out = _graph_state_to_dict(result, contract_id, turn, mode, tid)
+        _update_memory(memory, out, turn)
+        return out
     except Exception as e:
         logger.exception("graph invoke failed, fallback to direct: %s", e)
         result = process_contract_advanced(contract_text, pages, contract_id, turn, memory, model, harness_mode, on_stage)
@@ -618,7 +652,7 @@ def _pending_review_response(result: dict[str, Any], contract_id: str, turn: int
     the caller resumes with process_contract_graph(resume_decision=..., thread_id=thread_id)."""
     payload = result["__interrupt__"][0].value
     return {
-        "variant": "advanced", "contract_id": contract_id, "turn": turn, "harness_mode": harness_mode,
+        "variant": "advanced", "contract_id": contract_id, "turn": turn, "harness_mode": result.get("mode", harness_mode),
         "engine": "langgraph", "status": "pending_human_review", "thread_id": thread_id,
         "interrupt": payload,
         "trap_interactions": [], "findings": [], "approved_candidates": [], "rejected": [],

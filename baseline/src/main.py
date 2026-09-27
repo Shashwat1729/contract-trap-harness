@@ -6,16 +6,16 @@ No verification gating, no memory — single-pass.
 """
 from __future__ import annotations
 
+import os
 import time
 import logging
-from typing import Optional
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 import uvicorn
 
-from src.core import process_contract, health_check, build_page_map
+from src.core import process_contract, health_check
 from src.config import PORT, LOG_LEVEL
 
 logging.basicConfig(level=LOG_LEVEL.upper(), format="%(asctime)s %(levelname)s %(name)s %(message)s")
@@ -29,8 +29,9 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
+    # Wildcard origins + credentials is rejected by browsers; this API uses no cookies.
+    allow_origins=[o.strip() for o in os.getenv("CORS_ORIGINS", "*").split(",") if o.strip()] or ["*"],
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -99,10 +100,10 @@ def redline(req: RedlineRequest):
     try:
         result = process_contract(req.contract_text)
     except ValueError as e:
-        raise HTTPException(status_code=422, detail=str(e))
+        raise HTTPException(status_code=422, detail=str(e)) from e
     except Exception as e:  # noqa
         log.exception("redline failed")
-        raise HTTPException(status_code=500, detail=f"redline failed: {type(e).__name__}: {e}")
+        raise HTTPException(status_code=500, detail=f"redline failed: {type(e).__name__}") from e
     latency_ms = int((time.perf_counter() - t0) * 1000)
     # Build typed findings
     findings = []
@@ -138,4 +139,4 @@ def trap_detect(req: RedlineRequest):
 
 
 if __name__ == "__main__":
-    uvicorn.run("src.main:app", host="0.0.0.0", port=PORT, reload=True)
+    uvicorn.run("src.main:app", host=os.getenv("HOST", "0.0.0.0"), port=PORT, reload=os.getenv("UVICORN_RELOAD", "0") == "1")

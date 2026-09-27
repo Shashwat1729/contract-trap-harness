@@ -6,20 +6,25 @@ Human approval required before recommendation reaches reviewer as approved candi
 """
 from __future__ import annotations
 
+import os
+import re
+import threading
 import time
 import logging
+from collections import OrderedDict
+from pathlib import Path
 from typing import Optional, Literal, Any, AsyncIterator
 
 import asyncio
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 import uvicorn
 
-from src.config import PORT, LOG_LEVEL, MODEL, HARNESS_MODE, ENABLE_VERIFY, ENABLE_MEMORY, ENABLE_LANGGRAPH
+from src.config import PORT, LOG_LEVEL, HARNESS_MODE, ENABLE_MEMORY, ENABLE_LANGGRAPH, MAX_CHARS
 from src.core import process_contract_advanced, process_contract_graph
-from src.harness.ingest import extract_text_with_pages, Page
+from src.harness.ingest import Page
 from src.harness.memory import NegotiationMemory
 from src.fallback.handler import fallback_response
 
@@ -32,28 +37,60 @@ app = FastAPI(
     description="Verification-gated redlining: discover -> reason -> evidence -> verify -> human review as approved candidate.",
 )
 
+# Wildcard origins cannot be combined with credentials (browsers reject that response), and
+# this API uses no cookies/auth -- so credentials stay off. Restrict origins with
+# CORS_ORIGINS="https://a.example,https://b.example" in production.
+_CORS_ORIGINS = [o.strip() for o in os.getenv("CORS_ORIGINS", "*").split(",") if o.strip()] or ["*"]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
+    allow_origins=_CORS_ORIGINS,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 ADVANCED_FEATURES = ["verification-gated", "citation-provenance", "surgical-edits", "negotiation-memory", "tier-aware-harness", "fallback-sandbox", "agentic-langgraph-mode"]
 
-# In-memory negotiation memory per contract (production would persist to DB)
-_memories: dict[str, NegotiationMemory] = {}
+REDLINE_TIMEOUT_S: float = float(os.getenv("REDLINE_TIMEOUT_S", "30"))
+# Hard ceiling on request size (the harness itself only reads the first MAX_CHARS).
+MAX_REQUEST_CHARS: int = int(os.getenv("MAX_REQUEST_CHARS", str(max(MAX_CHARS * 10, 2_000_000))))
+CHARS_PER_PAGE = 2500
+CONTRACT_ID_PATTERN = r"^[A-Za-z0-9][A-Za-z0-9_.\-]{0,127}$"
+_FIXTURES_DIR = (Path(__file__).parents[2] / "shared" / "fixtures" / "contracts").resolve()
+
+# In-memory negotiation memory per contract (production would persist to DB). Bounded
+# (LRU) so a stream of distinct contract_ids cannot grow process memory without limit.
+_MAX_MEMORIES = int(os.getenv("MAX_NEGOTIATION_MEMORIES", "1000"))
+_memories: "OrderedDict[str, NegotiationMemory]" = OrderedDict()
+_memories_lock = threading.Lock()
+
+
+def _get_memory(contract_id: str, turn: int) -> NegotiationMemory:
+    with _memories_lock:
+        mem = _memories.get(contract_id)
+        if mem is None:
+            mem = NegotiationMemory(contract_id=contract_id, turn=turn)
+            _memories[contract_id] = mem
+        _memories.move_to_end(contract_id)
+        while len(_memories) > _MAX_MEMORIES:
+            _memories.popitem(last=False)
+        return mem
+
+
+def _paginate(text: str, chars_per_page: int = CHARS_PER_PAGE) -> list[Page]:
+    pages = [Page(num=i // chars_per_page + 1, text=text[i: i + chars_per_page], start=i, end=min(i + chars_per_page, len(text)))
+             for i in range(0, len(text), chars_per_page)]
+    return pages or [Page(num=1, text=text, start=0, end=len(text))]
 
 
 class RedlineRequest(BaseModel):
-    contract_text: str = Field(..., min_length=1)
-    contract_id: str = Field(default="contract_01")
-    party: str = Field(default="AgentCo")
+    contract_text: str = Field(..., min_length=1, max_length=MAX_REQUEST_CHARS)
+    contract_id: str = Field(default="contract_01", min_length=1, max_length=128)
+    party: str = Field(default="AgentCo", max_length=200)
     turn: int = Field(default=1, ge=1, le=4)
-    model: str = Field(default="gpt-4o-mini")
-    harness_mode: str = Field(default="auto", description="auto|light|balanced|strict")
-    engine: str = Field(default="auto", description="auto (respects ENABLE_LANGGRAPH env) | direct (single-function pipeline) | graph (LangGraph agentic StateGraph: extract->risk->evidence->verify->[revise->verify]->human_review, always falls back to direct on any graph-invoke exception)")
+    model: str = Field(default="gpt-4o-mini", max_length=200)
+    harness_mode: Literal["auto", "light", "balanced", "strict"] = Field(default="auto", description="auto|light|balanced|strict")
+    engine: Literal["auto", "direct", "graph"] = Field(default="auto", description="auto (respects ENABLE_LANGGRAPH env) | direct (single-function pipeline) | graph (LangGraph agentic StateGraph: extract->risk->evidence->verify->[revise->verify]->human_review, always falls back to direct on any graph-invoke exception)")
 
 
 class RedlineResponse(BaseModel):
@@ -98,37 +135,22 @@ def example_post(payload: dict[str, Any]) -> dict[str, Any]:
 
 @app.post("/api/redline", response_model=RedlineResponse)
 async def redline(req: RedlineRequest) -> RedlineResponse:
-    # Timeout handling: 30s for harness, non-blocking via run_in_executor for CPU-bound extract
+    # The harness is synchronous and CPU/network-bound: run it in a worker thread so it
+    # neither blocks the event loop (every other request) nor defeats the timeout -- a
+    # wait_for() around a coroutine that never awaits cannot fire until the work is done.
+    t0 = time.perf_counter()
     try:
-        return await asyncio.wait_for(_redline_sync(req), timeout=30.0)
+        result = await asyncio.wait_for(asyncio.to_thread(_run_redline, req), timeout=REDLINE_TIMEOUT_S)
     except asyncio.TimeoutError:
         log.warning("redline timeout for %s", req.contract_id)
-        raise HTTPException(status_code=504, detail=fallback_response(req.contract_id, "timeout 30s"))
+        raise HTTPException(status_code=504, detail=fallback_response(req.contract_id, f"timeout {REDLINE_TIMEOUT_S:g}s")) from None
+    return _to_response(result, t0)
 
-async def _redline_sync(req: RedlineRequest) -> RedlineResponse:
-    t0 = time.perf_counter()
-    # Ingest -> paginate for page:line
-    # If contract_text is already text, paginate by 2500 chars
-    full_text = req.contract_text
-    if len(full_text) > 120000:
-        full_text = full_text[:120000]
-    # Build pages
-    pages: list[Page] = []
-    chars_per_page = 2500
-    for i in range(0, len(full_text), chars_per_page):
-        num = i // chars_per_page + 1
-        chunk = full_text[i: i + chars_per_page]
-        pages.append(Page(num=num, text=chunk, start=i, end=i + len(chunk)))
-    if not pages:
-        pages.append(Page(num=1, text=full_text, start=0, end=len(full_text)))
 
-    # Memory: get or create
-    mem = None
-    if ENABLE_MEMORY:
-        mem = _memories.get(req.contract_id)
-        if mem is None:
-            mem = NegotiationMemory(contract_id=req.contract_id, turn=req.turn)
-            _memories[req.contract_id] = mem
+def _run_redline(req: RedlineRequest) -> dict[str, Any]:
+    full_text = req.contract_text[:MAX_CHARS]
+    pages = _paginate(full_text)
+    mem = _get_memory(req.contract_id, req.turn) if ENABLE_MEMORY else None
 
     try:
         result = process_contract_graph(
@@ -142,13 +164,17 @@ async def _redline_sync(req: RedlineRequest) -> RedlineResponse:
             engine=req.engine,
         )
     except ValueError as e:
-        raise HTTPException(status_code=422, detail=str(e))
+        raise HTTPException(status_code=422, detail=str(e)) from e
     except Exception as e:  # noqa
         log.exception("advanced redline failed")
-        # Fallback sandbox: never expose stack, return graceful fallback per Rule 04
-        fb = fallback_response(req.contract_id, f"{type(e).__name__}: {e}")
-        raise HTTPException(status_code=500, detail=fb)
+        # Fallback sandbox: never expose the stack trace or exception text to the caller
+        # (it is logged server-side); return the graceful fallback per Rule 04.
+        fb = fallback_response(req.contract_id, f"internal error ({type(e).__name__})")
+        raise HTTPException(status_code=500, detail=fb) from e
+    return result
 
+
+def _to_response(result: dict[str, Any], t0: float) -> RedlineResponse:
     latency_ms = int((time.perf_counter() - t0) * 1000)
     return RedlineResponse(
         variant="advanced",
@@ -186,7 +212,7 @@ class ResumeRequest(BaseModel):
 
 
 @app.post("/api/harness/resume", response_model=RedlineResponse)
-async def harness_resume(req: ResumeRequest) -> RedlineResponse:
+def harness_resume(req: ResumeRequest) -> RedlineResponse:
     """Resumes a graph run that paused at a real langgraph interrupt() inside human_review_node
     (ENABLE_GRAPH_INTERRUPT=1). A human reviewer decides which REJECTed findings to override
     to approved; the graph then finishes with those overrides applied and audit-marked
@@ -199,22 +225,11 @@ async def harness_resume(req: ResumeRequest) -> RedlineResponse:
         )
     except Exception as e:  # noqa
         log.exception("harness resume failed")
-        raise HTTPException(status_code=422, detail=f"resume failed (was thread_id={req.thread_id} actually interrupted? {type(e).__name__}: {e}")
-    latency_ms = int((time.perf_counter() - t0) * 1000)
-    return RedlineResponse(
-        variant="advanced", contract_id=result["contract_id"], turn=result["turn"],
-        harness_mode=result["harness_mode"], engine=result.get("engine", "langgraph"),
-        status=result.get("status", "complete"), thread_id=result.get("thread_id"), interrupt=result.get("interrupt"),
-        trap_count=result["trap_count"], total_proposed=result["total_proposed"],
-        evidence_supported=result["evidence_supported"], unsupported=result["unsupported"],
-        surgical_rate=result["surgical_rate"], findings=result["findings"],
-        trap_interactions=result["trap_interactions"], coverage_gaps=result.get("coverage_gaps", []),
-        dual_stats=result.get("dual_stats", {}), llm_stats=result.get("llm_stats", {}),
-        latency_ms=latency_ms, features=ADVANCED_FEATURES,
-    )
+        raise HTTPException(status_code=422, detail=f"resume failed (was thread_id={req.thread_id} actually interrupted? {type(e).__name__})") from e
+    return _to_response(result, t0)
 
 @app.get("/api/harness/stream")
-async def harness_stream(contract_id: str = "demo") -> StreamingResponse:
+async def harness_stream(contract_id: str = Query("demo", pattern=CONTRACT_ID_PATTERN)) -> StreamingResponse:
     """
     Real SSE progress: runs process_contract_advanced on shared/fixtures/contracts/{contract_id}.txt
     in a worker thread and streams each stage as it genuinely completes (via the on_stage
@@ -222,63 +237,66 @@ async def harness_stream(contract_id: str = "demo") -> StreamingResponse:
     is missing rather than pretending to have run.
     """
     import queue
-    import threading
-    from pathlib import Path as _Path
 
-    fixture = _Path(__file__).parents[2] / "shared" / "fixtures" / "contracts" / f"{contract_id}.txt"
-    if not fixture.exists():
+    # contract_id is restricted to a safe charset (no "/" or leading ".") AND the resolved
+    # path must stay inside the fixtures directory: previously "../../.." walked out and
+    # read (and ran the harness on) arbitrary .txt files on the server.
+    fixture = (_FIXTURES_DIR / f"{contract_id}.txt").resolve()
+    if fixture.parent != _FIXTURES_DIR or not fixture.is_file():
         async def err_gen() -> AsyncIterator[str]:
             yield f"data: error: fixture not found for contract_id={contract_id}\n\n"
         return StreamingResponse(err_gen(), media_type="text/event-stream")
 
-    text = fixture.read_text(encoding="utf-8", errors="ignore")
-    text = text[:120000]
-    pages: list[Page] = []
-    for i in range(0, len(text), 2500):
-        chunk = text[i : i + 2500]
-        pages.append(Page(num=i // 2500 + 1, text=chunk, start=i, end=i + len(chunk)))
-    if not pages:
-        pages.append(Page(num=1, text=text, start=0, end=len(text)))
+    text = fixture.read_text(encoding="utf-8", errors="ignore")[:MAX_CHARS]
+    pages = _paginate(text)
 
-    q: "queue.Queue[str]" = queue.Queue()
+    q: "queue.Queue[Any]" = queue.Queue()
     STAGE_LABELS = {
         "extract": "Extractor: scanning CUAD types -> SaaS playbook clauses",
         "risk": "Risk: playbook + precedent retrieval",
         "verify": "Verifier: gating on page:line provenance",
         "route": "Router: routed to human review as candidate",
     }
+    sentinel_done, sentinel_err = object(), object()
 
     def _on_stage(stage: str, detail: str) -> None:
         label = STAGE_LABELS.get(stage, stage)
-        q.put(f"{label} -- {detail}")
+        q.put(_sse_line(f"{label} -- {detail}"))
 
     def _run() -> None:
         try:
             process_contract_advanced(text, pages, contract_id=contract_id, turn=1, on_stage=_on_stage)
         except Exception as e:  # noqa
-            q.put(f"__error__ {type(e).__name__}: {e}")
+            log.exception("harness stream run failed for %s", contract_id)
+            q.put((sentinel_err, type(e).__name__))
         finally:
-            q.put("__done__")
+            q.put((sentinel_done, None))
 
     async def gen() -> AsyncIterator[str]:
         threading.Thread(target=_run, daemon=True).start()
-        loop = asyncio.get_event_loop()
+        loop = asyncio.get_running_loop()
         while True:
             item = await loop.run_in_executor(None, q.get)
-            if item == "__done__":
+            if isinstance(item, tuple) and item[0] is sentinel_done:
                 yield "data: done\n\n"
                 break
-            if item.startswith("__error__"):
-                yield f"data: error: {item[len('__error__ '):]}\n\n"
+            if isinstance(item, tuple) and item[0] is sentinel_err:
+                yield f"data: error: {item[1]}\n\n"
                 break
             yield f"data: {item}\n\n"
 
     return StreamingResponse(gen(), media_type="text/event-stream")
 
 
+def _sse_line(text: str) -> str:
+    """One SSE data field: embedded newlines would otherwise terminate the event early."""
+    return re.sub(r"[\r\n]+", " ", text)
+
+
 @app.get("/api/memory/{contract_id}")
 def get_memory(contract_id: str) -> dict[str, Any]:
-    mem = _memories.get(contract_id)
+    with _memories_lock:
+        mem = _memories.get(contract_id)
     if not mem:
         raise HTTPException(status_code=404, detail="no memory for contract_id")
     return {"contract_id": contract_id, "memory": mem.to_context(), "raw": mem.__dict__}
@@ -286,9 +304,10 @@ def get_memory(contract_id: str) -> dict[str, Any]:
 
 @app.post("/api/memory/{contract_id}/reset")
 def reset_memory(contract_id: str) -> dict[str, Any]:
-    _memories.pop(contract_id, None)
+    with _memories_lock:
+        _memories.pop(contract_id, None)
     return {"status": "reset", "contract_id": contract_id}
 
 
 if __name__ == "__main__":
-    uvicorn.run("src.main:app", host="0.0.0.0", port=PORT, reload=True)
+    uvicorn.run("src.main:app", host=os.getenv("HOST", "0.0.0.0"), port=PORT, reload=os.getenv("UVICORN_RELOAD", "0") == "1")

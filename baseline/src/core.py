@@ -8,12 +8,9 @@ This is the credible baseline: a reasonable single agent that finds needles in h
 from __future__ import annotations
 
 import re
-import os
 from dataclasses import dataclass, asdict
-from typing import Optional
 
 import logging
-from rapidfuzz import fuzz
 
 logger = logging.getLogger("baseline.core")
 
@@ -177,7 +174,7 @@ def detect_clauses(contract_text: str, page_map: list[tuple[int, int, int]] | No
                 if m and m.lastindex:
                     try:
                         val = int(m.group(1))
-                    except:  # noqa
+                    except (TypeError, ValueError):
                         val = None
                 # Decide trap: renewal/notice are the only two remaining trap_pattern
                 # rules (Termination for Convenience is handled above), both threshold-gated.
