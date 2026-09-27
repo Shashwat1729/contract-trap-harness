@@ -149,14 +149,14 @@ def verify_node(state: HarnessState) -> dict[str, Any]:
     t0 = time.perf_counter()
     try:
         from .verify import verify_finding, dual_verify_finding, VerificationResult
-        from .llm_verify import llm_verify_finding
+        from .llm_verify import llm_cross_check, new_llm_stats
         from ..config import ENABLE_LLM_VERIFY, LLM_VERIFY_SKIP_CONFIDENCE
         contract_text = state["contract_text"]
         verified = []
         results = []
         llm_results: list[Any] = []
         dual_stats = {"agree_pass": 0, "agree_reject": 0, "disagree": 0}
-        llm_stats = {"ran": 0, "confirmed": 0, "flagged": 0, "skipped": 0, "mock": 0, "skipped_high_confidence": 0}
+        llm_stats = new_llm_stats()
 
         for hit, finding, pkg in state.get("proposed", []):
             try:
@@ -174,34 +174,11 @@ def verify_node(state: HarnessState) -> dict[str, Any]:
                 except Exception as e2:
                     ver = VerificationResult(status="REJECT", reasons=[f"verify exception: {e2}"], revise_hint="retry with smaller span", evidence_supported=False)
 
-            # Confidence-based routing (CHANGELOG #20): mirrors core.py exactly -- skip the
-            # real LLM call when the dual verifier already AGREED pass and the playbook
-            # rule's own confidence is already high.
-            llm_res = None
-            skip_high_confidence = (
-                ver.dual_mode == "dual-agree-pass" and finding.confidence >= LLM_VERIFY_SKIP_CONFIDENCE
+            # Same LLM cross-check stage as core.py (shared helper, so the engines cannot drift).
+            llm_res = llm_cross_check(
+                hit.span_text, finding, pkg, ver, llm_stats,
+                enabled=ENABLE_LLM_VERIFY, skip_confidence=LLM_VERIFY_SKIP_CONFIDENCE,
             )
-            if ENABLE_LLM_VERIFY and ver.status == "PASS" and skip_high_confidence:
-                llm_stats["skipped_high_confidence"] += 1
-            elif ENABLE_LLM_VERIFY and ver.status == "PASS":
-                try:
-                    llm_res = llm_verify_finding(hit.span_text, finding, pkg)
-                    if llm_res.ran:
-                        llm_stats["ran"] += 1
-                        if llm_res.mock:
-                            llm_stats["mock"] += 1
-                        if llm_res.supported is False and (llm_res.confidence or 0) >= 0.6:
-                            llm_stats["flagged"] += 1
-                            ver.status = "REJECT"
-                            ver.reasons = list(ver.reasons) + [f"LLM cross-check flagged: {llm_res.concern or 'unsupported per LLM review'}"]
-                            ver.evidence_supported = False
-                        else:
-                            llm_stats["confirmed"] += 1
-                    else:
-                        llm_stats["skipped"] += 1
-                except Exception as e:
-                    logger.warning("verify_node llm_verify failed for %s: %s", finding.clause_type, e)
-                    llm_stats["skipped"] += 1
 
             verified.append((hit, finding, pkg, ver))
             results.append(ver)
@@ -303,6 +280,7 @@ def human_review_node(state: HarnessState) -> dict[str, Any]:
     t0 = time.perf_counter()
     try:
         from .router import route_findings
+        from .llm_verify import llm_result_dict
         from ..config import ENABLE_GRAPH_INTERRUPT
         verified = state.get("verified", [])
         llm_results = state.get("llm_results") or [None] * len(verified)
@@ -315,10 +293,7 @@ def human_review_node(state: HarnessState) -> dict[str, Any]:
                 "proposed_change": finding.proposed_change, "rationale": finding.rationale, "rule_id": finding.rule_id,
                 "precedent_id": finding.precedent_id, "evidence": pkg, "verification": ver.status, "reasons": ver.reasons,
                 "dual_mode": getattr(ver, "dual_mode", None),
-                "llm_verify": (
-                    {"ran": llm_res.ran, "supported": llm_res.supported, "confidence": llm_res.confidence, "concern": llm_res.concern, "mock": llm_res.mock}
-                    if llm_res is not None else {"ran": False, "supported": None, "confidence": None, "concern": "", "mock": True}
-                ),
+                "llm_verify": llm_result_dict(llm_res),
             }
             routed_input.append(d)
             ver_objs.append(ver)

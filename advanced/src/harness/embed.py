@@ -85,7 +85,7 @@ def _embed_one(texts: list[str], api_key: str | None) -> list[list[float]]:
     kwargs: dict[str, Any] = {}
     if api_key:
         kwargs["api_key"] = api_key
-    resp = litellm.embedding(model=EMBED_MODEL, input=texts, timeout=30, **kwargs)
+    resp = litellm.embedding(model=EMBED_MODEL, input=texts, timeout=float(os.getenv("LLM_TIMEOUT", "30") or 30), **kwargs)
     return [d["embedding"] for d in resp.data]
 
 

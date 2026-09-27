@@ -36,7 +36,7 @@ from .harness.ingest import Page
 from .harness.extract import extract_clauses, extract_clauses_hybrid, ClauseHit
 from .harness.risk import assess_risk, build_evidence_package, PLAYBOOK, get_thinking_log as risk_thinking, _find_number_before_unit, _find_number_near_keyword, RENEWAL_KEYWORD, INITIAL_TERM_LEAD_IN
 from .harness.verify import verify_finding, dual_verify_finding, get_thinking_log as verify_thinking
-from .harness.llm_verify import llm_verify_finding
+from .harness.llm_verify import llm_verify_finding, llm_cross_check, llm_result_dict, new_llm_stats
 from .harness.memory import NegotiationMemory, select_harness_mode
 from .harness.router import route_findings
 from .config import ENABLE_LLM_VERIFY, ENABLE_SEMANTIC_EXTRACTION, ENABLE_BM25_EXTRACTION, LLM_TIMEOUT, ENABLE_LANGGRAPH, LLM_VERIFY_SKIP_CONFIDENCE, ENABLE_LLM_EXTRACT, LLM_EXTRACT_MAX_CALLS
@@ -277,7 +277,7 @@ def process_contract_advanced(
         from .fallback.handler import fallback_response
         _persist_dead_letter(contract_id, f"extract failed: {e}", stage="extract")
         # Return fallback gracefully
-        return {"variant":"advanced","contract_id":contract_id,"turn":turn,"harness_mode":mode,"trap_interactions":[],"findings":[],"approved_candidates":[],"rejected":[],"trap_count":0,"total_proposed":0,"evidence_supported":0,"unsupported":0,"surgical_rate":1.0,"coverage_gaps":[],"llm_stats":{"ran":0,"confirmed":0,"flagged":0,"skipped":0,"mock":0,"skipped_high_confidence":0},"dual_stats":{"agree_pass":0,"agree_reject":0,"disagree":0},"fallback": fallback_response(contract_id, f"extract failed: {e}"), "thinking": get_thinking_log(20)}
+        return {"variant":"advanced","contract_id":contract_id,"turn":turn,"harness_mode":mode,"trap_interactions":[],"findings":[],"approved_candidates":[],"rejected":[],"trap_count":0,"total_proposed":0,"evidence_supported":0,"unsupported":0,"surgical_rate":1.0,"coverage_gaps":[],"llm_stats":new_llm_stats(),"dual_stats":{"agree_pass":0,"agree_reject":0,"disagree":0},"fallback": fallback_response(contract_id, f"extract failed: {e}"), "thinking": get_thinking_log(20)}
 
     proposed: list[tuple[Any, ...]] = []
     try:
@@ -309,7 +309,7 @@ def process_contract_advanced(
         _log_thinking("core/risk_stage_error", contract_id, str(e), f"Risk stage exception: {e}")
         from .fallback.handler import fallback_response
         _persist_dead_letter(contract_id, f"risk failed: {e}", stage="risk")
-        return {"variant":"advanced","contract_id":contract_id,"turn":turn,"harness_mode":mode,"trap_interactions":[],"findings":[],"approved_candidates":[],"rejected":[],"trap_count":0,"total_proposed":0,"evidence_supported":0,"unsupported":0,"surgical_rate":1.0,"coverage_gaps":[],"llm_stats":{"ran":0,"confirmed":0,"flagged":0,"skipped":0,"mock":0,"skipped_high_confidence":0},"dual_stats":{"agree_pass":0,"agree_reject":0,"disagree":0},"fallback": fallback_response(contract_id, f"risk failed: {e}"), "thinking": get_thinking_log(20)}
+        return {"variant":"advanced","contract_id":contract_id,"turn":turn,"harness_mode":mode,"trap_interactions":[],"findings":[],"approved_candidates":[],"rejected":[],"trap_count":0,"total_proposed":0,"evidence_supported":0,"unsupported":0,"surgical_rate":1.0,"coverage_gaps":[],"llm_stats":new_llm_stats(),"dual_stats":{"agree_pass":0,"agree_reject":0,"disagree":0},"fallback": fallback_response(contract_id, f"risk failed: {e}"), "thinking": get_thinking_log(20)}
 
     trap_interactions = _trap_interactions(contract_text, clause_hits, pages)
 
@@ -342,7 +342,7 @@ def process_contract_advanced(
     verification_results = []
     llm_results: list[Any] = []
     dual_stats = {"agree_pass": 0, "agree_reject": 0, "disagree": 0}
-    llm_stats = {"ran": 0, "confirmed": 0, "flagged": 0, "skipped": 0, "mock": 0, "skipped_high_confidence": 0}
+    llm_stats = new_llm_stats()
     for hit, finding, ev_pkg in proposed:
         try:
             # Prefer dual-verify (strict + lenient in parallel); fallback to single on exception
@@ -372,34 +372,13 @@ def process_contract_advanced(
         # verifier's strict+lenient thresholds already AGREED pass AND the playbook rule's
         # own confidence is already high -- route the real check to the findings the
         # deterministic engine is least sure about instead of spending it on every PASS.
-        llm_res = None
-        skip_high_confidence = (
-            ver.dual_mode == "dual-agree-pass" and finding.confidence >= LLM_VERIFY_SKIP_CONFIDENCE
+        llm_res = llm_cross_check(
+            hit.span_text, finding, ev_pkg, ver, llm_stats,
+            enabled=ENABLE_LLM_VERIFY, skip_confidence=LLM_VERIFY_SKIP_CONFIDENCE,
+            verify_fn=llm_verify_finding,
         )
-        if ENABLE_LLM_VERIFY and ver.status == "PASS" and skip_high_confidence:
-            llm_stats["skipped_high_confidence"] += 1
-            _log_thinking("core/llm_verify_skip", f"{finding.clause_type} rule={finding.rule_id} confidence={finding.confidence}", "SKIPPED (high confidence)", f"LLM cross-check skipped for {finding.clause_type}: dual-agree-pass and confidence {finding.confidence} >= {LLM_VERIFY_SKIP_CONFIDENCE}, real API call not spent")
-        elif ENABLE_LLM_VERIFY and ver.status == "PASS":
-            try:
-                llm_res = llm_verify_finding(hit.span_text, finding, ev_pkg)
-                if llm_res.ran:
-                    llm_stats["ran"] += 1
-                    if llm_res.mock:
-                        llm_stats["mock"] += 1
-                    if llm_res.supported is False and (llm_res.confidence or 0) >= 0.6:
-                        llm_stats["flagged"] += 1
-                        ver.status = "REJECT"
-                        ver.reasons = list(ver.reasons) + [f"LLM cross-check flagged: {llm_res.concern or 'unsupported per LLM review'}"]
-                        ver.evidence_supported = False
-                        _log_thinking("core/llm_verify", f"{finding.clause_type} rule={finding.rule_id}", "FLAGGED", f"LLM cross-check ({finding.clause_type}): model disagreed, downgraded PASS->REJECT: {llm_res.concern}")
-                    else:
-                        llm_stats["confirmed"] += 1
-                        _log_thinking("core/llm_verify", f"{finding.clause_type} rule={finding.rule_id}", "CONFIRMED", f"LLM cross-check ({finding.clause_type}): model agreed, confidence={llm_res.confidence}")
-                else:
-                    llm_stats["skipped"] += 1
-            except Exception as e:
-                logger.warning("llm_verify_finding failed for %s: %s", finding.clause_type, e)
-                llm_stats["skipped"] += 1
+        if llm_res is not None and llm_res.ran:
+            _log_thinking("core/llm_verify", f"{finding.clause_type} rule={finding.rule_id}", ver.status, f"LLM cross-check ({finding.clause_type}): supported={llm_res.supported} confidence={llm_res.confidence} -> {ver.status}: {llm_res.concern}")
         verification_results.append(ver)
         llm_results.append(llm_res)
         verified.append((hit, finding, ev_pkg, ver))
@@ -431,10 +410,7 @@ def process_contract_advanced(
             "verification": ver.status,
             "reasons": ver.reasons,
             "dual_mode": getattr(ver, "dual_mode", None),
-            "llm_verify": (
-                {"ran": llm_res.ran, "supported": llm_res.supported, "confidence": llm_res.confidence, "concern": llm_res.concern, "mock": llm_res.mock}
-                if llm_res is not None else {"ran": False, "supported": None, "confidence": None, "concern": "", "mock": True}
-            ),
+            "llm_verify": llm_result_dict(llm_res),
         }
         routed_input.append(d)
         ver_objs.append(ver)

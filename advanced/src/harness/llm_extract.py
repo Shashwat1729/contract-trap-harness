@@ -114,22 +114,16 @@ def _normalize(s: str) -> str:
 def _find_verbatim(contract_text: str, span: str) -> tuple[int, int] | None:
     """
     Locate `span` as a genuine substring of contract_text. Tries an exact
-    case-insensitive match first (handles the common case directly, preserving
-    real offsets); falls back to a whitespace-normalized search (LLMs sometimes
-    collapse a mid-sentence linebreak) for every occurrence of the span's first
-    few words, verifying EACH candidate location's own normalized window against
-    the normalized span before accepting it.
+    case-insensitive match first; falls back to a whitespace-tolerant search (LLMs
+    sometimes collapse a mid-sentence linebreak) in which every token of the span must
+    appear in order, separated only by whitespace, at one real location.
 
-    Why per-candidate verification, not a single global first-match: an earlier
-    version located the real offset by taking the FIRST occurrence of the span's
-    first 5 words anywhere in the document, after only confirming the normalized
-    span existed SOMEWHERE (not necessarily at that occurrence). On a real
-    contract, common opening phrasing ("This Agreement shall...") can recur
-    verbatim in an unrelated clause earlier in the document, so that approach
-    could anchor to the wrong occurrence and return a "verified" span pointing at
-    unrelated text -- a real, found bug (see CHANGELOG #22 audit), not a
-    hypothetical one. Now every occurrence of the first-words anchor is checked
-    against the ACTUAL text at that specific location before it's accepted.
+    History: an earlier version anchored on the FIRST occurrence of the span's first 5
+    words anywhere in the document after only confirming the normalized span existed
+    SOMEWHERE -- common opening phrasing ("This Agreement shall...") recurring in an
+    unrelated earlier clause made it point at unrelated text (CHANGELOG #22 audit). The
+    follow-up verified each anchor occurrence but still estimated the end offset as
+    start + len(span) + 40. The token regex returns the true matched [start, end).
 
     Returns None (never raises) if no genuine, verified match is found --
     callers MUST discard the candidate in that case, never fabricate offsets.
@@ -139,27 +133,20 @@ def _find_verbatim(contract_text: str, span: str) -> tuple[int, int] | None:
     lo_text = contract_text.lower()
     lo_span = span.lower().strip()
     idx = lo_text.find(lo_span)
-    if idx != -1:
+    if idx != -1 and len(lo_text) == len(contract_text):  # lower() kept offsets aligned
         return idx, idx + len(lo_span)
     norm_span = _normalize(span)
     if len(norm_span) < 15:
         return None
-    first_words = span.split()[:5]
-    if not first_words:
+    # Whitespace-TOLERANT, token-exact search: every token of the span must appear in
+    # order, separated only by whitespace (a linebreak where the LLM wrote a space, or
+    # vice versa). Each match is a genuine location in the real text, and its end offset
+    # is the real end of the matched text -- not an estimate.
+    pattern = re.compile(r"\s+".join(re.escape(tok) for tok in span.split()), re.IGNORECASE)
+    m = pattern.search(contract_text)
+    if m is None:
         return None
-    # Whitespace-TOLERANT anchor pattern (not a literal substring search): the
-    # whole reason this fallback path exists is that the real text can have a
-    # linebreak where the LLM's span has a plain space (or vice versa) -- a plain
-    # `.find()` on the literal joined words would miss the very case this is for.
-    anchor = re.compile(r"\s+".join(re.escape(w) for w in first_words), re.IGNORECASE)
-    for m in anchor.finditer(contract_text):
-        idx2 = m.start()
-        window_end = min(idx2 + len(span) + 80, len(contract_text))
-        norm_window = _normalize(contract_text[idx2:window_end])
-        if norm_window.startswith(norm_span) or norm_span in norm_window:
-            end2 = min(idx2 + len(span) + 40, len(contract_text))
-            return idx2, end2
-    return None
+    return m.start(), m.end()
 
 
 def llm_extract_missing_clauses(

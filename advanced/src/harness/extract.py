@@ -198,6 +198,7 @@ def find_durations(text: str, unit: str, include_years: bool | None = None) -> l
     for u, mult in units:
         for m in _DURATION_RES[u].finditer(text or ""):
             num = m.group("paren") or m.group("digits")
+            val: int | None
             if num is not None:
                 val = int(num)
             elif m.group("word"):
