@@ -107,6 +107,8 @@ def risk_node(state: HarnessState) -> dict[str, Any]:
                 continue
             pkg = build_evidence_package(hit, finding, state["contract_text"])
             proposed.append((hit, finding, pkg))
+        from ..core import _dedupe_proposed
+        proposed = _dedupe_proposed(proposed)
         logger.info("risk_node: %d proposed", len(proposed))
         stage_ms = dict(state.get("stage_latency_ms", {}))
         stage_ms["risk"] = round((time.perf_counter() - t0) * 1000, 2)

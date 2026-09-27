@@ -132,6 +132,36 @@ def _retry_extract(contract_text: str, pages: list[Page]) -> list[ClauseHit]:
     return extract_clauses(contract_text, pages)
 
 
+def _dedupe_proposed(proposed: list[tuple[Any, ...]]) -> list[tuple[Any, ...]]:
+    """One finding per (rule, cited clause text). "Cap on Liability" and "Limitation of
+    Liability" are one playbook rule family (P-04/P-12), so a single liability clause that
+    matches both clause-type patterns used to yield two identical redlines."""
+    seen: set[tuple[str, str]] = set()
+    out: list[tuple[Any, ...]] = []
+    for item in proposed:
+        finding = item[1]
+        key = (finding.rule_id, " ".join(finding.evidence_contract_span.split()).lower())
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append(item)
+    return out
+
+
+def _dedupe_traps(traps: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Merge interactions with the same id over the same clause text (see _dedupe_proposed)."""
+    merged: dict[tuple[str, tuple[str, ...]], dict[str, Any]] = {}
+    for t in traps:
+        key = (t["id"], tuple(" ".join(sp.split()).lower() for sp in t.get("spans", [])))
+        if key in merged:
+            for r in t.get("related", []):
+                if r not in merged[key]["related"]:
+                    merged[key]["related"].append(r)
+            continue
+        merged[key] = {**t, "related": list(t.get("related", []))}
+    return list(merged.values())
+
+
 def _trap_interactions(contract_text: str, clause_hits: list[ClauseHit], pages: list[Page]) -> list[dict[str, Any]]:
     """Find cross-clause trap interactions (A-D) -- the memorable part."""
     try:
@@ -165,6 +195,7 @@ def _trap_interactions(contract_text: str, clause_hits: list[ClauseHit], pages: 
             if re.search(r"delet|eras|purg", win, flags=re.IGNORECASE) and re.search(r"retain|retention|keep a copy|continue to (?:hold|store)", win, flags=re.IGNORECASE):
                 traps.append({"id": "Trap-C", "name": "Deletion vs Retention conflict", "related": [p.clause_type], "conflict": "deletion obligation conflicts with transition retention", "spans": [p.span_text]})
 
+        traps = _dedupe_traps(traps)
         _log_thinking("core/trap_interactions", f"{len(clause_hits)} hits", f"{len(traps)} traps", f"Cross-clause trap scan: {len(clause_hits)} hits -> {len(traps)} interactions ({[t['id'] for t in traps]})")
         return traps
     except Exception as e:
@@ -318,6 +349,7 @@ def process_contract_advanced(
                 _log_thinking("core/evidence_error", finding.rule_id, str(e), f"Evidence package failed: {e}")
                 continue
             proposed.append((hit, finding, ev_pkg))
+        proposed = _dedupe_proposed(proposed)
         logger.info("proposed %d findings after risk", len(proposed))
         _emit("risk", f"{len(proposed)} findings proposed via playbook + precedent retrieval")
         _log_thinking("core/risk_done", f"{len(clause_hits)} hits", f"{len(proposed)} proposed", f"Risk stage done: {len(clause_hits)} hits -> {len(proposed)} proposed findings, self-reflective RAG logged")

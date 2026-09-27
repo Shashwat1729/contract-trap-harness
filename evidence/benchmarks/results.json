@@ -5640,28 +5640,28 @@
       "delta": 0.444
     },
     "latency_ms": {
-      "baseline_p50": 0.7,
+      "baseline_p50": 0.6,
       "baseline_p95": 1.1,
-      "advanced_p50": 21.0,
-      "advanced_p95": 37.2,
-      "delta_p95": 36.0,
+      "advanced_p50": 5.0,
+      "advanced_p95": 8.3,
+      "delta_p95": 7.2,
       "batch_concurrency": "ThreadPoolExecutor(4) opt-in via EVAL_CONCURRENCY=1 caps p95 batch vs sequential 0.1s linear (Sirion analogue)",
       "stage_breakdown": {
         "extract": {
-          "p50_ms": 5.35,
-          "p95_ms": 7.38
+          "p50_ms": 2.95,
+          "p95_ms": 3.49
         },
         "risk": {
-          "p50_ms": 6.04,
-          "p95_ms": 14.25
+          "p50_ms": 0.27,
+          "p95_ms": 2.09
         },
         "verify": {
-          "p50_ms": 6.51,
-          "p95_ms": 14.99
+          "p50_ms": 0.95,
+          "p95_ms": 2.46
         },
         "route": {
-          "p50_ms": 1.92,
-          "p95_ms": 3.01
+          "p50_ms": 0.04,
+          "p95_ms": 0.06
         }
       }
     },

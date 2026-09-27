@@ -149,3 +149,15 @@ def test_span_whose_tail_is_altered_is_borderline_not_pass():
     altered = base.replace("unless terminated", "and the Customer waives every right to object, forever and irrevocably")
     f, pkg = _finding(altered)
     assert dual_verify_finding(altered, f, pkg, text).status == "REJECT"
+
+
+def test_liability_clause_matching_both_cap_types_yields_one_finding_and_one_trap():
+    text = (
+        "Section 9. Limitation of Liability. The liability cap is 12 months of fees; provided that "
+        "the foregoing cap shall not apply to data breach, which is excluded from cap."
+    )
+    res = process_contract_advanced(text, _pages(text), contract_id="cap_dupe")
+    assert [f["rule_id"] for f in res["findings"]] == ["P-12"]
+    traps = [t for t in res["trap_interactions"] if t["id"] == "Trap-B"]
+    assert len(traps) == 1
+    assert set(traps[0]["related"]) == {"Cap on Liability", "Limitation of Liability"}

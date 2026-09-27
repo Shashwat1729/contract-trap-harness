@@ -174,7 +174,7 @@ def extract_text_with_pages(path: str | Path, chars_per_page: int = 2500) -> tup
         if suffix == ".pdf":
             text, pages = _from_pdf(p)
         elif suffix in (".docx", ".doc"):
-            text, pages = _from_docx(p)
+            text, pages = _from_docx(p, chars_per_page)
         else:
             text = p.read_text(encoding="utf-8", errors="ignore")
             text, pages = _paginate(text, chars_per_page)
@@ -219,7 +219,7 @@ def _from_pdf(p: Path) -> tuple[str, list[Page]]:
         raise
 
 
-def _from_docx(p: Path) -> tuple[str, list[Page]]:
+def _from_docx(p: Path, chars_per_page: int = 2500) -> tuple[str, list[Page]]:
     try:
         from docx import Document
 
@@ -253,7 +253,7 @@ def _from_docx(p: Path) -> tuple[str, list[Page]]:
                 parts.append(row_text + "\n")
         text = "".join(parts)
         _log_thinking("ingest/docx", str(p)[:200], f"{len(text)} chars, {len(doc.paragraphs)} paras", f"DOCX parsed {p.name}: {len(doc.paragraphs)} paragraphs")
-        return _paginate(text, chars_per_page=2500)
+        return _paginate(text, chars_per_page=chars_per_page)
     except Exception as e:
         logger.exception("_from_docx failed for %s: %s", p, e)
         _log_thinking("ingest/docx_error", str(p)[:200], str(e), f"DOCX parse failed: {e}")
