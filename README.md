@@ -242,7 +242,7 @@ works without touching `advanced`.
 
 - [`ARCHITECTURE.md`](ARCHITECTURE.md) — design, trade-offs, latency SLO, market anchoring
 - [`REPRODUCTION.md`](REPRODUCTION.md) — clean-environment setup, versions, cost
-- [`CHANGELOG.md`](CHANGELOG.md) — 24 evidence-linked iterations (what failed, what changed, what it taught)
+- [`CHANGELOG.md`](CHANGELOG.md) — 26 evidence-linked iterations (what failed, what changed, what it taught)
 - [`docs/problem-brief.md`](docs/problem-brief.md) — problem definition
 - [`docs/evaluation-criteria.md`](docs/evaluation-criteria.md) — benchmark methodology
 - [`docs/11-IMPLEMENTATION-PLAN.md`](docs/11-IMPLEMENTATION-PLAN.md) — technical plan
