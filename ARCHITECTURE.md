@@ -1,5 +1,9 @@
 # Architecture
 
+![Contract Trap Harness architecture](docs/architecture.svg)
+
+One-page overview of the harness (also as [`docs/architecture.png`](docs/architecture.png) for slides): entry points → a shared engine selector → the five verification-gated stages (identical in the direct pipeline and the LangGraph StateGraph, which adds a one-shot revise loop and an optional human-in-the-loop `interrupt()`) → outputs. The Mermaid graph below is the stage-level detail.
+
 ```mermaid
 graph TD
     A[Contract .docx/.txt paginated] --> B[Ingest: pypdf+docx Page dataclass]

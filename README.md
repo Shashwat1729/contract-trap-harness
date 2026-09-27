@@ -83,6 +83,10 @@ Without a key everything degrades gracefully to the deterministic offline path �
 
 ## How it works
 
+![Contract Trap Harness architecture](docs/architecture.svg)
+
+*Full-size diagram: [`docs/architecture.svg`](docs/architecture.svg) (vector) · [`docs/architecture.png`](docs/architecture.png) (2560×1880, for slides). Condensed flow:*
+
 ```mermaid
 graph TD
     A[Contract .docx/.txt] --> B[Ingest: paginated text with page:line provenance]
