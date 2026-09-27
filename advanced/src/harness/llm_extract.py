@@ -41,7 +41,6 @@ import json
 import logging
 import re
 from pathlib import Path
-from typing import Any
 
 from .extract import ClauseHit, _extract_snippet
 from .ingest import Page, offset_to_page_line

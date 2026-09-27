@@ -34,8 +34,7 @@ except ImportError as e:
     logger.warning(f"LangGraph not available (fallback to direct function): {e}")
 
 from .ingest import Page
-from .extract import ClauseHit, SAAS_TYPES
-from .risk import RiskFinding
+from .extract import ClauseHit
 
 
 class HarnessState(TypedDict):

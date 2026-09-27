@@ -5,13 +5,13 @@ Upgraded: thinking logs per RiskWise Developer View.
 """
 from __future__ import annotations
 
-import json
 import logging
 import time
 from dataclasses import dataclass
 from datetime import datetime, timezone
-from pathlib import Path
 from typing import Any, Literal
+
+from .thinking import persist_module_log
 
 logger = logging.getLogger("advanced.harness.router")
 
@@ -33,20 +33,7 @@ def _log_thinking(stage: str, input_data: Any, output_data: Any, reasoning: str)
         if len(THINKING_LOG) > _THINKING_MAX:
             del THINKING_LOG[0 : len(THINKING_LOG) - _THINKING_MAX]
         logger.debug("router thinking [%s] %s", stage, reasoning[:100])
-        try:
-            evidence_dir = Path(__file__).parents[2] / "evidence" / "reviews"
-            alt_dir = Path(__file__).parents[1].parent / "evidence" / "reviews"
-            for d in (evidence_dir, alt_dir):
-                try:
-                    d.mkdir(parents=True, exist_ok=True)
-                    fp = d / "thinking_router.json"
-                    with open(fp, "w", encoding="utf-8") as f:
-                        json.dump(THINKING_LOG[-50:], f, indent=2, ensure_ascii=False)
-                    break
-                except Exception:
-                    continue
-        except Exception:
-            pass
+        persist_module_log("thinking_router.json", THINKING_LOG[-50:])
     except Exception as e:
         logger.warning("router thinking log failed: %s", e)
 

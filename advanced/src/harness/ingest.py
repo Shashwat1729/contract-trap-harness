@@ -14,14 +14,14 @@ Production-grade: type hints, docstrings, logging, try/except per helper.
 """
 from __future__ import annotations
 
-import io
-import json
 import logging
 import time
 from datetime import datetime, timezone
 from pathlib import Path
 from dataclasses import dataclass
 from typing import Any
+
+from .thinking import persist_module_log
 
 logger = logging.getLogger("advanced.harness.ingest")
 
@@ -44,20 +44,7 @@ def _log_thinking(stage: str, input_data: Any, output_data: Any, reasoning: str)
         if len(THINKING_LOG) > _THINKING_MAX:
             del THINKING_LOG[0 : len(THINKING_LOG) - _THINKING_MAX]
         logger.debug("ingest thinking [%s] %s", stage, reasoning[:110])
-        try:
-            evidence_dir = Path(__file__).parents[2] / "evidence" / "reviews"
-            alt_dir = Path(__file__).parents[1].parent / "evidence" / "reviews"
-            for d in (evidence_dir, alt_dir):
-                try:
-                    d.mkdir(parents=True, exist_ok=True)
-                    fp = d / "thinking_ingest.json"
-                    with open(fp, "w", encoding="utf-8") as f:
-                        json.dump(THINKING_LOG[-50:], f, indent=2, ensure_ascii=False)
-                    break
-                except Exception:
-                    continue
-        except Exception:
-            pass
+        persist_module_log("thinking_ingest.json", THINKING_LOG[-50:])
     except Exception as e:
         logger.warning("ingest thinking log failed: %s", e)
 

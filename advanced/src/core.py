@@ -25,7 +25,6 @@ import logging
 import re
 import time
 import uuid
-from dataclasses import asdict
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -39,6 +38,7 @@ from .harness.verify import verify_finding, dual_verify_finding, get_thinking_lo
 from .harness.llm_verify import llm_verify_finding, llm_cross_check, llm_result_dict, new_llm_stats
 from .harness.memory import NegotiationMemory, select_harness_mode
 from .harness.router import route_findings
+from .harness.thinking import REVIEWS_DIR, persist_module_log, safe_filename_part, snapshots_enabled, write_json_atomic
 from .config import ENABLE_LLM_VERIFY, ENABLE_SEMANTIC_EXTRACTION, ENABLE_BM25_EXTRACTION, ENABLE_LANGGRAPH, LLM_VERIFY_SKIP_CONFIDENCE, ENABLE_LLM_EXTRACT, LLM_EXTRACT_MAX_CALLS, MAX_CHARS
 
 logger = logging.getLogger("advanced.core")
@@ -56,7 +56,7 @@ def _persist_dead_letter(contract_id: str, reason: str, stage: str = "unknown") 
             try:
                 p.parent.mkdir(parents=True, exist_ok=True)
                 with open(p, "a", encoding="utf-8") as f:
-                    import json as _j, time as _t, datetime as _dt
+                    import json as _j, datetime as _dt
                     _j.dump({"ts": _dt.datetime.now(_dt.timezone.utc).isoformat(), "contract_id": contract_id, "stage": stage, "reason": reason}, f)
                     f.write("\n")
                 break
@@ -81,21 +81,7 @@ def _log_thinking(stage: str, input_data: Any, output_data: Any, reasoning: str)
         if len(THINKING_LOG) > _THINKING_MAX:
             del THINKING_LOG[0 : len(THINKING_LOG) - _THINKING_MAX]
         logger.debug("core thinking [%s] %s", stage, reasoning[:120])
-        # Persist combined
-        try:
-            evidence_dir = Path(__file__).parent.parent / "evidence" / "reviews"
-            evidence_dir.mkdir(parents=True, exist_ok=True)
-            fp = evidence_dir / "thinking_core.json"
-            with open(fp, "w", encoding="utf-8") as f:
-                json.dump(THINKING_LOG[-100:], f, indent=2, ensure_ascii=False)
-        except Exception:
-            try:
-                alt = Path("evidence") / "reviews" / "thinking_core.json"
-                alt.parent.mkdir(parents=True, exist_ok=True)
-                with open(alt, "w", encoding="utf-8") as f:
-                    json.dump(THINKING_LOG[-100:], f, indent=2, ensure_ascii=False)
-            except Exception:
-                pass
+        persist_module_log("thinking_core.json", THINKING_LOG[-100:])
     except Exception as e:
         logger.warning("core thinking log failed: %s", e)
 
@@ -475,10 +461,9 @@ def process_contract_advanced(
     latency_ms = int((time.perf_counter() - t_start) * 1000)
     _log_thinking("core/done", f"contract={contract_id} turn={turn}", f"approved={len(approved)} rejected={len(rejected)} latency={latency_ms}ms dual_stats={dual_stats}", f"process_contract_advanced done {contract_id} turn {turn}: {len(approved)} approved, {len(rejected)} rejected, trap_interactions {len(trap_interactions)}, latency {latency_ms}ms mode={mode}")
 
-    # Attempt to persist combined thinking snapshot
-    try:
-        evidence_dir = Path(__file__).parent.parent / "evidence" / "reviews"
-        evidence_dir.mkdir(parents=True, exist_ok=True)
+    # One aggregated developer-view snapshot per contract/turn (core + risk + verify
+    # thinking). Atomic write, sanitized filename: contract_id is caller-controlled.
+    if snapshots_enabled():
         snap = {
             "contract_id": contract_id,
             "turn": turn,
@@ -492,10 +477,7 @@ def process_contract_advanced(
             "verify_thinking": verify_thinking(10),
             "generated_at": datetime.now(timezone.utc).isoformat(),
         }
-        with open(evidence_dir / f"thinking_{contract_id}_t{turn}.json", "w", encoding="utf-8") as fh:
-            json.dump(snap, fh, indent=2, ensure_ascii=False)
-    except Exception as e:
-        logger.warning("thinking snapshot save failed: %s", e)
+        write_json_atomic(REVIEWS_DIR / f"thinking_{safe_filename_part(contract_id)}_t{int(turn)}.json", snap)
 
     return {
         "variant": "advanced",

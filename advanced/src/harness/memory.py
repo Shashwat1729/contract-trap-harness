@@ -8,13 +8,11 @@ Upgraded: thinking logs, production-grade type hints / logging.
 """
 from __future__ import annotations
 
-import json
 import logging
 import time
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
-from pathlib import Path
-from typing import Any, Literal
+from typing import Any
 
 logger = logging.getLogger("advanced.harness.memory")
 
