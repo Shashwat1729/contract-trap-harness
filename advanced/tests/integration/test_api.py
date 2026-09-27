@@ -78,3 +78,113 @@ def test_redline_graph_engine_reaches_langgraph():
     j = r.json()
     assert j["engine"] == "langgraph"
     assert "trap_count" in j and "findings" in j
+
+
+# --- hardening regressions -------------------------------------------------------------
+
+def test_stream_rejects_path_traversal(tmp_path):
+    outside = tmp_path / "outside.txt"
+    outside.write_text("Renewal Term: renews for 24 months.", encoding="utf-8")
+    rel = "../" * 12 + str(outside.with_suffix("")).lstrip("/")
+    r = client.get("/api/harness/stream", params={"contract_id": rel})
+    assert r.status_code == 422  # rejected by the contract_id pattern, file never read
+
+
+def test_stream_unknown_fixture_reports_error_event():
+    r = client.get("/api/harness/stream", params={"contract_id": "no_such_fixture"})
+    assert r.status_code == 200
+    assert "fixture not found" in r.text
+
+
+def test_stream_real_fixture_emits_stages_and_done():
+    r = client.get("/api/harness/stream", params={"contract_id": "cuad_00"})
+    assert r.status_code == 200
+    events = [ln for ln in r.text.splitlines() if ln.startswith("data: ")]
+    assert events[-1] == "data: done"
+    assert any("Extractor" in e for e in events)
+
+
+def test_invalid_engine_and_mode_are_rejected():
+    body = {"contract_text": "Renewal Term: 24 months."}
+    assert client.post("/api/redline", json={**body, "engine": "bogus"}).status_code == 422
+    assert client.post("/api/redline", json={**body, "harness_mode": "turbo"}).status_code == 422
+
+
+def test_whitespace_only_contract_is_422():
+    assert client.post("/api/redline", json={"contract_text": "   "}).status_code == 422
+
+
+def test_redline_timeout_returns_504_without_blocking(monkeypatch):
+    import time as _time
+    import src.main as main_mod
+
+    def slow(*a, **k):
+        _time.sleep(1.0)
+        return {}
+
+    monkeypatch.setattr(main_mod, "process_contract_graph", slow)
+    monkeypatch.setattr(main_mod, "REDLINE_TIMEOUT_S", 0.1)
+
+    import asyncio
+    import httpx
+
+    async def go():
+        # A persistent event loop (like uvicorn's): TestClient joins worker threads when it
+        # tears its loop down, which would hide whether the timeout fired early.
+        transport = httpx.ASGITransport(app=app)
+        async with httpx.AsyncClient(transport=transport, base_url="http://t") as ac:
+            t0 = _time.perf_counter()
+            health = asyncio.create_task(ac.get("/health"))
+            r = await ac.post("/api/redline", json={"contract_text": "Renewal Term: 24 months.", "contract_id": "slow"})
+            elapsed = _time.perf_counter() - t0
+            assert (await health).status_code == 200  # event loop was not blocked meanwhile
+            return r, elapsed
+
+    r, elapsed = asyncio.run(go())
+    assert r.status_code == 504
+    assert elapsed < 0.9  # the timeout actually fired before the work finished
+
+
+def test_internal_error_does_not_leak_exception_text(monkeypatch):
+    import src.main as main_mod
+
+    def boom(*a, **k):
+        raise RuntimeError("secret internal detail /etc/passwd")
+
+    monkeypatch.setattr(main_mod, "process_contract_graph", boom)
+    r = client.post("/api/redline", json={"contract_text": "Renewal Term: 24 months.", "contract_id": "boom"})
+    assert r.status_code == 500
+    assert "secret internal detail" not in r.text
+
+
+def test_negotiation_memory_is_bounded(monkeypatch):
+    import src.main as main_mod
+
+    monkeypatch.setattr(main_mod, "_MAX_MEMORIES", 3)
+    with main_mod._memories_lock:
+        main_mod._memories.clear()
+    for i in range(5):
+        main_mod._get_memory(f"c{i}", 1)
+    assert list(main_mod._memories) == ["c2", "c3", "c4"]
+    main_mod._get_memory("c2", 1)  # touching an entry makes it most-recent
+    main_mod._get_memory("c5", 1)
+    assert list(main_mod._memories) == ["c4", "c2", "c5"]
+
+
+def test_memory_accumulates_across_turns():
+    contract = "Renewal Term: This Agreement shall automatically renew for successive 24 month periods."
+    client.post("/api/memory/mem_turns/reset")
+    assert client.post("/api/redline", json={"contract_text": contract, "contract_id": "mem_turns", "turn": 1}).status_code == 200
+    j = client.get("/api/memory/mem_turns").json()
+    assert "P-01" in j["raw"]["open_issues"]
+
+
+def test_cors_does_not_combine_wildcard_with_credentials():
+    r = client.options("/api/redline", headers={"Origin": "https://example.com", "Access-Control-Request-Method": "POST"})
+    assert r.headers.get("access-control-allow-credentials") != "true"
+
+
+def test_resume_of_never_paused_thread_is_422_not_empty_success():
+    r = client.post("/api/harness/resume", json={"contract_id": "x", "thread_id": "never-paused", "approve_keys": []})
+    assert r.status_code == 422
+    assert "never-paused" in r.json()["detail"]

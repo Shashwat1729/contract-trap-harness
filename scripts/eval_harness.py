@@ -22,11 +22,8 @@ evidence/benchmarks/llm_judge_results.json if present. Missing that file is repo
 honestly as "not run", never backfilled with an invented number.
 """
 import json
-import concurrent.futures
-import re
 import time
 from pathlib import Path
-from dataclasses import asdict
 
 ROOT = Path(__file__).parents[1]
 FIXTURES = ROOT / "shared/fixtures/contracts"
@@ -43,6 +40,20 @@ def load_fixtures():
         fixtures.append((cid, txt, meta))
     return fixtures
 
+# Baseline -> advanced playbook vocabulary (see the verifier call in
+# evaluate_baseline_vs_advanced for why this translation is needed).
+_BASELINE_TRAP_RULES = {"Trap-A": ("P-01", "Renewal Term"), "Trap-B": ("P-12", "Cap on Liability")}
+_BASELINE_CLAUSE_TYPES = {"Uncapped Liability": "Cap on Liability"}
+
+
+def _baseline_rule_and_type(finding):
+    trap_id = finding.get("trap_id", "P-01")
+    if trap_id in _BASELINE_TRAP_RULES:
+        return _BASELINE_TRAP_RULES[trap_id]
+    ctype = finding.get("clause_type", "")
+    return trap_id, _BASELINE_CLAUSE_TYPES.get(ctype, ctype)
+
+
 # P95 helper
 def p95(values):
     if not values:
@@ -53,31 +64,7 @@ def p95(values):
         idx = len(s) - 1
     return s[idx]
 
-def _eval_one_contract(args):
-    """Helper for ThreadPoolExecutor: eval one contract, returns latencies + trap hits. Always per-contract isolated."""
-    try:
-        cid, txt, meta, baseline_process, process_contract_advanced, Page = args
-        pages = []
-        cpt = 2500
-        for i in range(0, len(txt), cpt):
-            num = i // cpt + 1
-            pages.append(Page(num=num, text=txt[i:i+cpt], start=i, end=i+len(txt[i:i+cpt])))
-        import time as _t
-        t0 = _t.perf_counter()
-        b_res = baseline_process(txt)
-        b_lat = (_t.perf_counter() - t0) * 1000
-        t0 = _t.perf_counter()
-        a_res = process_contract_advanced(txt, pages, contract_id=cid, turn=1, model="gpt-4o-mini", harness_mode="balanced")
-        a_lat = (_t.perf_counter() - t0) * 1000
-        return cid, b_res, a_res, b_lat, a_lat, meta, None
-    except Exception as e:
-        import traceback as _tb
-        return args[0] if args else "unknown", None, None, 0, 0, None, f"{type(e).__name__}: {e}\n{_tb.format_exc()[:500]}"
-
-
 def evaluate_baseline_vs_advanced():
-    import os as _os
-    _use_concurrency = _os.getenv("EVAL_CONCURRENCY", "0") == "1"  # opt-in: parallel batch with ThreadPoolExecutor(4), caps p95 batch time
     fixtures = load_fixtures()
     # Import harness cores (production)
     import sys
@@ -88,8 +75,6 @@ def evaluate_baseline_vs_advanced():
 
     baseline_total_traps = 0
     advanced_total_traps = 0
-    baseline_detected = 0
-    advanced_detected = 0
     baseline_unsupported = 0
     advanced_unsupported = 0
     baseline_evidence_supported = 0
@@ -130,6 +115,7 @@ def evaluate_baseline_vs_advanced():
 
         # For each gold trap that exists, check if baseline/advanced detected it (trap recall)
         # Gold id Trap-A/B/C maps to related_clauses or trap_interactions, not just trap_id
+        per_gold_hits = []
         for gold in gold_traps:
             if not gold["exists"]:
                 continue
@@ -167,30 +153,35 @@ def evaluate_baseline_vs_advanced():
                 trap_gold_tp_baseline += 1
             if a_hit:
                 trap_gold_tp_advanced += 1
+            per_gold_hits.append({"id": gold["id"], "baseline_hit": b_hit, "advanced_hit": a_hit})
 
         baseline_total_traps += b_res["trap_count"]
         advanced_total_traps += a_res["trap_count"]
         # For baseline, compute what verifier WOULD have rejected (to show hallucination rate)
         # Run verifier on baseline findings to get true unsupported
         from advanced.src.harness.verify import verify_finding as _verify_b
-        from advanced.src.harness.risk import PLAYBOOK as _PLAYBOOK_B
         # Build evidence packages for baseline findings and verify
         b_unsupported = 0
+        from advanced.src.harness.risk import RiskFinding
         for f in b_res["findings"]:
-            # Reconstruct minimal finding for verifier
-            from advanced.src.harness.risk import RiskFinding
-            # Create dummy RiskFinding from baseline finding
+            # Reconstruct a minimal finding for the verifier, translated into the advanced
+            # playbook's vocabulary first: baseline names its liability rule's clause type
+            # "Uncapped Liability" (CUAD's label) and its cross-clause findings "Trap-A"/
+            # "Trap-B", which the verifier's rule->clause_type check would otherwise reject as
+            # a label mismatch even when the cited span is genuine. "Unsupported" should mean
+            # the evidence does not hold up, not that the two systems spell labels differently.
+            rule_id, clause_type = _baseline_rule_and_type(f)
             try:
                 rf = RiskFinding(
-                    clause_type=f.get("clause_type",""), risk=f.get("risk",""), rule_id=f.get("trap_id","P-01"),
+                    clause_type=clause_type, risk=f.get("risk",""), rule_id=rule_id,
                     precedent_id="PR-01", proposed_change=f.get("proposed_change",""), rationale=f.get("rationale",""),
                     confidence=0.7, evidence_contract_span=f.get("span_text",""), evidence_page=f.get("page",1), evidence_line=f.get("line",1)
                 )
-                pkg = {"contract_span": f.get("span_text",""), "contract_page": f.get("page",1), "playbook_rule": f.get("trap_id","P-01"), "precedent": {"id":"PR-01"}, "confidence": 0.7}
+                pkg = {"contract_span": f.get("span_text",""), "contract_page": f.get("page",1), "playbook_rule": rule_id, "precedent": {"id":"PR-01"}, "confidence": 0.7}
                 ver = _verify_b(f.get("span_text",""), rf, pkg, txt)
                 if ver.status == "REJECT":
                     b_unsupported += 1
-            except:
+            except Exception:
                 b_unsupported += 1
         baseline_unsupported += b_unsupported
         advanced_unsupported += a_res.get("unsupported", 0)
@@ -202,7 +193,15 @@ def evaluate_baseline_vs_advanced():
 
         results["baseline"].append({"contract_id": cid, "trap_count": b_res["trap_count"], "findings": b_res["findings"]})
         results["advanced"].append({"contract_id": cid, "trap_count": a_res["trap_count"], "findings": a_res["findings"], "verification": {"supported": a_res["evidence_supported"], "unsupported": a_res["unsupported"], "surgical_rate": a_res["surgical_rate"]}})
-        results["traps"].append({"contract_id": cid, "gold": gold_traps, "baseline_hit": b_hit if gold_traps else False, "advanced_hit": a_hit if gold_traps else False})
+        # Per-contract hit flags are computed from THIS contract's existing gold traps only.
+        # (Previously this read the loop variables b_hit/a_hit after the loop, i.e. only the
+        # LAST gold trap's result -- or a stale value left over from an earlier contract when
+        # this one's gold traps all had exists=False.)
+        results["traps"].append({
+            "contract_id": cid, "gold": gold_traps, "per_gold": per_gold_hits,
+            "baseline_hit": bool(per_gold_hits) and all(h["baseline_hit"] for h in per_gold_hits),
+            "advanced_hit": bool(per_gold_hits) and all(h["advanced_hit"] for h in per_gold_hits),
+        })
 
     # Compute secondary diagnostics
     total_proposed_b = sum(len(r["findings"]) for r in results["baseline"])
@@ -320,7 +319,7 @@ def evaluate_baseline_vs_advanced():
         "primary_metric_rationale": "Reflects genuine generalization against real, independent expert legal annotation (CUAD, NeurIPS 2021) -- not labels we wrote ourselves. Trap Recall below is a real, useful regression-test metric, but it is self-graded (we wrote the gold traps), so it is reported as a secondary diagnostic, not the headline.",
         "cuad_ground_truth": cuad_summary if cuad_summary is not None else {"status": "not run -- execute `python scripts/eval_cuad_ground_truth.py` (real, expert-labeled ground truth, all 510 CUAD contracts, $0/deterministic)"},
         "trap_suite": {"total_traps_gold": trap_gold_total, "baseline_recall": round(trap_recall_b, 3), "advanced_recall": round(trap_recall_a, 3), "delta": round(trap_recall_a - trap_recall_b, 3)},
-        "latency_ms": {"baseline_p50": round(p50_b, 1), "baseline_p95": round(p95_b, 1), "advanced_p50": round(p50_a, 1), "advanced_p95": round(p95_a, 1), "delta_p95": round(p95_a - p95_b, 1), "batch_concurrency": "ThreadPoolExecutor(4) opt-in via EVAL_CONCURRENCY=1 caps p95 batch vs sequential 0.1s linear (Sirion analogue)", "stage_breakdown": stage_latency_summary},
+        "latency_ms": {"baseline_p50": round(p50_b, 1), "baseline_p95": round(p95_b, 1), "advanced_p50": round(p50_a, 1), "advanced_p95": round(p95_a, 1), "delta_p95": round(p95_a - p95_b, 1), "stage_breakdown": stage_latency_summary},
         "secondary": {
             "evidence_supported_rate": {"baseline": round(evidence_supported_rate_b, 3), "advanced": round(evidence_supported_rate_a, 3)},
             "unsupported_rate": {"baseline": round(unsupported_rate_b, 3), "advanced": round(unsupported_rate_a, 3)},

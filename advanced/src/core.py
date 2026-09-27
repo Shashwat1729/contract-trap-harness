@@ -1,4 +1,4 @@
-﻿"""
+"""
 Advanced core -- verification-gated harness, production-grade.
 
 Implements reviewer-corrected closed-loop: discover -> reason -> propose -> evidence -> verify -> human review as approved candidate.
@@ -23,9 +23,9 @@ import json
 import os
 import logging
 import re
+import threading
 import time
 import uuid
-from dataclasses import asdict
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -34,12 +34,13 @@ from tenacity import retry, stop_after_attempt, wait_exponential
 
 from .harness.ingest import Page
 from .harness.extract import extract_clauses, extract_clauses_hybrid, ClauseHit
-from .harness.risk import assess_risk, build_evidence_package, PLAYBOOK, get_thinking_log as risk_thinking
+from .harness.risk import assess_risk, build_evidence_package, PLAYBOOK, get_thinking_log as risk_thinking, _find_number_before_unit, _find_number_near_keyword, RENEWAL_KEYWORD, INITIAL_TERM_LEAD_IN
 from .harness.verify import verify_finding, dual_verify_finding, get_thinking_log as verify_thinking
-from .harness.llm_verify import llm_verify_finding
+from .harness.llm_verify import llm_verify_finding, llm_cross_check, llm_result_dict, new_llm_stats
 from .harness.memory import NegotiationMemory, select_harness_mode
 from .harness.router import route_findings
-from .config import ENABLE_LLM_VERIFY, ENABLE_SEMANTIC_EXTRACTION, ENABLE_BM25_EXTRACTION, LLM_TIMEOUT, ENABLE_LANGGRAPH, LLM_VERIFY_SKIP_CONFIDENCE, ENABLE_LLM_EXTRACT, LLM_EXTRACT_MAX_CALLS
+from .harness.thinking import REVIEWS_DIR, persist_module_log, safe_filename_part, snapshots_enabled, write_json_atomic
+from .config import ENABLE_LLM_VERIFY, ENABLE_SEMANTIC_EXTRACTION, ENABLE_BM25_EXTRACTION, ENABLE_LANGGRAPH, LLM_VERIFY_SKIP_CONFIDENCE, ENABLE_LLM_EXTRACT, LLM_EXTRACT_MAX_CALLS, MAX_CHARS
 
 logger = logging.getLogger("advanced.core")
 
@@ -47,24 +48,18 @@ THINKING_LOG: list[dict[str, Any]] = []
 _THINKING_MAX = 500
 
 def _persist_dead_letter(contract_id: str, reason: str, stage: str = "unknown") -> None:
-    """Persist fallback to dead-letter jsonl for human review -- ephemeral fallback never queued otherwise."""
+    """Append a fallback event to evidence/reviews/dead_letter.jsonl so a failed run is
+    queued for human review instead of disappearing. Never raises."""
     try:
-        from pathlib import Path as _P
-        dl = _P(__file__).parent.parent / "evidence" / "reviews" / "dead_letter.jsonl"
-        alt = _P("evidence") / "reviews" / "dead_letter.jsonl"
-        for p in (dl, alt):
-            try:
-                p.parent.mkdir(parents=True, exist_ok=True)
-                with open(p, "a", encoding="utf-8") as f:
-                    import json as _j, time as _t, datetime as _dt
-                    _j.dump({"ts": _dt.datetime.now(_dt.timezone.utc).isoformat(), "contract_id": contract_id, "stage": stage, "reason": reason}, f)
-                    f.write("\n")
-                break
-            except Exception:
-                continue
+        record = {"ts": datetime.now(timezone.utc).isoformat(), "contract_id": contract_id, "stage": stage, "reason": reason}
+        REVIEWS_DIR.mkdir(parents=True, exist_ok=True)
+        with _DEAD_LETTER_LOCK, open(REVIEWS_DIR / "dead_letter.jsonl", "a", encoding="utf-8") as f:
+            f.write(json.dumps(record, ensure_ascii=False) + "\n")
     except Exception as e:
         logger.warning("dead_letter persist failed: %s", e)
 
+
+_DEAD_LETTER_LOCK = threading.Lock()
 
 
 def _log_thinking(stage: str, input_data: Any, output_data: Any, reasoning: str) -> None:
@@ -81,21 +76,7 @@ def _log_thinking(stage: str, input_data: Any, output_data: Any, reasoning: str)
         if len(THINKING_LOG) > _THINKING_MAX:
             del THINKING_LOG[0 : len(THINKING_LOG) - _THINKING_MAX]
         logger.debug("core thinking [%s] %s", stage, reasoning[:120])
-        # Persist combined
-        try:
-            evidence_dir = Path(__file__).parent.parent / "evidence" / "reviews"
-            evidence_dir.mkdir(parents=True, exist_ok=True)
-            fp = evidence_dir / "thinking_core.json"
-            with open(fp, "w", encoding="utf-8") as f:
-                json.dump(THINKING_LOG[-100:], f, indent=2, ensure_ascii=False)
-        except Exception:
-            try:
-                alt = Path("evidence") / "reviews" / "thinking_core.json"
-                alt.parent.mkdir(parents=True, exist_ok=True)
-                with open(alt, "w", encoding="utf-8") as f:
-                    json.dump(THINKING_LOG[-100:], f, indent=2, ensure_ascii=False)
-            except Exception:
-                pass
+        persist_module_log("thinking_core.json", THINKING_LOG[-100:])
     except Exception as e:
         logger.warning("core thinking log failed: %s", e)
 
@@ -146,6 +127,36 @@ def _retry_extract(contract_text: str, pages: list[Page]) -> list[ClauseHit]:
     return extract_clauses(contract_text, pages)
 
 
+def _dedupe_proposed(proposed: list[tuple[Any, ...]]) -> list[tuple[Any, ...]]:
+    """One finding per (rule, cited clause text). "Cap on Liability" and "Limitation of
+    Liability" are one playbook rule family (P-04/P-12), so a single liability clause that
+    matches both clause-type patterns used to yield two identical redlines."""
+    seen: set[tuple[str, str]] = set()
+    out: list[tuple[Any, ...]] = []
+    for item in proposed:
+        finding = item[1]
+        key = (finding.rule_id, " ".join(finding.evidence_contract_span.split()).lower())
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append(item)
+    return out
+
+
+def _dedupe_traps(traps: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Merge interactions with the same id over the same clause text (see _dedupe_proposed)."""
+    merged: dict[tuple[str, tuple[str, ...]], dict[str, Any]] = {}
+    for t in traps:
+        key = (t["id"], tuple(" ".join(sp.split()).lower() for sp in t.get("spans", [])))
+        if key in merged:
+            for r in t.get("related", []):
+                if r not in merged[key]["related"]:
+                    merged[key]["related"].append(r)
+            continue
+        merged[key] = {**t, "related": list(t.get("related", []))}
+    return list(merged.values())
+
+
 def _trap_interactions(contract_text: str, clause_hits: list[ClauseHit], pages: list[Page]) -> list[dict[str, Any]]:
     """Find cross-clause trap interactions (A-D) -- the memorable part."""
     try:
@@ -154,16 +165,19 @@ def _trap_interactions(contract_text: str, clause_hits: list[ClauseHit], pages: 
         for h in clause_hits:
             by_type.setdefault(h.clause_type, []).append(h)
 
-        # Note: (\d+) alone misses the common legal-drafting convention "thirty-six (36)
-        # months" (numeral in parens after the spelled-out word) -- \(?...\)? tolerates it.
-        num_re = r"\(?\s*(\d+)\s*\)?\s*{}"
+        # Same duration parsing as risk.assess_risk (digits, "thirty-six (36) months",
+        # spelled-out numbers, years -> months), and the same renewal-anchored lookup, so
+        # the cross-clause check can't disagree with the per-clause findings it combines.
+        seen_pairs: set[tuple[str, str]] = set()
         for r in by_type.get("Renewal Term", []):
-            m = re.search(num_re.format("months?"), r.span_text, flags=re.IGNORECASE)
-            r_val = int(m.group(1)) if m else None
+            r_val = _find_number_near_keyword(r.span_text, RENEWAL_KEYWORD, "months?", skip_if_preceded_by=INITIAL_TERM_LEAD_IN)
             for n in by_type.get("Notice Period to Terminate Renewal", []):
-                mn = re.search(num_re.format("days?"), n.span_text, flags=re.IGNORECASE)
-                n_val = int(mn.group(1)) if mn else None
+                n_val = _find_number_before_unit(n.span_text, "days?")
                 if r_val is not None and n_val is not None and r_val > 12 and n_val < 60:
+                    pair = (r.span_text, n.span_text)
+                    if pair in seen_pairs:
+                        continue  # overlapping regex hits on the same clause text -- one interaction, not N
+                    seen_pairs.add(pair)
                     traps.append({"id": "Trap-A", "name": "Renewal vs Termination mismatch", "related": [r.clause_type, n.clause_type], "conflict": "auto-renewal >12m but notice <60d locks buyer", "spans": [r.span_text, n.span_text]})
 
         for c in by_type.get("Cap on Liability", []) + by_type.get("Limitation of Liability", []):
@@ -176,12 +190,52 @@ def _trap_interactions(contract_text: str, clause_hits: list[ClauseHit], pages: 
             if re.search(r"delet|eras|purg", win, flags=re.IGNORECASE) and re.search(r"retain|retention|keep a copy|continue to (?:hold|store)", win, flags=re.IGNORECASE):
                 traps.append({"id": "Trap-C", "name": "Deletion vs Retention conflict", "related": [p.clause_type], "conflict": "deletion obligation conflicts with transition retention", "spans": [p.span_text]})
 
+        traps = _dedupe_traps(traps)
         _log_thinking("core/trap_interactions", f"{len(clause_hits)} hits", f"{len(traps)} traps", f"Cross-clause trap scan: {len(clause_hits)} hits -> {len(traps)} interactions ({[t['id'] for t in traps]})")
         return traps
     except Exception as e:
         logger.exception("_trap_interactions failed: %s", e)
         _log_thinking("core/trap_interactions_error", str(e), "[]", f"trap_interactions exception: {e}")
         return []
+
+
+def _prepare_contract_text(contract_text: str | None, contract_id: str) -> str:
+    """Validate and bound the input the same way for both engines: raises ValueError on
+    empty/whitespace-only text, truncates to MAX_CHARS (env-configurable) with a logged
+    warning. Pages beyond the cut are harmless -- offsets past the end are never produced."""
+    if not contract_text or not contract_text.strip():
+        raise ValueError("contract_text must be non-empty")
+    orig_len = len(contract_text)
+    if orig_len > MAX_CHARS:
+        contract_text = contract_text[:MAX_CHARS]
+        logger.warning("truncation: contract %s orig_len=%d truncated_len=%d (limit %d)", contract_id, orig_len, len(contract_text), MAX_CHARS)
+        _log_thinking("core/truncation", f"orig_len={orig_len}", f"truncated_len={len(contract_text)}", f"Large contract truncated {orig_len} -> {len(contract_text)} chars")
+    return contract_text
+
+
+def _coverage_gaps(clause_hits: list[ClauseHit]) -> list[dict[str, Any]]:
+    """
+    Playbook rules whose trap is the ABSENCE of a clause (currently only P-03, "missing
+    TFC") cannot be evidence-gated the way presence-based findings are -- there is no
+    verbatim span to cite for something that is not in the document. Rather than
+    fabricate a citation to get it through dual-verify, surface it as a distinct,
+    honestly-unverified checklist flag. (A missing clause of any other type -- e.g. no
+    audit-rights clause at all -- is not a trap under the playbook, so it is not a gap.)
+    Shared by the direct pipeline and the LangGraph evidence node.
+    """
+    extracted_types = {h.clause_type for h in clause_hits}
+    gaps: list[dict[str, Any]] = []
+    if "Termination for Convenience" not in extracted_types:
+        p03 = PLAYBOOK["P-03"]
+        gaps.append({
+            "rule_id": "P-03",
+            "clause_type": "Termination for Convenience",
+            "gap": p03["trap"],
+            "proposed_change": p03["preferred"],
+            "rationale": p03["commercial"],
+            "note": "No Termination for Convenience clause was found anywhere in the document. This is a checklist flag, not a citation-verified finding -- there is no span to cite for an absence, so it is not gated through dual-verify/LLM-verify and is not counted in trap_count/evidence_supported.",
+        })
+    return gaps
 
 
 def process_contract_advanced(
@@ -229,13 +283,7 @@ def process_contract_advanced(
     # suite by eval_harness.py into evidence/benchmarks/results.json.
     stage_ms: dict[str, float] = {}
     _t_prev = t_start
-    if not contract_text or not contract_text.strip():
-        raise ValueError("contract_text must be non-empty")
-    orig_len = len(contract_text)
-    if orig_len > 120000:
-        contract_text = contract_text[:120000]
-        logger.warning("truncation: contract %s orig_len=%d truncated_len=%d (limit 120000)", contract_id, orig_len, len(contract_text))
-        _log_thinking("core/truncation", f"orig_len={orig_len}", f"truncated_len={len(contract_text)}", f"Large contract truncated {orig_len} -> {len(contract_text)} chars")
+    contract_text = _prepare_contract_text(contract_text, contract_id)
 
     mode = select_harness_mode(model, harness_mode)
     logger.info("harness mode=%s contract=%s turn=%s chars=%d", mode, contract_id, turn, len(contract_text))
@@ -274,7 +322,7 @@ def process_contract_advanced(
         from .fallback.handler import fallback_response
         _persist_dead_letter(contract_id, f"extract failed: {e}", stage="extract")
         # Return fallback gracefully
-        return {"variant":"advanced","contract_id":contract_id,"turn":turn,"harness_mode":mode,"trap_interactions":[],"findings":[],"approved_candidates":[],"rejected":[],"trap_count":0,"total_proposed":0,"evidence_supported":0,"unsupported":0,"surgical_rate":1.0,"coverage_gaps":[],"llm_stats":{"ran":0,"confirmed":0,"flagged":0,"skipped":0,"mock":0,"skipped_high_confidence":0},"dual_stats":{"agree_pass":0,"agree_reject":0,"disagree":0},"fallback": fallback_response(contract_id, f"extract failed: {e}"), "thinking": get_thinking_log(20)}
+        return {"variant":"advanced","contract_id":contract_id,"turn":turn,"harness_mode":mode,"trap_interactions":[],"findings":[],"approved_candidates":[],"rejected":[],"trap_count":0,"total_proposed":0,"evidence_supported":0,"unsupported":0,"surgical_rate":1.0,"coverage_gaps":[],"llm_stats":new_llm_stats(),"dual_stats":{"agree_pass":0,"agree_reject":0,"disagree":0},"fallback": fallback_response(contract_id, f"extract failed: {e}"), "thinking": get_thinking_log(20)}
 
     proposed: list[tuple[Any, ...]] = []
     try:
@@ -296,6 +344,7 @@ def process_contract_advanced(
                 _log_thinking("core/evidence_error", finding.rule_id, str(e), f"Evidence package failed: {e}")
                 continue
             proposed.append((hit, finding, ev_pkg))
+        proposed = _dedupe_proposed(proposed)
         logger.info("proposed %d findings after risk", len(proposed))
         _emit("risk", f"{len(proposed)} findings proposed via playbook + precedent retrieval")
         _log_thinking("core/risk_done", f"{len(clause_hits)} hits", f"{len(proposed)} proposed", f"Risk stage done: {len(clause_hits)} hits -> {len(proposed)} proposed findings, self-reflective RAG logged")
@@ -306,28 +355,13 @@ def process_contract_advanced(
         _log_thinking("core/risk_stage_error", contract_id, str(e), f"Risk stage exception: {e}")
         from .fallback.handler import fallback_response
         _persist_dead_letter(contract_id, f"risk failed: {e}", stage="risk")
-        return {"variant":"advanced","contract_id":contract_id,"turn":turn,"harness_mode":mode,"trap_interactions":[],"findings":[],"approved_candidates":[],"rejected":[],"trap_count":0,"total_proposed":0,"evidence_supported":0,"unsupported":0,"surgical_rate":1.0,"coverage_gaps":[],"llm_stats":{"ran":0,"confirmed":0,"flagged":0,"skipped":0,"mock":0,"skipped_high_confidence":0},"dual_stats":{"agree_pass":0,"agree_reject":0,"disagree":0},"fallback": fallback_response(contract_id, f"risk failed: {e}"), "thinking": get_thinking_log(20)}
+        return {"variant":"advanced","contract_id":contract_id,"turn":turn,"harness_mode":mode,"trap_interactions":[],"findings":[],"approved_candidates":[],"rejected":[],"trap_count":0,"total_proposed":0,"evidence_supported":0,"unsupported":0,"surgical_rate":1.0,"coverage_gaps":[],"llm_stats":new_llm_stats(),"dual_stats":{"agree_pass":0,"agree_reject":0,"disagree":0},"fallback": fallback_response(contract_id, f"risk failed: {e}"), "thinking": get_thinking_log(20)}
 
     trap_interactions = _trap_interactions(contract_text, clause_hits, pages)
 
-    # Coverage gaps: playbook rules whose trap is the ABSENCE of a clause (currently
-    # P-03 "missing TFC") cannot be evidence-gated the way presence-based findings are --
-    # there is no verbatim span to cite for something that is not in the document. Rather
-    # than fabricate a citation to get it through dual-verify, surface it as a distinct,
-    # honestly-unverified checklist flag instead of forcing it through the citation pipeline.
     coverage_gaps: list[dict[str, Any]] = []
     try:
-        extracted_types = {h.clause_type for h in clause_hits}
-        if "Termination for Convenience" not in extracted_types:
-            p03 = PLAYBOOK["P-03"]
-            coverage_gaps.append({
-                "rule_id": "P-03",
-                "clause_type": "Termination for Convenience",
-                "gap": p03["trap"],
-                "proposed_change": p03["preferred"],
-                "rationale": p03["commercial"],
-                "note": "No Termination for Convenience clause was found anywhere in the document. This is a checklist flag, not a citation-verified finding -- there is no span to cite for an absence, so it is not gated through dual-verify/LLM-verify and is not counted in trap_count/evidence_supported.",
-            })
+        coverage_gaps = _coverage_gaps(clause_hits)
         _emit("coverage", f"{len(coverage_gaps)} missing-clause checklist flag(s)")
     except Exception as e:
         logger.warning("coverage_gaps check failed: %s", e)
@@ -339,7 +373,7 @@ def process_contract_advanced(
     verification_results = []
     llm_results: list[Any] = []
     dual_stats = {"agree_pass": 0, "agree_reject": 0, "disagree": 0}
-    llm_stats = {"ran": 0, "confirmed": 0, "flagged": 0, "skipped": 0, "mock": 0, "skipped_high_confidence": 0}
+    llm_stats = new_llm_stats()
     for hit, finding, ev_pkg in proposed:
         try:
             # Prefer dual-verify (strict + lenient in parallel); fallback to single on exception
@@ -369,34 +403,13 @@ def process_contract_advanced(
         # verifier's strict+lenient thresholds already AGREED pass AND the playbook rule's
         # own confidence is already high -- route the real check to the findings the
         # deterministic engine is least sure about instead of spending it on every PASS.
-        llm_res = None
-        skip_high_confidence = (
-            ver.dual_mode == "dual-agree-pass" and finding.confidence >= LLM_VERIFY_SKIP_CONFIDENCE
+        llm_res = llm_cross_check(
+            hit.span_text, finding, ev_pkg, ver, llm_stats,
+            enabled=ENABLE_LLM_VERIFY, skip_confidence=LLM_VERIFY_SKIP_CONFIDENCE,
+            verify_fn=llm_verify_finding,
         )
-        if ENABLE_LLM_VERIFY and ver.status == "PASS" and skip_high_confidence:
-            llm_stats["skipped_high_confidence"] += 1
-            _log_thinking("core/llm_verify_skip", f"{finding.clause_type} rule={finding.rule_id} confidence={finding.confidence}", "SKIPPED (high confidence)", f"LLM cross-check skipped for {finding.clause_type}: dual-agree-pass and confidence {finding.confidence} >= {LLM_VERIFY_SKIP_CONFIDENCE}, real API call not spent")
-        elif ENABLE_LLM_VERIFY and ver.status == "PASS":
-            try:
-                llm_res = llm_verify_finding(hit.span_text, finding, ev_pkg)
-                if llm_res.ran:
-                    llm_stats["ran"] += 1
-                    if llm_res.mock:
-                        llm_stats["mock"] += 1
-                    if llm_res.supported is False and (llm_res.confidence or 0) >= 0.6:
-                        llm_stats["flagged"] += 1
-                        ver.status = "REJECT"
-                        ver.reasons = list(ver.reasons) + [f"LLM cross-check flagged: {llm_res.concern or 'unsupported per LLM review'}"]
-                        ver.evidence_supported = False
-                        _log_thinking("core/llm_verify", f"{finding.clause_type} rule={finding.rule_id}", "FLAGGED", f"LLM cross-check ({finding.clause_type}): model disagreed, downgraded PASS->REJECT: {llm_res.concern}")
-                    else:
-                        llm_stats["confirmed"] += 1
-                        _log_thinking("core/llm_verify", f"{finding.clause_type} rule={finding.rule_id}", "CONFIRMED", f"LLM cross-check ({finding.clause_type}): model agreed, confidence={llm_res.confidence}")
-                else:
-                    llm_stats["skipped"] += 1
-            except Exception as e:
-                logger.warning("llm_verify_finding failed for %s: %s", finding.clause_type, e)
-                llm_stats["skipped"] += 1
+        if llm_res is not None and llm_res.ran:
+            _log_thinking("core/llm_verify", f"{finding.clause_type} rule={finding.rule_id}", ver.status, f"LLM cross-check ({finding.clause_type}): supported={llm_res.supported} confidence={llm_res.confidence} -> {ver.status}: {llm_res.concern}")
         verification_results.append(ver)
         llm_results.append(llm_res)
         verified.append((hit, finding, ev_pkg, ver))
@@ -428,10 +441,7 @@ def process_contract_advanced(
             "verification": ver.status,
             "reasons": ver.reasons,
             "dual_mode": getattr(ver, "dual_mode", None),
-            "llm_verify": (
-                {"ran": llm_res.ran, "supported": llm_res.supported, "confidence": llm_res.confidence, "concern": llm_res.concern, "mock": llm_res.mock}
-                if llm_res is not None else {"ran": False, "supported": None, "confidence": None, "concern": "", "mock": True}
-            ),
+            "llm_verify": llm_result_dict(llm_res),
         }
         routed_input.append(d)
         ver_objs.append(ver)
@@ -478,10 +488,9 @@ def process_contract_advanced(
     latency_ms = int((time.perf_counter() - t_start) * 1000)
     _log_thinking("core/done", f"contract={contract_id} turn={turn}", f"approved={len(approved)} rejected={len(rejected)} latency={latency_ms}ms dual_stats={dual_stats}", f"process_contract_advanced done {contract_id} turn {turn}: {len(approved)} approved, {len(rejected)} rejected, trap_interactions {len(trap_interactions)}, latency {latency_ms}ms mode={mode}")
 
-    # Attempt to persist combined thinking snapshot
-    try:
-        evidence_dir = Path(__file__).parent.parent / "evidence" / "reviews"
-        evidence_dir.mkdir(parents=True, exist_ok=True)
+    # One aggregated developer-view snapshot per contract/turn (core + risk + verify
+    # thinking). Atomic write, sanitized filename: contract_id is caller-controlled.
+    if snapshots_enabled():
         snap = {
             "contract_id": contract_id,
             "turn": turn,
@@ -495,10 +504,7 @@ def process_contract_advanced(
             "verify_thinking": verify_thinking(10),
             "generated_at": datetime.now(timezone.utc).isoformat(),
         }
-        with open(evidence_dir / f"thinking_{contract_id}_t{turn}.json", "w", encoding="utf-8") as fh:
-            json.dump(snap, fh, indent=2, ensure_ascii=False)
-    except Exception as e:
-        logger.warning("thinking snapshot save failed: %s", e)
+        write_json_atomic(REVIEWS_DIR / f"thinking_{safe_filename_part(contract_id)}_t{int(turn)}.json", snap)
 
     return {
         "variant": "advanced",
@@ -522,6 +528,16 @@ def process_contract_advanced(
         "engine": "direct",
         "stage_latency_ms": {k: round(v, 2) for k, v in stage_ms.items()},
     }
+
+
+def _update_memory(memory: NegotiationMemory | None, result: dict[str, Any], turn: int) -> None:
+    """Graph-engine parity with the direct pipeline's negotiation-memory update."""
+    if memory is None:
+        return
+    try:
+        memory.update_from_findings(result.get("findings", []), turn=turn)
+    except Exception as e:
+        logger.warning("memory update failed: %s", e)
 
 
 def _graph_state_to_dict(result: dict[str, Any], contract_id: str, turn: int, harness_mode: str, thread_id: str) -> dict[str, Any]:
@@ -586,6 +602,12 @@ def process_contract_graph(
         graph = build_graph()
         tid = thread_id or contract_id
         config = {"configurable": {"thread_id": tid}}
+        # Only a run that is actually paused at an interrupt() can be resumed. Without this
+        # check LangGraph starts a brand-new run from START with an empty state: every node
+        # fails on the missing contract_text and the caller gets an empty "complete" result.
+        snapshot = graph.get_state(config)
+        if not any(getattr(task, "interrupts", ()) for task in (getattr(snapshot, "tasks", ()) or ())):
+            raise ValueError(f"no paused human-review run for thread_id={tid!r} (never interrupted, already resumed, or expired)")
         result = graph.invoke(Command(resume=resume_decision), config=config)
         if "__interrupt__" in result:
             return _pending_review_response(result, contract_id, turn, harness_mode, tid)
@@ -593,18 +615,22 @@ def process_contract_graph(
 
     if contract_text is None or pages is None:
         raise ValueError("contract_text and pages are required unless resume_decision is set")
+    if engine not in ("auto", "direct", "graph"):
+        raise ValueError(f"engine must be one of auto|direct|graph, got {engine!r}")
 
     use_graph = engine == "graph" or (engine == "auto" and ENABLE_LANGGRAPH)
     if not use_graph:
         result = process_contract_advanced(contract_text, pages, contract_id, turn, memory, model, harness_mode, on_stage)
         result["engine"] = "direct"
         return result
+    contract_text = _prepare_contract_text(contract_text, contract_id)
+    mode = select_harness_mode(model, harness_mode)
     try:
         from .harness.graph import build_graph
         graph = build_graph()
         init_state = {
             "contract_text": contract_text, "pages": pages, "contract_id": contract_id,
-            "turn": turn, "mode": harness_mode, "clause_hits": [], "trap_interactions": [],
+            "turn": turn, "mode": mode, "clause_hits": [], "trap_interactions": [],
             "coverage_gaps": [], "proposed": [], "verified": [], "verification_results": [],
             "llm_results": [], "dual_stats": {}, "llm_stats": {}, "routed": [], "findings_out": [],
             "approved": [], "rejected": [], "thinking": [], "latency_ms": 0, "stage_latency_ms": {}, "error": None, "dead_letter": None, "retry_count": 0,
@@ -623,8 +649,10 @@ def process_contract_graph(
         config = {"configurable": {"thread_id": tid}}
         result = graph.invoke(init_state, config=config)
         if "__interrupt__" in result:
-            return _pending_review_response(result, contract_id, turn, harness_mode, tid)
-        return _graph_state_to_dict(result, contract_id, turn, harness_mode, tid)
+            return _pending_review_response(result, contract_id, turn, mode, tid)
+        out = _graph_state_to_dict(result, contract_id, turn, mode, tid)
+        _update_memory(memory, out, turn)
+        return out
     except Exception as e:
         logger.exception("graph invoke failed, fallback to direct: %s", e)
         result = process_contract_advanced(contract_text, pages, contract_id, turn, memory, model, harness_mode, on_stage)
@@ -639,7 +667,7 @@ def _pending_review_response(result: dict[str, Any], contract_id: str, turn: int
     the caller resumes with process_contract_graph(resume_decision=..., thread_id=thread_id)."""
     payload = result["__interrupt__"][0].value
     return {
-        "variant": "advanced", "contract_id": contract_id, "turn": turn, "harness_mode": harness_mode,
+        "variant": "advanced", "contract_id": contract_id, "turn": turn, "harness_mode": result.get("mode", harness_mode),
         "engine": "langgraph", "status": "pending_human_review", "thread_id": thread_id,
         "interrupt": payload,
         "trap_interactions": [], "findings": [], "approved_candidates": [], "rejected": [],

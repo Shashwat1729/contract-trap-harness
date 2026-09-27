@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-08-31T12:14:49.795907+00:00",
+  "generated_at": "2026-09-27T17:45:10.274710+00:00",
   "all_passed": true,
   "suites": {
     "baseline_unit": {
-      "raw_summary_line": "6 passed in 0.46s",
+      "raw_summary_line": "6 passed in 0.01s",
       "counts": {
         "passed": 6,
         "failed": 0,
@@ -11,10 +11,10 @@
         "errors": 0
       },
       "returncode": 0,
-      "elapsed_s": 1.48
+      "elapsed_s": 0.7
     },
     "baseline_integration": {
-      "raw_summary_line": "3 passed, 1 warning in 0.68s",
+      "raw_summary_line": "3 passed, 1 warning in 0.19s",
       "counts": {
         "passed": 3,
         "failed": 0,
@@ -22,32 +22,32 @@
         "errors": 0
       },
       "returncode": 0,
-      "elapsed_s": 1.84
+      "elapsed_s": 0.88
     },
     "advanced_unit": {
-      "raw_summary_line": "77 passed, 1 skipped in 6.35s",
+      "raw_summary_line": "200 passed, 2 skipped in 1.66s",
       "counts": {
-        "passed": 77,
+        "passed": 200,
         "failed": 0,
-        "skipped": 1,
+        "skipped": 2,
         "errors": 0
       },
       "returncode": 0,
-      "elapsed_s": 7.55
+      "elapsed_s": 2.56
     },
     "advanced_integration": {
-      "raw_summary_line": "6 passed, 1 warning in 1.16s",
+      "raw_summary_line": "17 passed, 1 warning in 1.92s",
       "counts": {
-        "passed": 6,
+        "passed": 17,
         "failed": 0,
         "skipped": 0,
         "errors": 0
       },
       "returncode": 0,
-      "elapsed_s": 2.39
+      "elapsed_s": 2.8
     },
     "dashboard_smoke": {
-      "raw_summary_line": "5 passed in 3.80s",
+      "raw_summary_line": "5 passed in 3.16s",
       "counts": {
         "passed": 5,
         "failed": 0,
@@ -55,13 +55,24 @@
         "errors": 0
       },
       "returncode": 0,
-      "elapsed_s": 5.46
+      "elapsed_s": 4.47
+    },
+    "e2e": {
+      "raw_summary_line": "3 passed, 1 warning in 0.59s",
+      "counts": {
+        "passed": 3,
+        "failed": 0,
+        "skipped": 0,
+        "errors": 0
+      },
+      "returncode": 0,
+      "elapsed_s": 1.32
     }
   },
   "mypy": {
-    "raw_summary_line": "Success: no issues found in 22 source files",
+    "raw_summary_line": "Success: no issues found in 23 source files",
     "returncode": 0,
-    "elapsed_s": 35.65,
+    "elapsed_s": 0.76,
     "passed": true
   }
 }

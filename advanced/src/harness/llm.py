@@ -42,13 +42,36 @@ _KEY_ENV_VARS = ("GEMINI_API_KEY", "GOOGLE_API_KEY", "OPENAI_API_KEY", "ANTHROPI
 _IS_GEMINI = LLM_MODEL.startswith("gemini/")
 
 
+def _timeout_s() -> float:
+    try:
+        return float(os.getenv("LLM_TIMEOUT", "30"))
+    except ValueError:
+        return 30.0
+
+
+def provider_key_vars(model: str) -> tuple[str, ...]:
+    """Env vars that can authenticate `model` (litellm "<provider>/<model>" naming).
+    Empty tuple = unknown provider: any configured key is accepted and litellm resolves it."""
+    m = model.lower()
+    if m.startswith(("gemini/", "google/")):
+        return ("GEMINI_API_KEY", "GOOGLE_API_KEY", "GOOGLE_GENERATIVE_AI_API_KEY", "GEMINI_API_KEYS")
+    if m.startswith("anthropic/") or m.startswith("claude"):
+        return ("ANTHROPIC_API_KEY",)
+    if m.startswith("openai/") or m.startswith(("gpt-", "o1", "o3", "o4")):
+        return ("OPENAI_API_KEY",)
+    return ()
+
+
 def llm_available() -> bool:
-    """True only if a provider key is present AND EVAL_MOCK is not forcing offline mode."""
+    """True only if EVAL_MOCK is not forcing offline mode AND a key for LLM_MODEL's provider
+    is present. (A key for some *other* provider used to count, which turned every
+    cross-check into a doomed network call that then degraded to mock one by one.)"""
     if _EVAL_MOCK:
         return False
     if _IS_GEMINI and _keys.has_any_key():
         return True
-    return any(os.getenv(k) for k in _KEY_ENV_VARS)
+    wanted = provider_key_vars(LLM_MODEL)
+    return any(os.getenv(k) for k in (wanted or _KEY_ENV_VARS))
 
 
 class LLMCallError(Exception):
@@ -68,7 +91,7 @@ def _call_one(messages: list[dict[str, str]], max_tokens: int, temperature: floa
         messages=messages,
         max_tokens=max_tokens,
         temperature=temperature,
-        timeout=int(__import__("os").getenv("LLM_TIMEOUT", "25")),
+        timeout=_timeout_s(),
         **kwargs,
     )
     content = resp.choices[0].message.content

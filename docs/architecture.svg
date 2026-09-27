@@ -1,0 +1,202 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="940" viewBox="0 0 1280 940" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif">
+  <title>Contract Trap Harness — architecture</title>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+    <marker id="arrowRed" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#b91c1c"/>
+    </marker>
+    <marker id="arrowPurple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#6d28d9"/>
+    </marker>
+    <style>
+      .title { font-size: 26px; font-weight: 700; fill: #0f172a; }
+      .subtitle { font-size: 14px; fill: #475569; }
+      .h { font-size: 15px; font-weight: 700; fill: #0f172a; }
+      .t { font-size: 12.5px; fill: #1e293b; }
+      .s { font-size: 11.5px; fill: #475569; }
+      .mono { font-family: "JetBrains Mono", Menlo, Consolas, monospace; font-size: 11.5px; fill: #334155; }
+      .lane { font-size: 12px; font-weight: 700; letter-spacing: 1.5px; fill: #64748b; }
+      .edge { stroke: #475569; stroke-width: 1.6; fill: none; marker-end: url(#arrow); }
+      .edgeDash { stroke: #475569; stroke-width: 1.4; fill: none; stroke-dasharray: 5 4; marker-end: url(#arrow); }
+      .edgeRed { stroke: #b91c1c; stroke-width: 1.6; fill: none; stroke-dasharray: 5 4; marker-end: url(#arrowRed); }
+      .edgePurple { stroke: #6d28d9; stroke-width: 1.6; fill: none; stroke-dasharray: 5 4; marker-end: url(#arrowPurple); }
+      .lbl { font-size: 11px; fill: #475569; }
+    </style>
+  </defs>
+
+  <rect width="1280" height="940" fill="#ffffff"/>
+
+  <!-- Header -->
+  <text x="40" y="48" class="title">Contract Trap Harness — Architecture</text>
+  <text x="40" y="72" class="subtitle">Verification-gated redlining: every proposed edit must carry a verbatim, page:line citation that passes the evidence gate — and a human still decides.</text>
+
+  <!-- ============ LANE 1: entry points ============ -->
+  <text x="40" y="112" class="lane">ENTRY POINTS</text>
+  <rect x="40" y="122" width="1200" height="92" rx="12" fill="#f8fafc" stroke="#e2e8f0"/>
+
+  <rect x="60" y="136" width="270" height="64" rx="10" fill="#e0f2fe" stroke="#0284c7"/>
+  <text x="74" y="158" class="h">Contract in</text>
+  <text x="74" y="177" class="t">PDF · DOCX · TXT → page-preserving text</text>
+  <text x="74" y="193" class="mono">harness/ingest.py → page:line</text>
+
+  <rect x="350" y="136" width="310" height="64" rx="10" fill="#e0f2fe" stroke="#0284c7"/>
+  <text x="364" y="158" class="h">FastAPI service  :8001</text>
+  <text x="364" y="177" class="mono">/api/redline · /api/harness/stream</text>
+  <text x="364" y="193" class="mono">/api/harness/resume · /api/memory</text>
+
+  <rect x="680" y="136" width="250" height="64" rx="10" fill="#e0f2fe" stroke="#0284c7"/>
+  <text x="694" y="158" class="h">Streamlit dashboard</text>
+  <text x="694" y="177" class="t">Harness Monitor, metrics, HITL review</text>
+  <text x="694" y="193" class="mono">app/streamlit_app.py</text>
+
+  <rect x="950" y="136" width="270" height="64" rx="10" fill="#e0f2fe" stroke="#0284c7"/>
+  <text x="964" y="158" class="h">Evaluation scripts</text>
+  <text x="964" y="177" class="t">30-fixture suite · held-out · CUAD 510</text>
+  <text x="964" y="193" class="mono">scripts/eval_*.py  ($0 offline)</text>
+
+  <!-- to engine selector -->
+  <path d="M640 214 L640 244" class="edge"/>
+
+  <!-- engine selector -->
+  <rect x="330" y="246" width="620" height="46" rx="23" fill="#fef9c3" stroke="#ca8a04"/>
+  <text x="640" y="266" class="h" text-anchor="middle">core.process_contract_graph(engine = auto | direct | graph)</text>
+  <text x="640" y="283" class="s" text-anchor="middle">validate + truncate to MAX_CHARS · resolve tier-aware harness mode · both engines share every stage below</text>
+
+  <!-- ============ LANE 2: pipeline ============ -->
+  <text x="150" y="326" class="lane">VERIFICATION-GATED PIPELINE  (direct function  ≡  LangGraph StateGraph nodes)</text>
+  <rect x="40" y="336" width="1200" height="330" rx="12" fill="#f8fafc" stroke="#e2e8f0"/>
+  <path d="M640 292 L640 300 L130 300 L130 350" class="edge"/>
+
+  <!-- Stage 1: Extract -->
+  <rect x="58" y="352" width="222" height="226" rx="10" fill="#ecfdf5" stroke="#059669"/>
+  <text x="72" y="376" class="h">① Extract</text>
+  <text x="72" y="396" class="t">Regex patterns, 12 SaaS clause</text>
+  <text x="72" y="412" class="t">types (from CUAD's 41)</text>
+  <text x="72" y="434" class="s">opt-in, additive recall layers:</text>
+  <text x="72" y="450" class="t">· BM25 lexical ($0)</text>
+  <text x="72" y="466" class="t">· embeddings (semantic)</text>
+  <text x="72" y="482" class="t">· LLM-as-generator — span</text>
+  <text x="84" y="498" class="t">kept only if verbatim in text</text>
+  <text x="72" y="520" class="s">→ ClauseHits, same-clause dedup</text>
+  <text x="72" y="542" class="mono">extract.py bm25.py</text>
+  <text x="72" y="558" class="mono">semantic.py llm_extract.py</text>
+
+  <path d="M280 465 L300 465" class="edge"/>
+
+  <!-- Stage 2: Risk -->
+  <rect x="302" y="352" width="222" height="226" rx="10" fill="#ecfdf5" stroke="#059669"/>
+  <text x="316" y="376" class="h">② Risk + evidence</text>
+  <text x="316" y="396" class="t">Playbook rules P-01 … P-12</text>
+  <text x="316" y="412" class="t">(renewal &gt;12m, notice &lt;60d,</text>
+  <text x="316" y="428" class="t">uncapped / carve-out bypass …)</text>
+  <text x="316" y="450" class="t">Duration parser: digits, words,</text>
+  <text x="316" y="466" class="t">"thirty-six (36)", years → months</text>
+  <text x="316" y="488" class="t">Self-reflective precedent</text>
+  <text x="316" y="504" class="t">retrieval → evidence package</text>
+  <text x="316" y="526" class="s">→ RiskFinding + {span, page:line,</text>
+  <text x="316" y="542" class="s">   rule, precedent}</text>
+  <text x="316" y="562" class="mono">risk.py</text>
+
+  <path d="M524 465 L544 465" class="edge"/>
+
+  <!-- Stage 3: Cross-clause -->
+  <rect x="546" y="352" width="200" height="226" rx="10" fill="#ecfdf5" stroke="#059669"/>
+  <text x="560" y="376" class="h">③ Cross-clause</text>
+  <text x="560" y="398" class="t"><tspan font-weight="700">Trap-A</tspan> renewal &gt;12m</text>
+  <text x="560" y="414" class="t">with notice &lt;60d</text>
+  <text x="560" y="434" class="t"><tspan font-weight="700">Trap-B</tspan> liability cap</text>
+  <text x="560" y="450" class="t">bypassed by carve-outs</text>
+  <text x="560" y="470" class="t"><tspan font-weight="700">Trap-C</tspan> deletion vs retention</text>
+  <text x="560" y="496" class="t">Coverage gap: missing</text>
+  <text x="560" y="512" class="t">Termination for Convenience</text>
+  <text x="560" y="528" class="s">(checklist flag — nothing to cite)</text>
+  <text x="560" y="562" class="mono">core._trap_interactions</text>
+
+  <path d="M746 465 L766 465" class="edge"/>
+
+  <!-- Stage 4: Verify -->
+  <rect x="768" y="352" width="240" height="226" rx="10" fill="#fef2f2" stroke="#dc2626"/>
+  <text x="782" y="376" class="h">④ Verify (the gate)</text>
+  <text x="782" y="396" class="t">Deterministic, $0, always on:</text>
+  <text x="782" y="412" class="t">span must occur in the contract</text>
+  <text x="782" y="428" class="t">· strict: whole span</text>
+  <text x="782" y="444" class="t">· lenient: opening 60 chars</text>
+  <text x="782" y="460" class="t">rule ↔ clause type · precedent</text>
+  <text x="782" y="476" class="t">· surgical edit (&lt;500 chars)</text>
+  <text x="782" y="494" class="s">strict ≠ lenient → REJECT (borderline)</text>
+  <text x="782" y="514" class="t">LLM cross-check (optional) on</text>
+  <text x="782" y="530" class="t">lower-confidence PASSes; can</text>
+  <text x="782" y="546" class="t">downgrade PASS → REJECT</text>
+  <text x="782" y="566" class="mono">verify.py · llm_verify.py</text>
+
+  <path d="M1008 465 L1028 465" class="edge"/>
+
+  <!-- Stage 5: human review -->
+  <rect x="1030" y="352" width="194" height="226" rx="10" fill="#f5f3ff" stroke="#7c3aed"/>
+  <text x="1044" y="376" class="h">⑤ Human review</text>
+  <text x="1044" y="398" class="t">Every finding routes to</text>
+  <text x="1044" y="414" class="t">human_review — never</text>
+  <text x="1044" y="430" class="t">auto-applied</text>
+  <text x="1044" y="454" class="t">PASS → approved candidate</text>
+  <text x="1044" y="470" class="t">REJECT → with reasons</text>
+  <text x="1044" y="494" class="t">Graph + interrupt flag:</text>
+  <text x="1044" y="510" class="t">run pauses; reviewer may</text>
+  <text x="1044" y="526" class="t">override → "PASS (human</text>
+  <text x="1044" y="542" class="t">override)", audit-marked</text>
+  <text x="1044" y="566" class="mono">router.py · graph.py</text>
+
+  <!-- revise loop (graph only): below the verify gate -->
+  <path d="M830 578 L830 604" class="edgeRed"/>
+  <path d="M946 604 L946 580" class="edgeRed"/>
+  <rect x="780" y="604" width="216" height="50" rx="10" fill="#fff7ed" stroke="#ea580c"/>
+  <text x="792" y="624" class="h">revise  (graph only, once)</text>
+  <text x="792" y="642" class="s">shorten edit · deeper retrieval</text>
+  <text x="770" y="620" class="lbl" fill="#b91c1c" text-anchor="end">REJECT + revise hint →</text>
+  <text x="770" y="638" class="lbl" text-anchor="end">then re-verify (passed findings reuse their LLM verdict)</text>
+
+  <!-- interrupt / resume (graph only) -->
+  <rect x="1030" y="604" width="194" height="50" rx="10" fill="#faf5ff" stroke="#7c3aed" stroke-dasharray="5 4"/>
+  <text x="1042" y="624" class="t" fill="#6d28d9">interrupt() pause ⇄</text>
+  <text x="1042" y="642" class="mono">/api/harness/resume</text>
+  <path d="M1127 578 L1127 602" class="edgePurple"/>
+
+  <!-- ============ LANE 3: outputs ============ -->
+  <text x="40" y="700" class="lane">OUTPUTS</text>
+  <rect x="40" y="710" width="1200" height="96" rx="12" fill="#f8fafc" stroke="#e2e8f0"/>
+  <path d="M640 666 L640 722" class="edge"/>
+
+  <rect x="60" y="724" width="280" height="68" rx="10" fill="#ffffff" stroke="#94a3b8"/>
+  <text x="74" y="746" class="h">Findings JSON</text>
+  <text x="74" y="764" class="t">span · page:line · rule · verification</text>
+  <text x="74" y="780" class="t">trap interactions · coverage gaps · stats</text>
+
+  <rect x="356" y="724" width="270" height="68" rx="10" fill="#ffffff" stroke="#94a3b8"/>
+  <text x="370" y="746" class="h">Word redline (.docx)</text>
+  <text x="370" y="764" class="t">tracked w:ins / w:del + rationale</text>
+  <text x="370" y="780" class="mono">harness/report.py</text>
+
+  <rect x="642" y="724" width="280" height="68" rx="10" fill="#ffffff" stroke="#94a3b8"/>
+  <text x="656" y="746" class="h">Negotiation memory</text>
+  <text x="656" y="764" class="t">open issues across turns 1–4</text>
+  <text x="656" y="780" class="mono">harness/memory.py</text>
+
+  <rect x="938" y="724" width="282" height="68" rx="10" fill="#ffffff" stroke="#94a3b8"/>
+  <text x="952" y="746" class="h">Audit trail</text>
+  <text x="952" y="764" class="t">per-contract thinking snapshot,</text>
+  <text x="952" y="780" class="t">dead-letter queue for failed runs</text>
+
+  <!-- ============ Footer: baseline + resilience ============ -->
+  <rect x="40" y="826" width="590" height="94" rx="12" fill="#f1f5f9" stroke="#cbd5e1"/>
+  <text x="56" y="850" class="h">Baseline for comparison  (FastAPI :8000)</text>
+  <text x="56" y="870" class="t">Single-pass regex/keyword detector, 5 rules, no verification gate,</text>
+  <text x="56" y="886" class="t">no memory. Same inputs, same endpoint shape — evaluated side by side.</text>
+  <text x="56" y="906" class="mono">baseline/src/core.py</text>
+
+  <rect x="650" y="826" width="590" height="94" rx="12" fill="#f1f5f9" stroke="#cbd5e1"/>
+  <text x="666" y="850" class="h">Resilience &amp; cost controls</text>
+  <text x="666" y="870" class="t">Every stage degrades gracefully to a sandboxed fallback (never a crash);</text>
+  <text x="666" y="886" class="t">no key / EVAL_MOCK=1 → fully offline and $0; provider-agnostic LLM via litellm,</text>
+  <text x="666" y="902" class="t">key-pool rotation, per-call + per-request timeouts, confidence-routed LLM calls.</text>
+</svg>

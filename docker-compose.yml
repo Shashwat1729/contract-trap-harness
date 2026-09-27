@@ -1,4 +1,3 @@
-version: "3.9"
 services:
   baseline:
     build: ./baseline
@@ -13,7 +12,8 @@ services:
     volumes:
       - ./evidence:/app/evidence
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      # python:3.11-slim ships no curl -- probe with the interpreter that is guaranteed present.
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8000/health', timeout=2).status == 200 else 1)"]
       interval: 5s
       timeout: 3s
       retries: 10
@@ -33,7 +33,8 @@ services:
     volumes:
       - ./evidence:/app/evidence
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      # python:3.11-slim ships no curl -- probe with the interpreter that is guaranteed present.
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8001/health', timeout=2).status == 200 else 1)"]
       interval: 5s
       timeout: 3s
       retries: 10

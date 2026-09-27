@@ -62,10 +62,11 @@ def test_llm_verify_confidence_routing_skips_high_confidence_only(monkeypatch):
     verifier agreed PASS on AND whose playbook confidence is already high (>=
     LLM_VERIFY_SKIP_CONFIDENCE, default 0.85) -- routed (real call attempted) for
     lower-confidence findings even when dual-agree-pass. This fixture's own findings
-    span both sides of that line for real (not contrived): two Renewal Term regex hits
-    (0.88 each -- a real, pre-existing duplicate-span quirk in extract.py, unrelated to
-    this routing logic and out of this test's scope) and Cap-on-Liability
-    (carve-out-bypass, 0.91) skip; Notice Period (0.84) routes to a real call.
+    span both sides of that line for real (not contrived): Renewal Term (0.88) and
+    Cap-on-Liability (carve-out-bypass, 0.91) skip; Notice Period (0.84) routes to a
+    real call. (The Renewal clause matches two regex patterns -- "Renewal Term" and
+    "automatically renew" -- which extract.py now collapses into ONE hit; it used to
+    surface as two identical findings.)
     """
     import src.core as core_mod
 
@@ -88,8 +89,8 @@ def test_llm_verify_confidence_routing_skips_high_confidence_only(monkeypatch):
     pages = [Page(num=1, text=contract, start=0, end=len(contract))]
     res = process_contract_advanced(contract, pages, contract_id="routing_test", turn=1)
 
-    assert res["dual_stats"]["agree_pass"] == 4  # all 4 findings pass the deterministic gate
-    assert res["llm_stats"]["skipped_high_confidence"] == 3  # 2x Renewal (0.88) + Cap-on-Liability (0.91)
+    assert res["dual_stats"]["agree_pass"] == 3  # all 3 findings pass the deterministic gate
+    assert res["llm_stats"]["skipped_high_confidence"] == 2  # Renewal (0.88) + Cap-on-Liability (0.91)
     assert calls["n"] == 1  # only Notice Period (0.84) actually reaches the real call
     assert res["llm_stats"]["ran"] == 1
 

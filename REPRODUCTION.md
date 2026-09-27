@@ -147,9 +147,9 @@ Secondary — 30-contract trap suite (same cases for both):
 | Metric | Baseline | Advanced | Delta |
 |--------|----------|----------|-------|
 | Trap recall | 56% | 100% | +44pp |
-| Evidence-supported edits | 21.4% | 83.7% | +62.3pp |
-| Unsupported edits | 78.6% | 16.3% | -62.3pp |
-| Est. review time/contract | 5.1 min | 3.4 min | -1.7 min |
+| Evidence-supported edits | 57.1% | 100% | +42.9pp |
+| Unsupported edits | 42.9% | 0% | -42.9pp |
+| Est. review time/contract | 4.5 min | 3.0 min | -1.5 min |
 
 Trap Recall is deterministic and needs no API key. The optional LLM Judge secondary metric (`scripts/llm_judge.py`, 5-dimension rubric) degrades to a clearly-labeled mock score with no key — see `evidence/benchmarks/llm_judge_results.json` for its current `mode`.
 

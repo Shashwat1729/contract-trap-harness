@@ -1,7 +1,6 @@
-﻿.PHONY: setup test test-unit test-integration test-dashboard test-e2e test-coverage run-baseline run-advanced run-all eval eval-generalization eval-stress eval-cuad-ground-truth build-semantic-anchors tune-semantic-threshold eval-cuad-ground-truth-hybrid eval-llm-zeroshot-baseline reproduce docker-build docker-setup docker-up docker-down kill pre-submit brief ingest-problem capture-trajectory charts help
+.PHONY: setup test test-unit test-integration test-dashboard test-e2e test-coverage test-snapshot mypy lint eval-slo eval-mock eval-full harness-monitor run-baseline run-advanced run-all eval eval-generalization eval-stress eval-cuad-ground-truth build-semantic-anchors tune-semantic-threshold eval-cuad-ground-truth-hybrid eval-llm-zeroshot-baseline reproduce docker-build docker-setup docker-up docker-down kill pre-submit brief ingest-problem capture-trajectory charts help
 
 ROOT := $(shell pwd)
-PY := python
 ifeq ($(OS),Windows_NT)
   VENV_PY := .venv/Scripts/python
   VENV_ACTIVATE := .venv/Scripts/activate
@@ -9,6 +8,10 @@ else
   VENV_PY := .venv/bin/python
   VENV_ACTIVATE := .venv/bin/activate
 endif
+# Prefer the project venv created by `make setup` (absolute path, so it still resolves
+# after a recipe `cd`s into baseline/ or advanced/); fall back to whatever `python` is
+# on PATH. Override explicitly with `make PY=python3 ...`.
+PY ?= $(if $(wildcard $(VENV_PY)),$(ROOT)/$(VENV_PY),python)
 
 help:
 	@echo "Frontier Challenge — make targets"
@@ -28,9 +31,11 @@ help:
 	@echo "  make eval-llm-zeroshot-baseline — real, live zero-shot LLM comparison (needs API key + quota — see CHANGELOG #13)"
 	@echo "  make tune-semantic-threshold — sweep the real embedding semantic layer's threshold on a held-out dev split (needs API key + quota)"
 	@echo "  make eval-cuad-ground-truth-hybrid — regex+semantic hybrid CUAD validation (needs API key + quota, writes to a separate file — see CHANGELOG #13)"
-	@echo "  make mypy               -- strict type check (surgical invariants)
-  make eval-slo           -- p95 latency SLO gate (budget 15000ms)
-  make reproduce          — full clean-env check (what judges run)"
+	@echo "  make mypy               — strict type check (surgical invariants)"
+	@echo "  make lint               — ruff check (advisory)"
+	@echo "  make eval-slo           — p95 latency SLO gate (budget 15000ms)"
+	@echo "  make test-snapshot      — run every suite, write evidence/benchmarks/test_results.json"
+	@echo "  make reproduce          — full clean-env check (what judges run)"
 	@echo "  make docker-build       — build images"
 	@echo "  make kill               — free ports 8000/8001"
 	@echo "  make pre-submit         — secret scan + reproduce + checks"
@@ -38,7 +43,8 @@ help:
 	@echo "  make brief              — distill PROBLEM.md → docs/problem-brief.md"
 
 setup:
-	bash scripts/setup.sh 2>/dev/null || (echo "[setup] bash not found — run manually: python -m venv .venv && pip install -r baseline/requirements.txt -r advanced/requirements.txt"; exit 1)
+	@if command -v bash >/dev/null 2>&1; then bash scripts/setup.sh; \
+	else echo "[setup] bash not found — run manually: python -m venv .venv && pip install -r baseline/requirements.txt -r advanced/requirements.txt -r app/requirements.txt"; exit 1; fi
 
 test: test-unit test-integration test-dashboard test-e2e
 	@echo "[test] all passed"
@@ -67,17 +73,20 @@ test-coverage:
 	cd baseline && $(PY) -m pytest --cov=src --cov-report=term --cov-report=html --cov-fail-under=80
 	cd advanced && $(PY) -m pytest --cov=src --cov-report=term --cov-report=html --cov-fail-under=80
 
+test-snapshot:
+	$(PY) scripts/run_tests_snapshot.py
+
 mypy:
-	mypy advanced/src --strict --ignore-missing-imports
-	mypy baseline/src --ignore-missing-imports
+	$(PY) -m mypy advanced/src --strict --ignore-missing-imports
+	$(PY) -m mypy baseline/src --ignore-missing-imports
 	@echo "mypy strict OK -- surgical invariants checked"
 
 lint:
-	ruff check advanced/src baseline/src || true
+	$(PY) -m ruff check advanced/src baseline/src || true
 
 eval-slo:
 	@echo "[eval-slo] checking p95 SLO: advanced p95 < baseline p95 + 15000ms"
-	python scripts/check_latency_slo.py --budget-ms 15000 || (echo "SLO FAIL: p95 budget exceeded -- see evidence/benchmarks/results.json"; exit 1)
+	$(PY) scripts/check_latency_slo.py --budget-ms 15000 || (echo "SLO FAIL: p95 budget exceeded -- see evidence/benchmarks/results.json"; exit 1)
 
 run-baseline:
 	bash scripts/run_baseline.sh
@@ -90,46 +99,50 @@ run-all:
 	@echo "baseline http://localhost:8000/health  advanced http://localhost:8001/health"
 
 eval:
-	bash scripts/eval.sh 2>/dev/null || python scripts/eval_harness.py
+	$(PY) scripts/eval_harness.py
 
 eval-mock:
-	EVAL_MOCK=1 bash scripts/eval.sh 2>/dev/null || python scripts/eval_harness.py
+	EVAL_MOCK=1 $(PY) scripts/eval_harness.py
 
 eval-full:
-	python scripts/eval_harness.py
+	$(PY) scripts/eval_harness.py
 
 charts:
-	python scripts/generate_charts.py
+	$(PY) scripts/generate_charts.py
 
 eval-generalization:
-	EVAL_MOCK=1 python scripts/eval_generalization.py
+	EVAL_MOCK=1 $(PY) scripts/eval_generalization.py
 
 eval-stress:
-	EVAL_MOCK=1 python scripts/eval_stress.py
+	EVAL_MOCK=1 $(PY) scripts/eval_stress.py
 
 eval-cuad-ground-truth:
-	python scripts/eval_cuad_ground_truth.py
+	$(PY) scripts/eval_cuad_ground_truth.py
 
 # The three targets below need a live LLM/embedding provider key (real network calls,
 # real $0-tier-quota-gated) -- not part of the offline `make reproduce` path. See
 # CHANGELOG #13: all three are built and correct but were quota-blocked when last run.
 build-semantic-anchors:
-	python scripts/build_semantic_anchors.py
+	$(PY) scripts/build_semantic_anchors.py
 
 tune-semantic-threshold:
-	python scripts/tune_semantic_threshold.py --dev-size 40
+	$(PY) scripts/tune_semantic_threshold.py --dev-size 40
 
 eval-cuad-ground-truth-hybrid:
-	python scripts/eval_cuad_ground_truth.py --hybrid --out evidence/benchmarks/cuad_ground_truth_hybrid_results.json
+	$(PY) scripts/eval_cuad_ground_truth.py --hybrid --out evidence/benchmarks/cuad_ground_truth_hybrid_results.json
 
 eval-llm-zeroshot-baseline:
-	python scripts/eval_llm_zeroshot_baseline.py --sample 30
+	$(PY) scripts/eval_llm_zeroshot_baseline.py --sample 30
 
 reproduce:
-	bash scripts/reproduce.sh 2>/dev/null || (echo "[reproduce] bash not found — running fallback: tests + eval (offline-safe, no keys needed)"; cd baseline && python -m pytest tests -v && cd .. && python -m pytest advanced/tests/unit advanced/tests/integration tests/e2e app/tests -v && python scripts/eval_harness.py)
+	@if command -v bash >/dev/null 2>&1; then bash scripts/reproduce.sh; \
+	else echo "[reproduce] bash not found — running fallback: tests + eval (offline-safe, no keys needed)"; \
+	  (cd baseline && $(PY) -m pytest tests -v) && \
+	  EVAL_MOCK=1 $(PY) -m pytest advanced/tests/unit advanced/tests/integration tests/e2e app/tests -v && \
+	  EVAL_MOCK=1 $(PY) scripts/eval_harness.py; fi
 
 harness-monitor:
-	streamlit run app/streamlit_app.py --server.port 8501 --server.headless true
+	$(PY) -m streamlit run app/streamlit_app.py --server.port 8501 --server.headless true
 
 docker-build:
 	docker compose build

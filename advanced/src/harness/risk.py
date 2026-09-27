@@ -1,4 +1,4 @@
-﻿"""
+"""
 Risk -- playbook + precedent retrieval with evidence package.
 
 Playbook is 12 SaaS rules (P-01..P-12) grounded in CUAD handbook + RedlineBench commerce context.
@@ -25,7 +25,8 @@ from typing import Any
 
 from rapidfuzz import fuzz
 
-from .extract import ClauseHit
+from .thinking import persist_module_log
+from .extract import ClauseHit, find_duration, find_durations
 
 logger = logging.getLogger("advanced.harness.risk")
 
@@ -52,21 +53,7 @@ def _log_thinking(stage: str, input_data: Any, output_data: Any, reasoning: str)
             del THINKING_LOG[0 : len(THINKING_LOG) - _THINKING_MAX]
         logger.debug("thinking [%s] %s", stage, reasoning[:120])
         # Persist to file (best-effort, no raise)
-        try:
-            evidence_dir = Path(__file__).parents[2] / "evidence" / "reviews"
-            # also handle advanced/src/harness -> advanced/evidence/reviews
-            alt_dir = Path(__file__).parents[1].parent / "evidence" / "reviews"
-            for d in (evidence_dir, alt_dir):
-                try:
-                    d.mkdir(parents=True, exist_ok=True)
-                    fp = d / "thinking_risk.json"
-                    with open(fp, "w", encoding="utf-8") as f:
-                        json.dump(THINKING_LOG[-50:], f, indent=2, ensure_ascii=False)
-                    break
-                except Exception:
-                    continue
-        except Exception:
-            pass
+        persist_module_log("thinking_risk.json", THINKING_LOG[-50:])
     except Exception as e:
         logger.warning("thinking log failed: %s", e)
 
@@ -196,19 +183,33 @@ def _check_coverage(
         return {"has_span": False, "has_playbook": False, "has_precedent": False, "complete": False}
 
 
+RENEWAL_KEYWORD = r"renew(?:s|al|als|ed|ing)?"
+INITIAL_TERM_LEAD_IN = r"\binitial\b"
+
+
+def _unit_name(unit: str) -> str:
+    """Map the legacy regex-style unit argument ("months?", "days?") to find_durations' unit."""
+    u = unit.lower()
+    if u.startswith("month"):
+        return "month"
+    if u.startswith("day"):
+        return "day"
+    raise ValueError(f"unsupported unit {unit!r}")
+
+
 def _find_number_before_unit(text: str, unit: str) -> int | None:
     """
-    Find a number immediately preceding a unit word (e.g. "months", "days"), tolerating
-    the extremely common legal-drafting convention of spelling the number out with the
-    numeral in parentheses right after -- "thirty-six (36) months", "ninety (90) days" --
-    not just the bare-digit form "36 months". Missing this form was a real generalization
-    gap: it silently failed on a mainstream contract-drafting style, not an edge case.
+    First duration in `unit` in text. Tolerates the extremely common legal-drafting
+    convention of spelling the number out with the numeral in parentheses right after --
+    "thirty-six (36) months", "ninety (90) days" -- as well as the bare-digit form
+    ("36 months"), a spelled-out number alone ("ninety days"), and, for months, year
+    durations ("two (2) years" -> 24). A unit word with no number attached ("monthly
+    fees") is ignored rather than read as the preceding unrelated number.
     """
-    m = re.search(rf"\(?\s*(\d+)\s*\)?\s*{unit}", text, flags=re.IGNORECASE)
-    return int(m.group(1)) if m else None
+    return find_duration(text, _unit_name(unit))
 
 
-def _find_number_near_keyword(text: str, keyword_pattern: str, unit: str, radius: int = 100) -> int | None:
+def _find_number_near_keyword(text: str, keyword_pattern: str, unit: str, radius: int = 100, skip_if_preceded_by: str | None = None) -> int | None:
     """
     Like _find_number_before_unit, but prefers a number that appears shortly after an
     anchor keyword (e.g. "renew") over the first number-before-unit match in the whole
@@ -218,12 +219,25 @@ def _find_number_near_keyword(text: str, keyword_pattern: str, unit: str, radius
     up the safe Initial Term value instead of the actual Renewal Term value, missing a
     real trap. Falls back to the plain first-match search when no anchored match exists
     (single-number spans, or the anchor keyword isn't present).
+
+    A duration whose lead-in (between the anchor keyword and the number) matches
+    `skip_if_preceded_by` is skipped: e.g. a "Term and Renewal" section header followed by
+    "...continues for an initial period of one year" must not be read as the renewal term.
     """
+    uname = _unit_name(unit)
     for km in re.finditer(keyword_pattern, text, flags=re.IGNORECASE):
         window = text[km.end(): km.end() + radius]
-        m = re.search(rf"\(?\s*(\d+)\s*\)?\s*{unit}", window, flags=re.IGNORECASE)
-        if m:
-            return int(m.group(1))
+        for offset, val in find_durations(window, uname):
+            if skip_if_preceded_by and re.search(skip_if_preceded_by, window[:offset], flags=re.IGNORECASE):
+                continue
+            return val
+    if skip_if_preceded_by:
+        # No anchored match: take the first duration in the whole span that isn't
+        # introduced as the excluded kind (e.g. the initial term), before falling back
+        # to the plain first match.
+        for offset, val in find_durations(text, uname):
+            if not re.search(skip_if_preceded_by, text[max(0, offset - 80):offset], flags=re.IGNORECASE):
+                return val
     return _find_number_before_unit(text, unit)
 
 
@@ -249,7 +263,7 @@ def assess_risk(hit: ClauseHit) -> RiskFinding | None:
             if hit.clause_type in rule["clause_types"]:
                 finding: RiskFinding | None = None
                 if hit.clause_type == "Renewal Term":
-                    months_val = _find_number_near_keyword(hit.span_text, r"renew(?:s|al|als|ed|ing)?", "months?")
+                    months_val = _find_number_near_keyword(hit.span_text, RENEWAL_KEYWORD, "months?", skip_if_preceded_by=INITIAL_TERM_LEAD_IN)
                     if months_val is not None and months_val > 12:
                         finding = RiskFinding(clause_type=hit.clause_type, risk="High", rule_id=rid, precedent_id=rule["precedent"].split()[0], proposed_change=rule["preferred"], rationale=rule["commercial"] + " " + rule["trap"], confidence=0.88, evidence_contract_span=hit.span_text, evidence_page=hit.page, evidence_line=hit.line)
                     else:

@@ -1,4 +1,4 @@
-﻿"""
+"""
 Extract -- clause discovery with CUAD-aware types.
 
 Uses CUAD 41 types filtered to SaaS MSA 12, with span-level citations.
@@ -11,18 +11,16 @@ Upgraded to Best Overall:
 """
 from __future__ import annotations
 
-import json
 import logging
 import re
 from functools import lru_cache
 import time
 from dataclasses import dataclass
 from datetime import datetime, timezone
-from pathlib import Path
 from typing import Any
 
-from rapidfuzz import fuzz
 
+from .thinking import persist_module_log
 from .ingest import Page, offset_to_page_line
 
 logger = logging.getLogger("advanced.harness.extract")
@@ -45,20 +43,7 @@ def _log_thinking(stage: str, input_data: Any, output_data: Any, reasoning: str)
         if len(THINKING_LOG) > _THINKING_MAX:
             del THINKING_LOG[0 : len(THINKING_LOG) - _THINKING_MAX]
         logger.debug("extract thinking [%s] %s", stage, reasoning[:110])
-        try:
-            evidence_dir = Path(__file__).parents[2] / "evidence" / "reviews"
-            alt_dir = Path(__file__).parents[1].parent / "evidence" / "reviews"
-            for d in (evidence_dir, alt_dir):
-                try:
-                    d.mkdir(parents=True, exist_ok=True)
-                    fp = d / "thinking_extract.json"
-                    with open(fp, "w", encoding="utf-8") as f:
-                        json.dump(THINKING_LOG[-50:], f, indent=2, ensure_ascii=False)
-                    break
-                except Exception:
-                    continue
-        except Exception:
-            pass
+        persist_module_log("thinking_extract.json", THINKING_LOG[-50:])
     except Exception as e:
         logger.warning("extract thinking log failed: %s", e)
 
@@ -136,7 +121,8 @@ CLAUSE_PATTERNS: dict[str, list[str]] = {
     ],
 }
 
-# WORD_NUM: 1-100 + hyphen forms + common compounds -- parse_months fails on "thirty (30) days" without this
+# WORD_NUM: 1-100 + hyphen/space compound forms, so spelled-out durations ("thirty-six
+# (36) months", "ninety days") parse as well as bare digits.
 _WORD_NUM_BASE = {
     "one":1,"two":2,"three":3,"four":4,"five":5,"six":6,"seven":7,"eight":8,"nine":9,"ten":10,
     "eleven":11,"twelve":12,"thirteen":13,"fourteen":14,"fifteen":15,"sixteen":16,"seventeen":17,
@@ -149,39 +135,94 @@ for tens_word, tens_val in [("twenty",20),("thirty",30),("forty",40),("fifty",50
     for ones_word, ones_val in [("one",1),("two",2),("three",3),("four",4),("five",5),("six",6),("seven",7),("eight",8),("nine",9)]:
         WORD_NUM[f"{tens_word}-{ones_word}"] = tens_val + ones_val
         WORD_NUM[f"{tens_word} {ones_word}"] = tens_val + ones_val
-# legacy aliases
-WORD_NUM["twenty-four"] = 24
-WORD_NUM["twenty four"] = 24
-WORD_NUM["twenty four months"] = 24
+WORD_NUM["a"] = 1  # "a one-year term" / "a year" style phrasing, only ever matched right before a unit
+
+# Longest alternatives first so "thirty-six" wins over "thirty"/"six". Word boundaries on
+# both sides so number words embedded in other words never match -- the previous
+# substring scan read "written notice of ninety days" as 10 ("ten" inside "written") or 9
+# ("nine" inside "ninety"), and "thirty-six months" as 6.
+_WORD_ALT = "|".join(re.escape(w).replace(r"\ ", r"[\s\-]+").replace(r"\-", r"[\s\-]+")
+                     for w in sorted(WORD_NUM, key=len, reverse=True))
+# "(36)" / "36" / "thirty-six (36)" / "thirty-six" -- optionally followed by a
+# "calendar"/"business"/"consecutive" qualifier -- directly before the unit word.
+_QUALIFIER = r"(?:(?:calendar|business|working|consecutive|full)\s+)?"
+_UNIT_WORDS = {
+    "day": r"days?",
+    "month": r"months?",
+    "year": r"years?",
+}
+
+
+def _duration_regex(unit: str) -> re.Pattern[str]:
+    unit_re = _UNIT_WORDS[unit]
+    return re.compile(
+        rf"(?:\b(?P<word>{_WORD_ALT})\b[\s\-]*)?"
+        rf"(?:\(\s*(?P<paren>\d{{1,4}})\s*\)|(?<![\d.,])(?P<digits>\d{{1,4}})(?![\d.,]\d))?"
+        rf"[\s\-]*{_QUALIFIER}{unit_re}\b",
+        flags=re.IGNORECASE,
+    )
+
+
+_DURATION_RES: dict[str, re.Pattern[str]] = {u: _duration_regex(u) for u in _UNIT_WORDS}
+
+
+def find_durations(text: str, unit: str, include_years: bool | None = None) -> list[tuple[int, int]]:
+    """
+    Every duration expressed in `unit` ("day" or "month") in `text`, as (offset, value)
+    pairs in document order. Accepts bare digits ("24 months"), the legal-drafting
+    word+numeral form ("twenty-four (24) months"), a parenthesized numeral alone, and a
+    spelled-out number alone ("ninety days"). For unit="month", year durations are
+    converted to months ("two (2) years" -> 24) unless include_years=False.
+    """
+    if unit not in ("day", "month"):
+        raise ValueError(f"unsupported unit {unit!r}")
+    if include_years is None:
+        include_years = unit == "month"
+    units = [(unit, 1)] + ([("year", 12)] if include_years else [])
+    out: list[tuple[int, int]] = []
+    for u, mult in units:
+        for m in _DURATION_RES[u].finditer(text or ""):
+            num = m.group("paren") or m.group("digits")
+            val: int | None
+            if num is not None:
+                val = int(num)
+            elif m.group("word"):
+                val = _word_value(m.group("word"))
+            else:
+                continue  # bare unit word ("monthly fee", "days") -- no number attached
+            if val is None:
+                continue
+            out.append((m.start(), val * mult))
+    out.sort(key=lambda t: t[0])
+    return out
+
+
+def _word_value(word: str) -> int | None:
+    norm = re.sub(r"[\s\-]+", "-", word.lower().strip())
+    if norm in WORD_NUM:
+        return WORD_NUM[norm]
+    return WORD_NUM.get(norm.replace("-", " "))
+
+
+def find_duration(text: str, unit: str, include_years: bool | None = None) -> int | None:
+    """First duration in `unit` found in `text` (see find_durations), or None."""
+    found = find_durations(text, unit, include_years=include_years)
+    return found[0][1] if found else None
+
+
 def parse_months(text: str) -> int | None:
+    """First month-denominated duration in text (years converted to months), or None."""
     try:
-        m = re.search(r"\(?\s*(\d+)\s*\)?\s*months?", text, flags=re.IGNORECASE)
-        if m:
-            return int(m.group(1))
-        # word numbers
-        low = text.lower()
-        for w, val in WORD_NUM.items():
-            if w in low and "month" in low:
-                return val
-        if "one year" in low or "1 year" in low:
-            return 12
-        if "two years" in low or "2 years" in low:
-            return 24
-        return None
+        return find_duration(text, "month")
     except Exception as e:
         logger.warning("parse_months failed for %r: %s", text[:80], e)
         return None
 
+
 def parse_days(text: str) -> int | None:
+    """First day-denominated duration in text, or None."""
     try:
-        m = re.search(r"\(?\s*(\d+)\s*\)?\s*days?", text, flags=re.IGNORECASE)
-        if m:
-            return int(m.group(1))
-        low = text.lower()
-        for w, val in WORD_NUM.items():
-            if w in low and "day" in low:
-                return val
-        return None
+        return find_duration(text, "day")
     except Exception as e:
         logger.warning("parse_days failed for %r: %s", text[:80], e)
         return None
@@ -206,7 +247,7 @@ def _compiled_pattern(pat: str) -> re.Pattern[str]:
 
 @lru_cache(maxsize=256)
 def _cached_parse_months_token(word: str) -> int | None:
-    return WORD_NUM.get(word.lower())
+    return _word_value(word)
 
 def get_cache_stats() -> dict[str, Any]:
     return {"compiled_cache": _compiled_pattern.cache_info()._asdict(), "word_cache": _cached_parse_months_token.cache_info()._asdict()}
@@ -329,15 +370,13 @@ def extract_clauses(contract_text: str, pages: list[Page]) -> list[ClauseHit]:
         logger.exception("trap_value scan failed: %s", e)
         _log_thinking("extract/trap_value_error", "TRAP_VALUES scan", str(e), f"trap_value scan failed: {e}")
 
-    # Deduplicate by (type, start)
+    # Deduplicate: same (type, start), and also same (type, snippet) -- two patterns of
+    # one clause type matching a few characters apart inside the same clause (e.g.
+    # "Renewal Term" and "automatically renew" in one sentence) yield the identical
+    # section-bounded snippet, i.e. the same clause twice, which previously surfaced
+    # as two identical redline findings for a single clause.
     try:
-        seen: set[tuple[str, int]] = set()
-        uniq: list[ClauseHit] = []
-        for h in sorted(hits, key=lambda x: x.start):
-            key = (h.clause_type, h.start)
-            if key not in seen:
-                seen.add(key)
-                uniq.append(h)
+        uniq = _dedupe_hits(hits)
         _log_thinking("extract/done", f"raw {len(hits)} hits", f"{len(uniq)} unique", f"Extract done in {(time.perf_counter()-t0)*1000:.1f}ms: raw {len(hits)} -> {len(uniq)} unique hits, top types { {c: sum(1 for x in uniq if x.clause_type==c) for c in SAAS_TYPES if any(x.clause_type==c for x in uniq)} }")
         logger.info("extract_clauses %d unique hits (%d raw) in %.1fms", len(uniq), len(hits), (time.perf_counter()-t0)*1000)
         return uniq
@@ -377,13 +416,30 @@ def extract_clauses_hybrid(contract_text: str, pages: list[Page], semantic: bool
             logger.warning("bm25 layer failed, continuing without it: %s", e)
     if not extra:
         return regex_hits
-    combined = regex_hits + extra
-    seen: set[tuple[str, int]] = set()
+    return _dedupe_hits(regex_hits + extra)
+
+
+# Two same-type matches starting this close together are one clause matched by two
+# patterns (e.g. "Renewal Term: ... shall automatically renew"), not two clauses.
+_SAME_CLAUSE_GAP = 120
+
+
+def _dedupe_hits(hits: list[ClauseHit]) -> list[ClauseHit]:
+    """Sorted by start; keeps the first (earliest) hit of each clause and drops later
+    same-type hits that repeat its normalized snippet or start within _SAME_CLAUSE_GAP
+    chars of it."""
+    seen_span: set[tuple[str, str]] = set()
+    last_kept: dict[str, ClauseHit] = {}
     uniq: list[ClauseHit] = []
-    for h in sorted(combined, key=lambda x: x.start):
-        key = (h.clause_type, h.start)
-        if key not in seen:
-            seen.add(key)
-            uniq.append(h)
+    for h in sorted(hits, key=lambda x: (x.start, -x.confidence)):
+        span_key = (h.clause_type, " ".join(h.span_text.split()).lower())
+        prev = last_kept.get(h.clause_type)
+        if span_key in seen_span:
+            continue
+        if prev is not None and h.start - prev.start < _SAME_CLAUSE_GAP:
+            continue
+        seen_span.add(span_key)
+        last_kept[h.clause_type] = h
+        uniq.append(h)
     return uniq
 

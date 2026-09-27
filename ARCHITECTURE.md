@@ -1,4 +1,8 @@
-﻿# Architecture
+# Architecture
+
+![Contract Trap Harness architecture](docs/architecture.svg)
+
+One-page overview of the harness (also as [`docs/architecture.png`](docs/architecture.png) for slides): entry points → a shared engine selector → the five verification-gated stages (identical in the direct pipeline and the LangGraph StateGraph, which adds a one-shot revise loop and an optional human-in-the-loop `interrupt()`) → outputs. The Mermaid graph below is the stage-level detail.
 
 ```mermaid
 graph TD
@@ -108,9 +112,9 @@ Per docs/11-IMPLEMENTATION-PLAN.md §4: rejected fine-tuned LegalBERT (heavy tra
 
 ## Latency SLO & Caching
 
-- **p95 budget:** advanced p95 < baseline p95 + 15000ms. Enforced via `make eval-slo` which runs `scripts/check_latency_slo.py --budget-ms 15000` and fails CI if exceeded. Current measured p95: baseline ~1.2ms, advanced ~10202.7ms (delta +10201.5ms on 30 contracts, this machine) -- deterministic gate + thinking-log IO dominates; LLM cross-check capped 25s timeout is excluded when no key. Per-stage breakdown (extract 8ms / risk 6ms / verify 5ms / llm_verify 0 when mocked) shows aggregate is sum of stages plus IO; batch concurrency via EVAL_CONCURRENCY=1 + ThreadPoolExecutor(4) caps batch p95. SLO budget 15000ms reflects honest SLO for deterministic harness; dashboard hero surfaces budget vs actual with per-stage timeline.
+- **p95 budget:** advanced p95 < baseline p95 + 15000ms. Enforced via `make eval-slo` which runs `scripts/check_latency_slo.py --budget-ms 15000` and fails CI if exceeded. Current measured p95 on the 30-contract suite (EVAL_MOCK=1, this machine): see `evidence/benchmarks/results.json` -> `summary.latency_ms` (single-digit milliseconds for the deterministic path since per-log-line thinking-log file rewrites were made opt-in -- they were ~75% of the old latency). The real LLM cross-check, when enabled, is bounded by `LLM_TIMEOUT` (default 30s) per call and the API enforces an overall `REDLINE_TIMEOUT_S` per request. SLO budget 15000ms reflects the LLM-enabled path; the dashboard surfaces budget vs actual with a per-stage timeline.
 - **Caching:** `advanced/src/harness/extract.py` has `@lru_cache` on `_compiled_pattern` and `_cached_parse_months_token` -- repeated eval_harness runs reuse compiled regex and WORD_NUM lookups. Hit rate visible via `get_cache_stats()` and dashboard.
-- **Batch concurrency:** `scripts/eval_harness.py` now parallelizes per-contract eval with `ThreadPoolExecutor(max_workers=4)` -- cap p95 batch time vs sequential 0.1s linear. Sirion comparison: Sirion claims 60pct faster batch via parallel review; our p95 batch KPI is the honest analogue (different task, disclosed).
+- **Batch evaluation** is sequential: `scripts/eval_harness.py` measures per-contract latency one contract at a time so the p50/p95 numbers are not distorted by thread contention. (An earlier revision of this document claimed an `EVAL_CONCURRENCY` thread-pool mode; that code path was never wired up and has been removed.)
 - **Per-stage latency:** `advanced/src/core.py` on_stage emits extract/risk/verify/llm_verify per-stage ms; dashboard Harness Monitor renders micro-timeline + p95 per stage, not just aggregate.
 
 ## Market Anchoring (Sirion)

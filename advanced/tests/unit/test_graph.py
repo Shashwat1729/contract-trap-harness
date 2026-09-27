@@ -238,4 +238,64 @@ def test_evidence_node_import_path_resolves():
     result = g.evidence_node(state)
     assert "trap_interactions" in result
     assert "coverage_gaps" in result
-    assert isinstance(result["coverage_gaps"], list) and len(result["coverage_gaps"]) > 0  # no hits -> every playbook rule is a gap
+    # no hits -> no Termination for Convenience clause -> the P-03 absence checklist flag
+    assert [gap["rule_id"] for gap in result["coverage_gaps"]] == ["P-03"]
+
+
+def test_graph_and_direct_engines_agree_on_mode_gaps_and_findings():
+    from src.core import process_contract_graph
+    from src.harness.memory import NegotiationMemory
+
+    pages = _pages(TRAP_CONTRACT)
+    mem_direct = NegotiationMemory(contract_id="p", turn=1)
+    mem_graph = NegotiationMemory(contract_id="p", turn=1)
+    direct = process_contract_graph(TRAP_CONTRACT, pages, contract_id="parity", engine="direct", model="gpt-4o-mini", memory=mem_direct)
+    graph = process_contract_graph(TRAP_CONTRACT, pages, contract_id="parity", engine="graph", model="gpt-4o-mini", memory=mem_graph)
+
+    assert graph["engine"] == "langgraph"
+    assert graph["harness_mode"] == direct["harness_mode"] == "light"  # "auto" resolved, not echoed
+    assert graph["coverage_gaps"] == direct["coverage_gaps"]
+    key = lambda f: (f["rule_id"], f["verification"], f["page"], f["line"])  # noqa: E731
+    assert sorted(map(key, graph["findings"])) == sorted(map(key, direct["findings"]))
+    assert mem_graph.open_issues == mem_direct.open_issues and mem_graph.open_issues
+
+
+def test_graph_engine_validates_input_like_direct():
+    import pytest as _pytest
+    from src.core import process_contract_graph
+
+    with _pytest.raises(ValueError):
+        process_contract_graph("   ", _pages("   "), engine="graph")
+    with _pytest.raises(ValueError):
+        process_contract_graph(TRAP_CONTRACT, _pages(TRAP_CONTRACT), engine="bogus")
+
+
+def test_revise_loop_does_not_repeat_paid_llm_calls_for_passed_findings(monkeypatch):
+    import src.config as cfg
+    import src.harness.llm_verify as lv
+    import src.harness.verify as vmod
+    from src.core import process_contract_graph
+
+    calls = []
+
+    def fake_llm(hit_span, finding, pkg):
+        calls.append(finding.rule_id)
+        return lv.LLMVerifyResult(ran=True, supported=True, confidence=0.9, concern="", mock=False)
+
+    real_dual = vmod.dual_verify_finding
+
+    def dual(span, finding, pkg, text):
+        if finding.rule_id == "P-12":  # force one REJECT so the graph takes the revise loop
+            return VerificationResult("REJECT", ["precedent x not found"], "hint", False, "dual-agree-reject")
+        return real_dual(span, finding, pkg, text)
+
+    monkeypatch.setattr(lv, "llm_verify_finding", fake_llm)
+    monkeypatch.setattr(vmod, "dual_verify_finding", dual)
+    monkeypatch.setattr(cfg, "ENABLE_LLM_VERIFY", True)
+    monkeypatch.setattr(cfg, "LLM_VERIFY_SKIP_CONFIDENCE", 0.99)  # route every PASS to the LLM
+
+    res = process_contract_graph(TRAP_CONTRACT, _pages(TRAP_CONTRACT), contract_id="revise_cost", engine="graph")
+    assert res["engine"] == "langgraph"
+    assert any(step.get("stage") == "revise" for step in res["thinking"])
+    passed = [f for f in res["findings"] if f["verification"] == "PASS"]
+    assert len(calls) == len(passed) == res["llm_stats"]["ran"]  # one call per passed finding, not two

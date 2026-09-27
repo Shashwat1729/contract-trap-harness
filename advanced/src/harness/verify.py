@@ -1,4 +1,4 @@
-﻿"""
+"""
 Verify -- gates every substantive redline on auditable evidence.
 
 For every proposed edit, verify:
@@ -24,18 +24,18 @@ Production-grade: type hints, docstrings, logging, try/except.
 """
 from __future__ import annotations
 
-import json
 import logging
 import re
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
+from functools import lru_cache
 from datetime import datetime, timezone
-from pathlib import Path
 from typing import Any, Literal
 
 from rapidfuzz import fuzz
 
+from .thinking import persist_module_log
 from .risk import PLAYBOOK, PRECEDENTS, RiskFinding
 
 logger = logging.getLogger("advanced.harness.verify")
@@ -62,20 +62,7 @@ def _log_thinking(stage: str, input_data: Any, output_data: Any, reasoning: str)
         if len(THINKING_LOG) > _THINKING_MAX:
             del THINKING_LOG[0 : len(THINKING_LOG) - _THINKING_MAX]
         logger.debug("thinking [%s] %s", stage, reasoning[:120])
-        try:
-            evidence_dir = Path(__file__).parents[2] / "evidence" / "reviews"
-            alt_dir = Path(__file__).parents[1].parent / "evidence" / "reviews"
-            for d in (evidence_dir, alt_dir):
-                try:
-                    d.mkdir(parents=True, exist_ok=True)
-                    fp = d / "thinking_verify.json"
-                    with open(fp, "w", encoding="utf-8") as f:
-                        json.dump(THINKING_LOG[-50:], f, indent=2, ensure_ascii=False)
-                    break
-                except Exception:
-                    continue
-        except Exception:
-            pass
+        persist_module_log("thinking_verify.json", THINKING_LOG[-50:])
     except Exception as e:
         logger.warning("thinking log failed: %s", e)
 
@@ -100,30 +87,43 @@ class VerificationResult:
     thinking: list[dict[str, Any]] | None = None
 
 
+def _normalize_ws(text: str) -> str:
+    return re.sub(r"\s+", " ", text).strip().lower()
+
+
+@lru_cache(maxsize=32)
+def _normalized_contract(contract_text: str) -> str:
+    """Whitespace-normalized, lowercased contract -- cached because dual_verify checks
+    every finding of one document against the same (up to 120k-char) text twice."""
+    return _normalize_ws(contract_text)
+
+
 def _check_contract_span(hit_span: str, contract_text: str, evidence_pkg: dict[str, Any], strict: bool = True) -> tuple[bool, str]:
     """
-    Check if contract_span exists in contract_text.
+    Check that the cited span genuinely occurs in contract_text (whitespace-insensitive,
+    case-insensitive, anywhere in the document).
 
-    strict=True:  fuzz partial_ratio >=80, substring 40 chars required (ModelProof strict)
-    strict=False: fuzz partial_ratio >=65, substring 25 chars (lenient / second LM)
+    strict=True:  the whole normalized span must occur verbatim; otherwise fuzz
+                  partial_ratio >= 90 over the whole span (first 600 chars), so an
+                  invented tail on an otherwise-real opening does not pass
+    strict=False: the span's first 60 normalized chars must occur verbatim; otherwise
+                  fuzz partial_ratio >= 65 on its first 80 chars
+
+    Previously the whitespace-normalized search only covered the first 8000 chars of the
+    contract, so a genuine verbatim span from page 4+ containing a line break or double
+    space was reported as a "hallucinated" citation and rejected.
     """
     try:
         if not hit_span or not hit_span.strip():
             return False, "empty hit_span"
-        span_norm = re.sub(r"\s+", " ", hit_span.strip())[:160]
-        contract_norm = re.sub(r"\s+", " ", contract_text)[:8000]
-        threshold = 80 if strict else 65
-        substr_len = 40 if strict else 25
-        exists = False
-        if span_norm:
-            if span_norm[:substr_len].lower() in contract_text.lower():
-                exists = True
-            elif span_norm[:60].lower() in contract_norm.lower():
-                exists = True
-            else:
-                score = fuzz.partial_ratio(span_norm[:80].lower(), contract_norm.lower())
-                if score >= threshold:
-                    exists = True
+        span_norm = _normalize_ws(hit_span)
+        contract_norm = _normalized_contract(contract_text)
+        threshold = 90 if strict else 65
+        needle = span_norm if strict else span_norm[:60]
+        exists = needle in contract_norm
+        if not exists:
+            probe = span_norm[:600] if strict else span_norm[:80]
+            exists = fuzz.partial_ratio(probe, contract_norm) >= threshold
         if not exists:
             return False, f"contract_span not found (hallucinated page:{evidence_pkg.get('contract_page')}, fuzz partial_ratio <{threshold} strict={strict})"
         return True, ""

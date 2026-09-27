@@ -130,12 +130,12 @@ claim on its own.
 ## Secondary diagnostics
 | Metric | Baseline | Advanced | Change |
 |--------|----------|----------|--------|
-| Evidence-supported edit rate | 21.4% | 83.7% | +62.2pp |
-| Unsupported edit rate | 78.6% | 16.3% | -62.2pp |
-| Verification catch rate | — | 16.3% | — |
-| Over-redlining avg/contract | 2.33 | 1.63 | -0.70 |
+| Evidence-supported edit rate | 57.1% | 100.0% | +42.9pp |
+| Unsupported edit rate | 42.9% | 0.0% | -42.9pp |
+| Verification catch rate | — | 0.0% | — |
+| Over-redlining avg/contract | 2.33 | 1.30 | -1.03 |
 | Surgical rate | 100% | 100% | +0pp |
-| Est. human review time/contract | 5.1 min | 3.4 min | -1.7 min |
+| Est. human review time/contract | 4.5 min | 3.0 min | -1.5 min |
 | LLM Judge Score (0-100) | 52 | 44 | -8.1 |
 
 Est. human review time is a disclosed formula (120s skim + 45s/supported finding + 90s/unsupported finding), not a measurement -- see ARCHITECTURE.md.
@@ -144,8 +144,8 @@ LLM Judge mode: **partial-live (9/16 calls reached the model, rest fell back to 
 ## Latency (p50 / p95 ms, measured on 30 contracts, this machine)
 | System | p50 | p95 | Delta p95 |
 |--------|-----|-----|-----------|
-| Baseline | 0.9 | 1.5 | — |
-| Advanced | 37.8 | 93.2 | +91.7 |
+| Baseline | 0.6 | 1.1 | — |
+| Advanced | 5.5 | 8.1 | +7.0 |
 
 ## Fixture suite composition (disclosed, not hidden)
 Of the 30 contracts in this suite, **18 contain hand-authored "ADDENDUM TRAP
@@ -169,4 +169,4 @@ Full detail: `evidence/benchmarks/generalization_results.json`, fixtures in
 7/7 scored cases passed (100%) on messier, harder-to-parse real-world text: OCR-style whitespace noise, ALL CAPS/em-dash headers, a long document with decoy numbers in unrelated sections, multi-level subsection numbering (8.2/8.3/8.4), non-US drafting conventions, and a common real-world phrasing gap ('shall automatically renew') that no existing regex covered. This suite is what actually found the last three real bugs fixed in this pass -- see CHANGELOG.md for the details.
 Full detail: `evidence/benchmarks/stress_results.json`, fixtures in `shared/fixtures/stress/`.
 
-**Headline:** CUAD ground truth (real, 510 contracts): recall 15.5% -> 42.2% | precision 53.7% -> 92.7% || Trap Recall (self-graded regression suite) 56% -> 100% (+44pp) | Unsupported 78.6% -> 16.3% | Evidence-supported 21.4% -> 83.7% | LLM Judge 52 -> 44/100 (partial-live (9/16 calls reached the model, rest fell back to mock -- likely a provider quota limit hit mid-run))
+**Headline:** CUAD ground truth (real, 510 contracts): recall 15.5% -> 42.2% | precision 53.7% -> 92.7% || Trap Recall (self-graded regression suite) 56% -> 100% (+44pp) | Unsupported 42.9% -> 0.0% | Evidence-supported 57.1% -> 100.0% | LLM Judge 52 -> 44/100 (partial-live (9/16 calls reached the model, rest fell back to mock -- likely a provider quota limit hit mid-run))

@@ -17,7 +17,7 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, Callable
 
 from .llm import call_llm_json, llm_available
 from .risk import RiskFinding
@@ -46,84 +46,157 @@ class LLMVerifyResult:
 
 
 def _build_llm_prompt(hit_span: str, finding: RiskFinding, evidence_pkg: dict[str, Any]) -> str:
-    """Build user prompt with per-field isolation -- never crashes harness."""
+    """Build the user prompt; tolerant of missing finding fields."""
+    span = str(hit_span or "")[:800]
+    rule = str((evidence_pkg or {}).get("playbook_text", ""))[:400]
+    change = str(getattr(finding, "proposed_change", ""))[:300]
+    rationale = str(getattr(finding, "rationale", ""))[:300]
+    clause = str(getattr(finding, "clause_type", ""))
+    page = str(getattr(finding, "evidence_page", "?"))
+    line = str(getattr(finding, "evidence_line", "?"))
+    return (
+        f"Playbook rule under review: {rule}\n"
+        f"This rule applies ONLY to clause type: {clause}. If the span below also "
+        "contains other, unrelated provisions, ignore them -- judge only whether THIS rule, for "
+        "THIS clause type, is genuinely triggered.\n\n"
+        f"Contract span (verbatim, cited at page {page} line {line}):\n"
+        f"\"\"\"\n{span}\n\"\"\"\n\n"
+        f"Proposed change: {change}\n"
+        f"Rationale given: {rationale}\n\n"
+        "Does the span genuinely trigger this specific rule for this specific clause type? "
+        "Respond with the JSON object only."
+    )
+
+
+def _parse_bool(value: Any) -> bool | None:
+    """Strict tri-state boolean: JSON true/false, or the strings/ints models sometimes emit
+    instead. Anything unrecognised is None (inconclusive) -- never truthiness, which read
+    the string "false" as True and silently discarded the model's disagreement."""
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, (int, float)) and value in (0, 1):
+        return bool(value)
+    if isinstance(value, str):
+        v = value.strip().lower()
+        if v in ("true", "yes", "supported", "1"):
+            return True
+        if v in ("false", "no", "unsupported", "0"):
+            return False
+    return None
+
+
+def _parse_confidence(value: Any) -> float | None:
+    """Float in [0, 1], accepting "0.8" and percentages like 80 / "80%"; else None."""
     try:
-        span = str(hit_span)[:800] if hit_span else ""
-    except Exception as e:
-        import logging as _lg
-        _lg.getLogger("advanced.harness.llm_verify").warning("_build_llm_prompt span failed: %s", e)
-        span = ""
-    try:
-        rule = str(evidence_pkg.get("playbook_text", ""))[:400] if evidence_pkg else ""
-    except Exception as e:
-        import logging as _lg2
-        _lg2.getLogger("advanced.harness.llm_verify").warning("_build_llm_prompt rule failed: %s", e)
-        rule = ""
-    try:
-        change = str(finding.proposed_change)[:300] if finding and hasattr(finding, "proposed_change") else ""
-        rationale = str(finding.rationale)[:300] if finding and hasattr(finding, "rationale") else ""
-        clause = str(finding.clause_type) if finding and hasattr(finding, "clause_type") else ""
-        page = str(finding.evidence_page) if finding and hasattr(finding, "evidence_page") else "?"
-        line = str(finding.evidence_line) if finding and hasattr(finding, "evidence_line") else "?"
-    except Exception as e:
-        import logging as _lg3
-        _lg3.getLogger("advanced.harness.llm_verify").warning("_build_llm_prompt finding fields failed: %s", e)
-        change = rationale = clause = page = line = ""
-    try:
-        return (
-            f"Playbook rule under review: {rule}\n"
-            f"This rule applies ONLY to clause type: {clause}. If the span below also "
-            "contains other, unrelated provisions, ignore them -- judge only whether THIS rule, for "
-            "THIS clause type, is genuinely triggered.\n\n"
-            f"Contract span (verbatim, cited at page {page} line {line}):\n"
-            f"\"\"\"\n{span}\n\"\"\"\n\n"
-            f"Proposed change: {change}\n"
-            f"Rationale given: {rationale}\n\n"
-            "Does the span genuinely trigger this specific rule for this specific clause type? "
-            "Respond with the JSON object only."
-        )
-    except Exception as e:
-        import logging as _lg4
-        _lg4.getLogger("advanced.harness.llm_verify").warning("_build_llm_prompt final assembly failed: %s", e)
-        return f"Contract span: {span[:500]}\nDoes this support the finding? Reply JSON only."
+        if isinstance(value, str):
+            value = value.strip().rstrip("%")
+        conf = float(value)
+    except (TypeError, ValueError):
+        return None
+    if conf != conf:  # NaN
+        return None
+    if 1.0 < conf <= 100.0:
+        conf /= 100.0
+    return min(max(conf, 0.0), 1.0)
+
 
 def llm_verify_finding(hit_span: str, finding: RiskFinding, evidence_pkg: dict[str, Any]) -> LLMVerifyResult:
-    """Ask the LLM whether hit_span genuinely supports finding. Never raises. Per-helper isolation + timeout via llm.py (25s)."""
+    """Ask the LLM whether hit_span genuinely supports finding. Never raises. Per-helper isolation + timeout via llm.py."""
     try:
         if not llm_available():
             return LLMVerifyResult(ran=False, supported=None, confidence=None, concern="", mock=True)
     except Exception as e:
-        import logging as _lg
-        _lg.getLogger("advanced.harness.llm_verify").warning("llm_available check failed: %s", e)
+        logger.warning("llm_available check failed: %s", e)
         return LLMVerifyResult(ran=False, supported=None, confidence=None, concern="", mock=True, error=str(e))
 
-    user = (
-        f"Playbook rule under review: {evidence_pkg.get('playbook_text', '')}\n"
-        f"This rule applies ONLY to clause type: {finding.clause_type}. If the span below also "
-        "contains other, unrelated provisions, ignore them -- judge only whether THIS rule, for "
-        "THIS clause type, is genuinely triggered.\n\n"
-        f"Contract span (verbatim, cited at page {finding.evidence_page} line {finding.evidence_line}):\n"
-        f"\"\"\"\n{hit_span[:800]}\n\"\"\"\n\n"
-        f"Proposed change: {finding.proposed_change}\n"
-        f"Rationale given: {finding.rationale}\n\n"
-        "Does the span genuinely trigger this specific rule for this specific clause type? "
-        "Respond with the JSON object only."
-    )
+    user = _build_llm_prompt(hit_span, finding, evidence_pkg)
     mock = {"supported": True, "confidence": round(finding.confidence, 2), "concern": ""}
     # Generous max_tokens: some providers (e.g. Gemini 2.5 "thinking" models) spend part of
     # the output budget on internal reasoning before the visible JSON reply -- too tight a
     # cap truncates the reply mid-object and makes a genuinely successful call look failed.
     result = call_llm_json(SYSTEM_PROMPT, user, max_tokens=1000, mock_response=mock)
 
+    ran = bool(result.get("_ran", False))
+    supported = _parse_bool(result.get("supported"))
+    confidence = _parse_confidence(result.get("confidence"))
+    if ran and supported is None:
+        logger.warning("llm_verify_finding: unrecognised 'supported' value %r -- treating as inconclusive", result.get("supported"))
+    return LLMVerifyResult(
+        ran=ran,
+        supported=supported,
+        confidence=confidence,
+        concern=str(result.get("concern", "") or "")[:300],
+        mock=bool(result.get("_mock", True)),
+        error=result.get("_error"),
+    )
+
+
+# A model verdict of "unsupported" at or above this confidence downgrades a PASS.
+LLM_FLAG_MIN_CONFIDENCE = 0.6
+
+
+def new_llm_stats() -> dict[str, int]:
+    return {"ran": 0, "confirmed": 0, "flagged": 0, "inconclusive": 0, "skipped": 0, "mock": 0, "skipped_high_confidence": 0}
+
+
+def llm_cross_check(
+    hit_span: str,
+    finding: RiskFinding,
+    evidence_pkg: dict[str, Any],
+    ver: Any,
+    llm_stats: dict[str, int],
+    *,
+    enabled: bool,
+    skip_confidence: float,
+    verify_fn: Callable[..., LLMVerifyResult] | None = None,
+) -> LLMVerifyResult | None:
+    """
+    The LLM cross-check stage shared by the direct pipeline (core.py) and the LangGraph
+    verify node, so the two engines cannot drift apart. Mutates `ver` (PASS -> REJECT when
+    the model flags the finding) and `llm_stats`; returns the LLM result, or None when no
+    call was made.
+
+    Only deterministic PASSes are checked. Confidence-based routing (CHANGELOG #20): the
+    call is skipped when the dual verifier's strict+lenient thresholds already agreed PASS
+    and the playbook rule's own confidence is >= skip_confidence.
+
+    Verdicts: supported=False with confidence >= LLM_FLAG_MIN_CONFIDENCE (or no usable
+    confidence at all -- an explicit "unsupported" is not waved through just because the
+    model omitted a number) -> flagged. supported=None (unparseable) -> inconclusive, the
+    deterministic verdict stands. Otherwise confirmed.
+    """
+    if not enabled or getattr(ver, "status", None) != "PASS":
+        return None
+    if getattr(ver, "dual_mode", None) == "dual-agree-pass" and finding.confidence >= skip_confidence:
+        llm_stats["skipped_high_confidence"] += 1
+        return None
+    fn = verify_fn or llm_verify_finding
     try:
-        return LLMVerifyResult(
-            ran=bool(result.get("_ran", False)),
-            supported=bool(result.get("supported", True)),
-            confidence=float(result.get("confidence", 0.5)),
-            concern=str(result.get("concern", "") or "")[:300],
-            mock=bool(result.get("_mock", True)),
-            error=result.get("_error"),
-        )
-    except (TypeError, ValueError) as e:
-        logger.warning("llm_verify_finding: malformed LLM JSON, treating as inconclusive: %s", e)
-        return LLMVerifyResult(ran=True, supported=None, confidence=None, concern="", mock=True, error=str(e))
+        res = fn(hit_span, finding, evidence_pkg)
+    except Exception as e:
+        logger.warning("llm_verify_finding failed for %s: %s", finding.clause_type, e)
+        llm_stats["skipped"] += 1
+        return None
+    if not res.ran:
+        llm_stats["skipped"] += 1
+        return res
+    llm_stats["ran"] += 1
+    if res.mock:
+        llm_stats["mock"] += 1
+    if res.supported is False and (res.confidence is None or res.confidence >= LLM_FLAG_MIN_CONFIDENCE):
+        llm_stats["flagged"] += 1
+        ver.status = "REJECT"
+        ver.reasons = list(ver.reasons) + [f"LLM cross-check flagged: {res.concern or 'unsupported per LLM review'}"]
+        ver.evidence_supported = False
+    elif res.supported is None:
+        llm_stats["inconclusive"] += 1
+    else:
+        llm_stats["confirmed"] += 1
+    return res
+
+
+def llm_result_dict(res: LLMVerifyResult | None) -> dict[str, Any]:
+    """Serializable per-finding view of the cross-check (same shape for both engines)."""
+    if res is None:
+        return {"ran": False, "supported": None, "confidence": None, "concern": "", "mock": True}
+    return {"ran": res.ran, "supported": res.supported, "confidence": res.confidence, "concern": res.concern, "mock": res.mock}

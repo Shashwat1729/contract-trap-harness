@@ -34,8 +34,7 @@ except ImportError as e:
     logger.warning(f"LangGraph not available (fallback to direct function): {e}")
 
 from .ingest import Page
-from .extract import ClauseHit, SAAS_TYPES
-from .risk import RiskFinding
+from .extract import ClauseHit
 
 
 class HarnessState(TypedDict):
@@ -108,6 +107,8 @@ def risk_node(state: HarnessState) -> dict[str, Any]:
                 continue
             pkg = build_evidence_package(hit, finding, state["contract_text"])
             proposed.append((hit, finding, pkg))
+        from ..core import _dedupe_proposed
+        proposed = _dedupe_proposed(proposed)
         logger.info("risk_node: %d proposed", len(proposed))
         stage_ms = dict(state.get("stage_latency_ms", {}))
         stage_ms["risk"] = round((time.perf_counter() - t0) * 1000, 2)
@@ -121,14 +122,11 @@ def evidence_node(state: HarnessState) -> dict[str, Any]:
     """Node 3: cross-clause trap interactions + playbook coverage gaps."""
     t0 = time.perf_counter()
     try:
-        from ..core import _trap_interactions
-        from .risk import PLAYBOOK
+        from ..core import _trap_interactions, _coverage_gaps
         traps = _trap_interactions(state["contract_text"], state.get("clause_hits", []), state["pages"])
-        gaps = []
-        hit_types = {h.clause_type for h in state.get("clause_hits", [])}
-        for rid, rule in PLAYBOOK.items():
-            if not any(ct in hit_types for ct in rule["clause_types"]):
-                gaps.append({"rule_id": rid, "missing": rule["clause_types"]})
+        # Same absence-based checklist as the direct pipeline (P-03 only -- a missing
+        # clause of any other type is not a playbook trap), same shape.
+        gaps = _coverage_gaps(state.get("clause_hits", []))
         # Folded into the "risk" bucket: cross-clause/coverage analysis over the same
         # clause_hits risk_node already scored, matching the direct pipeline's single
         # "risk" stage_ms bucket rather than inventing a stage key the direct path lacks.
@@ -149,14 +147,22 @@ def verify_node(state: HarnessState) -> dict[str, Any]:
     t0 = time.perf_counter()
     try:
         from .verify import verify_finding, dual_verify_finding, VerificationResult
-        from .llm_verify import llm_verify_finding
+        from .llm_verify import llm_cross_check, new_llm_stats
         from ..config import ENABLE_LLM_VERIFY, LLM_VERIFY_SKIP_CONFIDENCE
         contract_text = state["contract_text"]
         verified = []
         results = []
         llm_results: list[Any] = []
         dual_stats = {"agree_pass": 0, "agree_reject": 0, "disagree": 0}
-        llm_stats = {"ran": 0, "confirmed": 0, "flagged": 0, "skipped": 0, "mock": 0, "skipped_high_confidence": 0}
+        llm_stats = new_llm_stats()
+
+        # On the post-revise pass, findings that already PASSed the first time are carried
+        # through revise_node unchanged. Reuse their earlier LLM verdict instead of paying
+        # for a second identical call (the deterministic gate is re-run -- it is free).
+        prior_llm: dict[tuple[Any, ...], Any] = {}
+        for (p_hit, p_finding, _p_pkg, p_ver), p_llm in zip(state.get("verified", []), state.get("llm_results", []) or []):
+            if getattr(p_ver, "status", None) == "PASS" and p_llm is not None and p_llm.ran:
+                prior_llm[_finding_key(p_hit, p_finding)] = p_llm
 
         for hit, finding, pkg in state.get("proposed", []):
             try:
@@ -174,34 +180,13 @@ def verify_node(state: HarnessState) -> dict[str, Any]:
                 except Exception as e2:
                     ver = VerificationResult(status="REJECT", reasons=[f"verify exception: {e2}"], revise_hint="retry with smaller span", evidence_supported=False)
 
-            # Confidence-based routing (CHANGELOG #20): mirrors core.py exactly -- skip the
-            # real LLM call when the dual verifier already AGREED pass and the playbook
-            # rule's own confidence is already high.
-            llm_res = None
-            skip_high_confidence = (
-                ver.dual_mode == "dual-agree-pass" and finding.confidence >= LLM_VERIFY_SKIP_CONFIDENCE
+            # Same LLM cross-check stage as core.py (shared helper, so the engines cannot drift).
+            cached = prior_llm.get(_finding_key(hit, finding))
+            llm_res = llm_cross_check(
+                hit.span_text, finding, pkg, ver, llm_stats,
+                enabled=ENABLE_LLM_VERIFY, skip_confidence=LLM_VERIFY_SKIP_CONFIDENCE,
+                verify_fn=(lambda *_a, _c=cached, **_k: _c) if cached is not None else None,
             )
-            if ENABLE_LLM_VERIFY and ver.status == "PASS" and skip_high_confidence:
-                llm_stats["skipped_high_confidence"] += 1
-            elif ENABLE_LLM_VERIFY and ver.status == "PASS":
-                try:
-                    llm_res = llm_verify_finding(hit.span_text, finding, pkg)
-                    if llm_res.ran:
-                        llm_stats["ran"] += 1
-                        if llm_res.mock:
-                            llm_stats["mock"] += 1
-                        if llm_res.supported is False and (llm_res.confidence or 0) >= 0.6:
-                            llm_stats["flagged"] += 1
-                            ver.status = "REJECT"
-                            ver.reasons = list(ver.reasons) + [f"LLM cross-check flagged: {llm_res.concern or 'unsupported per LLM review'}"]
-                            ver.evidence_supported = False
-                        else:
-                            llm_stats["confirmed"] += 1
-                    else:
-                        llm_stats["skipped"] += 1
-                except Exception as e:
-                    logger.warning("verify_node llm_verify failed for %s: %s", finding.clause_type, e)
-                    llm_stats["skipped"] += 1
 
             verified.append((hit, finding, pkg, ver))
             results.append(ver)
@@ -222,6 +207,11 @@ def verify_node(state: HarnessState) -> dict[str, Any]:
     except Exception as e:
         logger.exception("verify_node failed: %s", e)
         return {"verified": [], "verification_results": [], "llm_results": [], "dual_stats": {}, "llm_stats": {}}
+
+
+def _finding_key(hit: Any, finding: Any) -> tuple[Any, ...]:
+    """Identity of a proposed finding across the verify -> revise -> verify loop."""
+    return (hit.clause_type, hit.start, finding.rule_id, finding.proposed_change, finding.evidence_contract_span)
 
 
 def _shorten_surgical(text: str, limit: int = 280) -> str:
@@ -303,6 +293,7 @@ def human_review_node(state: HarnessState) -> dict[str, Any]:
     t0 = time.perf_counter()
     try:
         from .router import route_findings
+        from .llm_verify import llm_result_dict
         from ..config import ENABLE_GRAPH_INTERRUPT
         verified = state.get("verified", [])
         llm_results = state.get("llm_results") or [None] * len(verified)
@@ -315,10 +306,7 @@ def human_review_node(state: HarnessState) -> dict[str, Any]:
                 "proposed_change": finding.proposed_change, "rationale": finding.rationale, "rule_id": finding.rule_id,
                 "precedent_id": finding.precedent_id, "evidence": pkg, "verification": ver.status, "reasons": ver.reasons,
                 "dual_mode": getattr(ver, "dual_mode", None),
-                "llm_verify": (
-                    {"ran": llm_res.ran, "supported": llm_res.supported, "confidence": llm_res.confidence, "concern": llm_res.concern, "mock": llm_res.mock}
-                    if llm_res is not None else {"ran": False, "supported": None, "confidence": None, "concern": "", "mock": True}
-                ),
+                "llm_verify": llm_result_dict(llm_res),
             }
             routed_input.append(d)
             ver_objs.append(ver)

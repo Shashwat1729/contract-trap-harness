@@ -1,4 +1,4 @@
-﻿from .ingest import extract_text_with_pages, Page, generate_redlined_docx, get_thinking_log as ingest_thinking
+from .ingest import extract_text_with_pages, Page, generate_redlined_docx, get_thinking_log as ingest_thinking
 from .extract import extract_clauses, ClauseHit, SAAS_TYPES, get_thinking_log as extract_thinking
 from .risk import assess_risk, build_evidence_package, PLAYBOOK, RiskFinding, retrieve_precedent, self_reflective_retrieve, get_thinking_log as risk_thinking
 from .verify import verify_finding, dual_verify_finding, VerificationResult, get_thinking_log as verify_thinking

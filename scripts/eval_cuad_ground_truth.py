@@ -49,8 +49,13 @@ OUT = ROOT / "evidence" / "benchmarks" / "cuad_ground_truth_results.json"
 CUAD_DATA_URL = "https://github.com/TheAtticusProject/cuad/raw/master/data.zip"
 
 
+class CuadUnavailable(RuntimeError):
+    """The CUAD dataset is not on disk and could not be downloaded."""
+
+
 def ensure_cuad() -> Path:
-    """Ensure CUADv1.json exists locally, downloading the official release if needed."""
+    """Ensure CUADv1.json exists locally, downloading the official release if needed.
+    Raises CuadUnavailable (never leaves a partial CUADv1.json behind)."""
     if CUAD_JSON.exists():
         return CUAD_JSON
     import urllib.request
@@ -68,14 +73,16 @@ def ensure_cuad() -> Path:
                 member = next((n for n in names if n.endswith("CUADv1.json")), None)
                 if member is None:
                     raise RuntimeError(f"CUADv1.json not found in release archive: {names[:5]}")
-                with z.open(member) as src, open(CUAD_JSON, "wb") as dst:
+                partial = CUAD_JSON.with_suffix(".json.part")
+                with z.open(member) as src, open(partial, "wb") as dst:
                     dst.write(src.read())
+                partial.replace(CUAD_JSON)
     except Exception as e:
-        raise SystemExit(
+        raise CuadUnavailable(
             f"[cuad] download failed ({e}).\n"
             f"  Download manually from https://github.com/TheAtticusProject/cuad\n"
             f"  and place CUADv1.json at {CUAD_JSON}."
-        )
+        ) from e
     print(f"[cuad] saved {CUAD_JSON} ({CUAD_JSON.stat().st_size // 1024} KB)")
     return CUAD_JSON
 
@@ -114,6 +121,7 @@ def main() -> None:
     ap.add_argument("--hybrid-threshold", type=float, default=None, help="override semantic.py's DEFAULT_THRESHOLD (tuned on a disjoint dev split -- see scripts/tune_semantic_threshold.py)")
     ap.add_argument("--bm25", action="store_true", help="also add the BM25 lexical layer (see bm25.py) -- $0, no API, independent of --hybrid; can be used alone or combined with --hybrid")
     ap.add_argument("--bm25-threshold", type=float, default=None, help="override bm25.py's DEFAULT_THRESHOLD (tuned on the full 510-contract set -- see scripts/tune_bm25_threshold.py)")
+    ap.add_argument("--allow-missing", action="store_true", help="if the CUAD dataset is not on disk and cannot be downloaded (offline / egress-restricted machine), print a warning and exit 0 WITHOUT touching the existing results file, instead of failing")
     ap.add_argument("--checkpoint-every", type=int, default=25, help="write partial results to --out every N contracts, so a long --hybrid run's progress survives an interruption")
     args = ap.parse_args()
     out_path = Path(args.out) if args.out else OUT
@@ -139,7 +147,15 @@ def main() -> None:
     # going through detect_clauses()'s trap-flag semantics.
     _tfc_pattern = BASELINE_PLAYBOOK["Termination for Convenience"]["trap_pattern"]
 
-    cuad = json.loads(ensure_cuad().read_text(encoding="utf-8"))["data"]
+    try:
+        cuad_path = ensure_cuad()
+    except CuadUnavailable as e:
+        print(str(e), file=sys.stderr)
+        if args.allow_missing:
+            print(f"[cuad] SKIPPED: dataset unavailable -- {out_path} was NOT regenerated (existing file, if any, left as-is).", file=sys.stderr)
+            return
+        raise SystemExit(1) from None
+    cuad = json.loads(cuad_path.read_text(encoding="utf-8"))["data"]
     if args.sample:
         random.Random(args.seed).shuffle(cuad)
         cuad = cuad[: args.sample]

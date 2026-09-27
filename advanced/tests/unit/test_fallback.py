@@ -72,3 +72,17 @@ def test_surgical_vs_block():
     for f in res["findings"]:
         assert len(f["proposed_change"]) < 500  # surgical, not block
         assert f["surgical"] is True
+
+
+def test_docx_ingest_honors_chars_per_page(tmp_path):
+    from docx import Document
+    from src.harness.ingest import extract_text_with_pages
+
+    doc = Document()
+    for i in range(40):
+        doc.add_paragraph(f"Paragraph {i}: " + "lorem ipsum " * 10)
+    path = tmp_path / "c.docx"
+    doc.save(str(path))
+    text, pages = extract_text_with_pages(path, chars_per_page=500)
+    assert len(pages) == -(-len(text) // 500) and len(pages) > 1
+    assert pages[0].end - pages[0].start == 500
