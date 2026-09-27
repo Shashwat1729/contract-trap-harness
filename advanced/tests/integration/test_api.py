@@ -182,3 +182,9 @@ def test_memory_accumulates_across_turns():
 def test_cors_does_not_combine_wildcard_with_credentials():
     r = client.options("/api/redline", headers={"Origin": "https://example.com", "Access-Control-Request-Method": "POST"})
     assert r.headers.get("access-control-allow-credentials") != "true"
+
+
+def test_resume_of_never_paused_thread_is_422_not_empty_success():
+    r = client.post("/api/harness/resume", json={"contract_id": "x", "thread_id": "never-paused", "approve_keys": []})
+    assert r.status_code == 422
+    assert "never-paused" in r.json()["detail"]

@@ -144,8 +144,8 @@ LLM Judge mode: **partial-live (9/16 calls reached the model, rest fell back to 
 ## Latency (p50 / p95 ms, measured on 30 contracts, this machine)
 | System | p50 | p95 | Delta p95 |
 |--------|-----|-----|-----------|
-| Baseline | 0.6 | 1.1 | — |
-| Advanced | 5.0 | 8.3 | +7.2 |
+| Baseline | 0.7 | 1.1 | — |
+| Advanced | 5.0 | 9.3 | +8.3 |
 
 ## Fixture suite composition (disclosed, not hidden)
 Of the 30 contracts in this suite, **18 contain hand-authored "ADDENDUM TRAP

@@ -38,6 +38,7 @@ SUITES = [
     ("advanced_unit", None, ["advanced/tests/unit"]),
     ("advanced_integration", None, ["advanced/tests/integration"]),
     ("dashboard_smoke", None, ["app/tests"]),
+    ("e2e", None, ["tests/e2e"]),
 ]
 
 

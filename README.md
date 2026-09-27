@@ -41,7 +41,7 @@ not asserted. See [`evidence/benchmarks/comparison.md`](evidence/benchmarks/comp
 Solo counsel or an ops lead at a SaaS company reviewing vendor MSAs: someone who must
 catch cross-clause traps (e.g. a 24-month auto-renewal paired with a 30-day termination
 notice, or a liability cap quietly bypassed by carve-outs) across dozens of pages under
-time pressure. The harness reduces estimated review time **5.1 → 3.4 min per contract**
+time pressure. The harness reduces estimated review time **4.5 → 3.0 min per contract**
 (disclosed formula, not a user study) while catching **42.2% of real clause types vs
 15.5% for the baseline** on 510 real CUAD contracts — and every approved edit carries
 its `{contract_span, page:line, playbook_rule}` citation so a human reviewer can check
@@ -169,9 +169,14 @@ Secondary diagnostics (30-contract trap suite, same cases for both):
 | Metric | Baseline | Advanced |
 |---|---|---|
 | Trap recall | 56% | **100%** |
-| Evidence-supported edits | 21.4% | **83.7%** |
-| Unsupported edits | 78.6% | **16.3%** |
-| Est. review time / contract | 5.1 min | **3.4 min** |
+| Evidence-supported edits | 57.1% | **100%** |
+| Unsupported edits | 42.9% | **0%** |
+| Est. review time / contract | 4.5 min | **3.0 min** |
+
+(Earlier revisions reported 83.7% / 16.3% for advanced. Every one of those "unsupported"
+edits was a verifier bug — genuine verbatim spans past ~8,000 characters were checked
+against a truncated copy of the contract and rejected as hallucinated — and baseline's
+rate was inflated by a label mismatch. See CHANGELOG #26.)
 
 ![Recall and precision on 510 CUAD contracts](evidence/benchmarks/charts/headline_recall_precision.png)
 ![Per-rule recall](evidence/benchmarks/charts/per_rule_recall.png)

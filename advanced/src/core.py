@@ -23,6 +23,7 @@ import json
 import os
 import logging
 import re
+import threading
 import time
 import uuid
 from datetime import datetime, timezone
@@ -47,24 +48,18 @@ THINKING_LOG: list[dict[str, Any]] = []
 _THINKING_MAX = 500
 
 def _persist_dead_letter(contract_id: str, reason: str, stage: str = "unknown") -> None:
-    """Persist fallback to dead-letter jsonl for human review -- ephemeral fallback never queued otherwise."""
+    """Append a fallback event to evidence/reviews/dead_letter.jsonl so a failed run is
+    queued for human review instead of disappearing. Never raises."""
     try:
-        from pathlib import Path as _P
-        dl = _P(__file__).parent.parent / "evidence" / "reviews" / "dead_letter.jsonl"
-        alt = _P("evidence") / "reviews" / "dead_letter.jsonl"
-        for p in (dl, alt):
-            try:
-                p.parent.mkdir(parents=True, exist_ok=True)
-                with open(p, "a", encoding="utf-8") as f:
-                    import json as _j, datetime as _dt
-                    _j.dump({"ts": _dt.datetime.now(_dt.timezone.utc).isoformat(), "contract_id": contract_id, "stage": stage, "reason": reason}, f)
-                    f.write("\n")
-                break
-            except Exception:
-                continue
+        record = {"ts": datetime.now(timezone.utc).isoformat(), "contract_id": contract_id, "stage": stage, "reason": reason}
+        REVIEWS_DIR.mkdir(parents=True, exist_ok=True)
+        with _DEAD_LETTER_LOCK, open(REVIEWS_DIR / "dead_letter.jsonl", "a", encoding="utf-8") as f:
+            f.write(json.dumps(record, ensure_ascii=False) + "\n")
     except Exception as e:
         logger.warning("dead_letter persist failed: %s", e)
 
+
+_DEAD_LETTER_LOCK = threading.Lock()
 
 
 def _log_thinking(stage: str, input_data: Any, output_data: Any, reasoning: str) -> None:
@@ -607,6 +602,12 @@ def process_contract_graph(
         graph = build_graph()
         tid = thread_id or contract_id
         config = {"configurable": {"thread_id": tid}}
+        # Only a run that is actually paused at an interrupt() can be resumed. Without this
+        # check LangGraph starts a brand-new run from START with an empty state: every node
+        # fails on the missing contract_text and the caller gets an empty "complete" result.
+        snapshot = graph.get_state(config)
+        if not any(getattr(task, "interrupts", ()) for task in (getattr(snapshot, "tasks", ()) or ())):
+            raise ValueError(f"no paused human-review run for thread_id={tid!r} (never interrupted, already resumed, or expired)")
         result = graph.invoke(Command(resume=resume_decision), config=config)
         if "__interrupt__" in result:
             return _pending_review_response(result, contract_id, turn, harness_mode, tid)

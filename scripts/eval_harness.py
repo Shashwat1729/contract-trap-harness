@@ -64,31 +64,7 @@ def p95(values):
         idx = len(s) - 1
     return s[idx]
 
-def _eval_one_contract(args):
-    """Helper for ThreadPoolExecutor: eval one contract, returns latencies + trap hits. Always per-contract isolated."""
-    try:
-        cid, txt, meta, baseline_process, process_contract_advanced, Page = args
-        pages = []
-        cpt = 2500
-        for i in range(0, len(txt), cpt):
-            num = i // cpt + 1
-            pages.append(Page(num=num, text=txt[i:i+cpt], start=i, end=i+len(txt[i:i+cpt])))
-        import time as _t
-        t0 = _t.perf_counter()
-        b_res = baseline_process(txt)
-        b_lat = (_t.perf_counter() - t0) * 1000
-        t0 = _t.perf_counter()
-        a_res = process_contract_advanced(txt, pages, contract_id=cid, turn=1, model="gpt-4o-mini", harness_mode="balanced")
-        a_lat = (_t.perf_counter() - t0) * 1000
-        return cid, b_res, a_res, b_lat, a_lat, meta, None
-    except Exception as e:
-        import traceback as _tb
-        return args[0] if args else "unknown", None, None, 0, 0, None, f"{type(e).__name__}: {e}\n{_tb.format_exc()[:500]}"
-
-
 def evaluate_baseline_vs_advanced():
-    import os as _os
-    _use_concurrency = _os.getenv("EVAL_CONCURRENCY", "0") == "1"  # opt-in: parallel batch with ThreadPoolExecutor(4), caps p95 batch time
     fixtures = load_fixtures()
     # Import harness cores (production)
     import sys
@@ -99,8 +75,6 @@ def evaluate_baseline_vs_advanced():
 
     baseline_total_traps = 0
     advanced_total_traps = 0
-    baseline_detected = 0
-    advanced_detected = 0
     baseline_unsupported = 0
     advanced_unsupported = 0
     baseline_evidence_supported = 0
@@ -345,7 +319,7 @@ def evaluate_baseline_vs_advanced():
         "primary_metric_rationale": "Reflects genuine generalization against real, independent expert legal annotation (CUAD, NeurIPS 2021) -- not labels we wrote ourselves. Trap Recall below is a real, useful regression-test metric, but it is self-graded (we wrote the gold traps), so it is reported as a secondary diagnostic, not the headline.",
         "cuad_ground_truth": cuad_summary if cuad_summary is not None else {"status": "not run -- execute `python scripts/eval_cuad_ground_truth.py` (real, expert-labeled ground truth, all 510 CUAD contracts, $0/deterministic)"},
         "trap_suite": {"total_traps_gold": trap_gold_total, "baseline_recall": round(trap_recall_b, 3), "advanced_recall": round(trap_recall_a, 3), "delta": round(trap_recall_a - trap_recall_b, 3)},
-        "latency_ms": {"baseline_p50": round(p50_b, 1), "baseline_p95": round(p95_b, 1), "advanced_p50": round(p50_a, 1), "advanced_p95": round(p95_a, 1), "delta_p95": round(p95_a - p95_b, 1), "batch_concurrency": "ThreadPoolExecutor(4) opt-in via EVAL_CONCURRENCY=1 caps p95 batch vs sequential 0.1s linear (Sirion analogue)", "stage_breakdown": stage_latency_summary},
+        "latency_ms": {"baseline_p50": round(p50_b, 1), "baseline_p95": round(p95_b, 1), "advanced_p50": round(p50_a, 1), "advanced_p95": round(p95_a, 1), "delta_p95": round(p95_a - p95_b, 1), "stage_breakdown": stage_latency_summary},
         "secondary": {
             "evidence_supported_rate": {"baseline": round(evidence_supported_rate_b, 3), "advanced": round(evidence_supported_rate_a, 3)},
             "unsupported_rate": {"baseline": round(unsupported_rate_b, 3), "advanced": round(unsupported_rate_a, 3)},

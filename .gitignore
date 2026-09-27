@@ -69,10 +69,11 @@ docs/research/redline-bench/.git/**
 docs/research/**/.git/
 docs/research/**/.git/**
 
-# Harness thinking logs & temp artifacts (regenerated, large)
-advanced/evidence/reviews/thinking_*.json
-advanced/evidence/reviews/test_redlined*
-advanced/evidence/reviews/thinking_*.jsonl
+# Harness runtime output (thinking logs, dead letters, generated redlines) and the
+# LangGraph sqlite checkpointer -- regenerated on every run, never committed
+advanced/evidence/
+evidence/checkpoints/
+evidence/reviews/
 Contract_Trap_Harness.pptx
 .secrets.baseline
 tmp_fix.py
