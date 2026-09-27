@@ -154,6 +154,14 @@ def verify_node(state: HarnessState) -> dict[str, Any]:
         dual_stats = {"agree_pass": 0, "agree_reject": 0, "disagree": 0}
         llm_stats = new_llm_stats()
 
+        # On the post-revise pass, findings that already PASSed the first time are carried
+        # through revise_node unchanged. Reuse their earlier LLM verdict instead of paying
+        # for a second identical call (the deterministic gate is re-run -- it is free).
+        prior_llm: dict[tuple[Any, ...], Any] = {}
+        for (p_hit, p_finding, _p_pkg, p_ver), p_llm in zip(state.get("verified", []), state.get("llm_results", []) or []):
+            if getattr(p_ver, "status", None) == "PASS" and p_llm is not None and p_llm.ran:
+                prior_llm[_finding_key(p_hit, p_finding)] = p_llm
+
         for hit, finding, pkg in state.get("proposed", []):
             try:
                 ver = dual_verify_finding(hit.span_text, finding, pkg, contract_text)
@@ -171,9 +179,11 @@ def verify_node(state: HarnessState) -> dict[str, Any]:
                     ver = VerificationResult(status="REJECT", reasons=[f"verify exception: {e2}"], revise_hint="retry with smaller span", evidence_supported=False)
 
             # Same LLM cross-check stage as core.py (shared helper, so the engines cannot drift).
+            cached = prior_llm.get(_finding_key(hit, finding))
             llm_res = llm_cross_check(
                 hit.span_text, finding, pkg, ver, llm_stats,
                 enabled=ENABLE_LLM_VERIFY, skip_confidence=LLM_VERIFY_SKIP_CONFIDENCE,
+                verify_fn=(lambda *_a, _c=cached, **_k: _c) if cached is not None else None,
             )
 
             verified.append((hit, finding, pkg, ver))
@@ -195,6 +205,11 @@ def verify_node(state: HarnessState) -> dict[str, Any]:
     except Exception as e:
         logger.exception("verify_node failed: %s", e)
         return {"verified": [], "verification_results": [], "llm_results": [], "dual_stats": {}, "llm_stats": {}}
+
+
+def _finding_key(hit: Any, finding: Any) -> tuple[Any, ...]:
+    """Identity of a proposed finding across the verify -> revise -> verify loop."""
+    return (hit.clause_type, hit.start, finding.rule_id, finding.proposed_change, finding.evidence_contract_span)
 
 
 def _shorten_surgical(text: str, limit: int = 280) -> str:

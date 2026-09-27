@@ -268,3 +268,34 @@ def test_graph_engine_validates_input_like_direct():
         process_contract_graph("   ", _pages("   "), engine="graph")
     with _pytest.raises(ValueError):
         process_contract_graph(TRAP_CONTRACT, _pages(TRAP_CONTRACT), engine="bogus")
+
+
+def test_revise_loop_does_not_repeat_paid_llm_calls_for_passed_findings(monkeypatch):
+    import src.config as cfg
+    import src.harness.llm_verify as lv
+    import src.harness.verify as vmod
+    from src.core import process_contract_graph
+
+    calls = []
+
+    def fake_llm(hit_span, finding, pkg):
+        calls.append(finding.rule_id)
+        return lv.LLMVerifyResult(ran=True, supported=True, confidence=0.9, concern="", mock=False)
+
+    real_dual = vmod.dual_verify_finding
+
+    def dual(span, finding, pkg, text):
+        if finding.rule_id == "P-12":  # force one REJECT so the graph takes the revise loop
+            return VerificationResult("REJECT", ["precedent x not found"], "hint", False, "dual-agree-reject")
+        return real_dual(span, finding, pkg, text)
+
+    monkeypatch.setattr(lv, "llm_verify_finding", fake_llm)
+    monkeypatch.setattr(vmod, "dual_verify_finding", dual)
+    monkeypatch.setattr(cfg, "ENABLE_LLM_VERIFY", True)
+    monkeypatch.setattr(cfg, "LLM_VERIFY_SKIP_CONFIDENCE", 0.99)  # route every PASS to the LLM
+
+    res = process_contract_graph(TRAP_CONTRACT, _pages(TRAP_CONTRACT), contract_id="revise_cost", engine="graph")
+    assert res["engine"] == "langgraph"
+    assert any(step.get("stage") == "revise" for step in res["thinking"])
+    passed = [f for f in res["findings"] if f["verification"] == "PASS"]
+    assert len(calls) == len(passed) == res["llm_stats"]["ran"]  # one call per passed finding, not two
