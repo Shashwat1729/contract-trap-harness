@@ -35,19 +35,22 @@ def load_app(name: str, base_dir: Path):
     return module.app
 
 
-_baseline_dir = str(ROOT / "baseline")
-_advanced_dir = str(ROOT / "advanced")
 _saved_path = list(sys.path)
+# Snapshot any `src*` modules a sibling suite (e.g. advanced/tests, collected earlier in
+# the same pytest session) already imported. Merely deleting them afterwards is not
+# enough: those suites hold references to the ORIGINAL module objects, while a later
+# `import src.core` inside a test would then load a fresh duplicate -- so a
+# monkeypatch applied to the duplicate silently misses the code under test.
+_saved_src_modules = {m: mod for m, mod in sys.modules.items() if m == "src" or m.startswith("src.")}
 
 baseline_app = load_app("baseline", ROOT / "baseline")
 advanced_app = load_app("advanced", ROOT / "advanced")
 
-# Restore the import state we found: drop our path entries and the transient
-# `src*` modules so sibling suites in the same pytest session are unaffected.
-# The loaded app objects keep working through their own references.
-sys.path = [p for p in sys.path if p not in (_baseline_dir, _advanced_dir)]
+# Restore the exact import state we found. The loaded app objects keep working
+# through their own references.
 for _mod in [m for m in list(sys.modules) if m == "src" or m.startswith("src.")]:
     del sys.modules[_mod]
+sys.modules.update(_saved_src_modules)
 sys.path = _saved_path
 
 from fastapi.testclient import TestClient  # noqa: E402

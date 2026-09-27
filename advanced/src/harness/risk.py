@@ -1,4 +1,4 @@
-﻿"""
+"""
 Risk -- playbook + precedent retrieval with evidence package.
 
 Playbook is 12 SaaS rules (P-01..P-12) grounded in CUAD handbook + RedlineBench commerce context.

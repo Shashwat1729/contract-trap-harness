@@ -1,4 +1,4 @@
-﻿"""
+"""
 Memory -- structured negotiation memory for turns 2-4.
 
 Holds: accepted positions, rejected positions, open issues, concessions, counterparty asks, deal-breakers, unresolved threads.

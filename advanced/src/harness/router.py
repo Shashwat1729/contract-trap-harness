@@ -1,4 +1,4 @@
-﻿"""
+"""
 Router -- field-level routing, human checkpoint for consequential actions (Rule 04/05).
 
 Upgraded: thinking logs per RiskWise Developer View.

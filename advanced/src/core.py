@@ -1,4 +1,4 @@
-﻿"""
+"""
 Advanced core -- verification-gated harness, production-grade.
 
 Implements reviewer-corrected closed-loop: discover -> reason -> propose -> evidence -> verify -> human review as approved candidate.

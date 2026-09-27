@@ -1,4 +1,4 @@
-﻿"""
+"""
 Verify -- gates every substantive redline on auditable evidence.
 
 For every proposed edit, verify:

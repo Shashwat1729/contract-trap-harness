@@ -1,4 +1,4 @@
-﻿"""
+"""
 Extract -- clause discovery with CUAD-aware types.
 
 Uses CUAD 41 types filtered to SaaS MSA 12, with span-level citations.

@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 import argparse, json, sys
 from pathlib import Path
 parser = argparse.ArgumentParser()

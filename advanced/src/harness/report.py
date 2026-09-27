@@ -1,4 +1,4 @@
-﻿"""
+"""
 Report -- Professional Word redlined docx generation with tracked changes and comments.
 
 Uses python-docx (already dependency) to create a new docx with:
