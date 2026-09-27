@@ -3,7 +3,7 @@ Report -- Professional Word redlined docx generation with tracked changes and co
 
 Uses python-docx (already dependency) to create a new docx with:
 - Tracked changes via w:ins / w:del (ECMA-376)
-- Comments via w:commentRangeStart / w:commentRangeEnd + comments.xml
+- Comment-style shaded rationale blocks (visible text, not Word comments.xml entries)
 - Styled redline paragraphs (insertions green underline, deletions red strikethrough)
 - Header with contract metadata + findings summary
 - Per-finding section with risk, page:line, original span, proposed change
@@ -13,6 +13,7 @@ Never raises: returns Path or fallback payload.
 """
 from __future__ import annotations
 
+import itertools
 import json
 import logging
 import time
@@ -51,6 +52,21 @@ def get_thinking_log(limit: int = 50) -> list[dict[str, Any]]:
         return []
 
 
+# w:id on w:ins/w:del must be unique within the document. A process-wide counter
+# guarantees that; the previous perf_counter()-millisecond ids collided whenever two
+# revisions were written within the same millisecond (and ins/del ids could overlap).
+_REVISION_IDS = itertools.count(1)
+
+
+def _revision_id() -> str:
+    return str(next(_REVISION_IDS))
+
+
+def _revision_date() -> str:
+    """ST_DateTime as Word writes it (UTC, second precision, 'Z')."""
+    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
 def _ensure_evidence_dir() -> Path:
     """Ensure evidence/reviews exists, return Path."""
     try:
@@ -75,24 +91,23 @@ def _add_tracked_insertion(paragraph: Any, text: str, author: str = "Contract Tr
 
         # Create w:ins element wrapping a w:r
         ins = OxmlElement("w:ins")
+        ins.set(qn("w:id"), _revision_id())
         ins.set(qn("w:author"), author)
-        ins.set(qn("w:date"), datetime.now(timezone.utc).isoformat())
-        ins.set(qn("w:id"), str(int(time.perf_counter() * 1000) % 10000))
+        ins.set(qn("w:date"), _revision_date())
 
         r = OxmlElement("w:r")
         rPr = OxmlElement("w:rPr")
-        # Color + underline for insertion
+        # CT_RPr children must follow schema order: color, sz, ..., u.
         color_el = OxmlElement("w:color")
         color_el.set(qn("w:val"), "00AA00" if color == "green" else "0000FF")
         rPr.append(color_el)
+        sz = OxmlElement("w:sz")
+        sz.set(qn("w:val"), "22")
+        rPr.append(sz)
         u = OxmlElement("w:u")
         u.set(qn("w:val"), "single")
         u.set(qn("w:color"), "00AA00")
         rPr.append(u)
-        # Shading
-        sz = OxmlElement("w:sz")
-        sz.set(qn("w:val"), "22")
-        rPr.append(sz)
         r.append(rPr)
         t = OxmlElement("w:t")
         t.set(qn("xml:space"), "preserve")
@@ -122,9 +137,9 @@ def _add_tracked_deletion(paragraph: Any, text: str, author: str = "Contract Tra
         from docx.oxml.ns import qn
 
         dele = OxmlElement("w:del")
+        dele.set(qn("w:id"), _revision_id())
         dele.set(qn("w:author"), author)
-        dele.set(qn("w:date"), datetime.now(timezone.utc).isoformat())
-        dele.set(qn("w:id"), str(int(time.perf_counter() * 1000) % 10000 + 5000))
+        dele.set(qn("w:date"), _revision_date())
 
         r = OxmlElement("w:r")
         rPr = OxmlElement("w:rPr")
@@ -135,11 +150,11 @@ def _add_tracked_deletion(paragraph: Any, text: str, author: str = "Contract Tra
         color_el.set(qn("w:val"), "FF0000")
         rPr.append(color_el)
         r.append(rPr)
-        t = OxmlElement("w:t")
+        # Deleted text must be w:delText (a w:t inside w:del is invalid OOXML).
+        t = OxmlElement("w:delText")
         t.set(qn("xml:space"), "preserve")
         t.text = text
         r.append(t)
-        # delText needs w:delText not w:t per spec, but many renderers accept w:t inside w:del
         dele.append(r)
         paragraph._p.append(dele)
         _log_thinking("report/tracked_del", text[:100], "w:del injected", f"Tracked deletion {len(text)} chars")
@@ -159,13 +174,12 @@ def _append_comment_paragraph(doc: Any, finding: dict[str, Any], idx: int) -> No
     """
     Append a comment-style paragraph for a finding.
 
-    Uses python-docx comments emulation: adds a bordered paragraph with metadata.
-    True w:comment requires package-level comments.xml; we provide a best-effort
-    simulation that renders as visible comment + also attempt XML injection if possible.
+    Renders as a shaded, visible comment block. Deliberately does NOT emit
+    w:commentRangeStart/End/w:commentReference: those must resolve to entries in a
+    word/comments.xml part, which python-docx 1.1 cannot create -- dangling references
+    make Word refuse the file as "unreadable content".
     """
     try:
-        # Try to inject real w:comment if python-docx version supports it via low-level
-        # We add a paragraph with comment range markers
         from docx.oxml import OxmlElement
         from docx.oxml.ns import qn
 
@@ -178,21 +192,13 @@ def _append_comment_paragraph(doc: Any, finding: dict[str, Any], idx: int) -> No
         shd.set(qn("w:fill"), "FFF9E6")
         pPr.append(shd)
 
-        # Comment range start
-        try:
-            comment_start = OxmlElement("w:commentRangeStart")
-            comment_start.set(qn("w:id"), str(idx))
-            p._p.append(comment_start)
-        except Exception:
-            pass
-
         run = p.add_run(f"[Comment {idx} -- {finding.get('clause_type','')} | Risk: {finding.get('risk','')} | Rule: {finding.get('rule_id','')} | Page {finding.get('page','?')}:{finding.get('line','?')}]")
         run.bold = True
         run.font.size = None
 
         p2 = doc.add_paragraph(style="Intense Quote" if "Intense Quote" in [s.name for s in doc.styles] else None)
         try:
-            p2.add_run(f"Original span: ").bold = True
+            p2.add_run("Original span: ").bold = True
             p2.add_run(str(finding.get("span_text",""))[:800])
         except Exception:
             p2.add_run(f"Original span: {str(finding.get('span_text',''))[:800]}")
@@ -208,25 +214,6 @@ def _append_comment_paragraph(doc: Any, finding: dict[str, Any], idx: int) -> No
         p4 = doc.add_paragraph()
         p4.add_run("Rationale: ").bold = True
         p4.add_run(str(finding.get("rationale",""))[:800])
-
-        # Comment range end
-        try:
-            comment_end = OxmlElement("w:commentRangeEnd")
-            comment_end.set(qn("w:id"), str(idx))
-            p4._p.append(comment_end)
-            # Comment reference
-            r = OxmlElement("w:r")
-            rPr = OxmlElement("w:rPr")
-            rStyle = OxmlElement("w:rStyle")
-            rStyle.set(qn("w:val"), "CommentReference")
-            rPr.append(rStyle)
-            r.append(rPr)
-            comment_ref = OxmlElement("w:commentReference")
-            comment_ref.set(qn("w:id"), str(idx))
-            r.append(comment_ref)
-            p4._p.append(r)
-        except Exception:
-            pass
 
         _log_thinking("report/comment", finding.get("trap_id"), f"comment {idx} added", f"Comment {idx} for {finding.get('clause_type')} rule {finding.get('rule_id')}")
     except Exception as e:
@@ -259,7 +246,7 @@ def generate_redlined_docx(
     t0 = time.perf_counter()
     try:
         from docx import Document
-        from docx.shared import Pt, RGBColor, Inches
+        from docx.shared import Pt, RGBColor
         from docx.enum.text import WD_ALIGN_PARAGRAPH
         from docx.enum.style import WD_STYLE_TYPE
 
@@ -344,7 +331,7 @@ def generate_redlined_docx(
         doc.add_heading("Redlined Clauses -- Tracked Changes", level=2)
         p_intro = doc.add_paragraph()
         p_intro.add_run("Instructions: ").bold = True
-        p_intro.add_run("Review each tracked insertion (green underline) and deletion (red strikethrough). Comments (yellow) provide rationale and precedent. Approve or reject each change in Word (Review ? Accept/Reject).")
+        p_intro.add_run("Review each tracked insertion (green underline) and deletion (red strikethrough). Comments (yellow) provide rationale and precedent. Approve or reject each change in Word (Review > Accept/Reject).")
 
         # Per-finding redlines
         for idx, f in enumerate(findings, start=1):
@@ -402,8 +389,7 @@ def generate_redlined_docx(
         # Add thinking log as appendix (collapsible)
         try:
             doc.add_heading("Appendix -- Harness Thinking Log (Developer View)", level=2)
-            thinking_combined = THINKING_LOG[-20:] + get_thinking_log(10)
-            for entry in thinking_combined[-20:]:
+            for entry in THINKING_LOG[-20:]:
                 p = doc.add_paragraph(style="Normal")
                 p.add_run(f"[{entry.get('timestamp','')}] {entry.get('stage','')}: ").bold = True
                 p.add_run(str(entry.get("reasoning",""))[:300])
