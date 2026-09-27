@@ -958,7 +958,10 @@ with tab_harness:
                     _cfg.ENABLE_LLM_EXTRACT = enable_llm_extract
                     _core_mod.ENABLE_LLM_EXTRACT = enable_llm_extract
                     try:
-                        a_res = process_contract_graph(contract_text, pages, contract_id=contract_id, turn=1, on_stage=_on_stage, engine=engine_choice)
+                        a_res = process_contract_graph(
+                            contract_text, pages, contract_id=contract_id, turn=1, on_stage=_on_stage,
+                            engine=engine_choice, harness_mode=harness_mode.split(" ", 1)[0],
+                        )
                     finally:
                         _cfg.ENABLE_GRAPH_INTERRUPT = _prev_interrupt
                         _cfg.ENABLE_LLM_EXTRACT = _prev_llm_extract

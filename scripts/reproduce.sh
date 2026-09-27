@@ -27,7 +27,10 @@ if [ -d ".venv/bin" ]; then source .venv/bin/activate 2>/dev/null || true; fi
 # #19) but never applied to this script -- found by actually running `make reproduce`
 # fresh end to end, not by inspection.
 (cd baseline && python -m pytest tests -v 2>&1 | tee -a "$ROOT/$LOG") || { echo "baseline tests FAILED" | tee -a "$LOG"; exit 1; }
-python -m pytest advanced/tests/unit advanced/tests/integration -v 2>&1 | tee -a "$LOG" || { echo "advanced tests FAILED" | tee -a "$LOG"; exit 1; }
+EVAL_MOCK=1 python -m pytest advanced/tests/unit advanced/tests/integration -v 2>&1 | tee -a "$LOG" || { echo "advanced tests FAILED" | tee -a "$LOG"; exit 1; }
+
+echo "[reproduce] step 2a: e2e -- baseline + advanced FastAPI apps in-process" | tee -a "$LOG"
+(EVAL_MOCK=1 python -m pytest tests/e2e -v 2>&1 | tee -a "$ROOT/$LOG") || { echo "e2e tests FAILED" | tee -a "$LOG"; exit 1; }
 
 echo "[reproduce] step 2b: dashboard smoke -- actually runs app/streamlit_app.py end to end (AppTest)" | tee -a "$LOG"
 (EVAL_MOCK=1 python -m pytest app/tests -v 2>&1 | tee -a "$ROOT/$LOG") || { echo "dashboard smoke FAILED" | tee -a "$LOG"; exit 1; }
@@ -39,7 +42,9 @@ echo "[reproduce] step 3b: stress suite (7 messy real-world contracts, mock mode
 EVAL_MOCK=1 python scripts/eval_stress.py 2>&1 | tee -a "$LOG"
 
 echo "[reproduce] step 3c: PRIMARY metric — CUAD real expert ground truth (510 real contracts, not self-graded)" | tee -a "$LOG"
-python scripts/eval_cuad_ground_truth.py 2>&1 | tee -a "$LOG"
+# --allow-missing: on a machine that cannot download the dataset, keep the committed
+# results file and say so loudly rather than aborting the whole reproduction.
+python scripts/eval_cuad_ground_truth.py --allow-missing 2>&1 | tee -a "$LOG"
 
 echo "[reproduce] step 3d: eval harness (30-fixture suite, mock mode — no network)" | tee -a "$LOG"
 EVAL_MOCK=1 python scripts/eval_harness.py 2>&1 | tee -a "$LOG"
