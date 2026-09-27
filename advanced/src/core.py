@@ -34,7 +34,7 @@ from tenacity import retry, stop_after_attempt, wait_exponential
 
 from .harness.ingest import Page
 from .harness.extract import extract_clauses, extract_clauses_hybrid, ClauseHit
-from .harness.risk import assess_risk, build_evidence_package, PLAYBOOK, get_thinking_log as risk_thinking
+from .harness.risk import assess_risk, build_evidence_package, PLAYBOOK, get_thinking_log as risk_thinking, _find_number_before_unit, _find_number_near_keyword, RENEWAL_KEYWORD, INITIAL_TERM_LEAD_IN
 from .harness.verify import verify_finding, dual_verify_finding, get_thinking_log as verify_thinking
 from .harness.llm_verify import llm_verify_finding
 from .harness.memory import NegotiationMemory, select_harness_mode
@@ -154,16 +154,19 @@ def _trap_interactions(contract_text: str, clause_hits: list[ClauseHit], pages: 
         for h in clause_hits:
             by_type.setdefault(h.clause_type, []).append(h)
 
-        # Note: (\d+) alone misses the common legal-drafting convention "thirty-six (36)
-        # months" (numeral in parens after the spelled-out word) -- \(?...\)? tolerates it.
-        num_re = r"\(?\s*(\d+)\s*\)?\s*{}"
+        # Same duration parsing as risk.assess_risk (digits, "thirty-six (36) months",
+        # spelled-out numbers, years -> months), and the same renewal-anchored lookup, so
+        # the cross-clause check can't disagree with the per-clause findings it combines.
+        seen_pairs: set[tuple[str, str]] = set()
         for r in by_type.get("Renewal Term", []):
-            m = re.search(num_re.format("months?"), r.span_text, flags=re.IGNORECASE)
-            r_val = int(m.group(1)) if m else None
+            r_val = _find_number_near_keyword(r.span_text, RENEWAL_KEYWORD, "months?", skip_if_preceded_by=INITIAL_TERM_LEAD_IN)
             for n in by_type.get("Notice Period to Terminate Renewal", []):
-                mn = re.search(num_re.format("days?"), n.span_text, flags=re.IGNORECASE)
-                n_val = int(mn.group(1)) if mn else None
+                n_val = _find_number_before_unit(n.span_text, "days?")
                 if r_val is not None and n_val is not None and r_val > 12 and n_val < 60:
+                    pair = (r.span_text, n.span_text)
+                    if pair in seen_pairs:
+                        continue  # overlapping regex hits on the same clause text -- one interaction, not N
+                    seen_pairs.add(pair)
                     traps.append({"id": "Trap-A", "name": "Renewal vs Termination mismatch", "related": [r.clause_type, n.clause_type], "conflict": "auto-renewal >12m but notice <60d locks buyer", "spans": [r.span_text, n.span_text]})
 
         for c in by_type.get("Cap on Liability", []) + by_type.get("Limitation of Liability", []):

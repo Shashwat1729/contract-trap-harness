@@ -1765,7 +1765,7 @@
       },
       {
         "contract_id": "cuad_02",
-        "trap_count": 5,
+        "trap_count": 4,
         "findings": [
           {
             "trap_id": "P-11",
@@ -1900,50 +1900,6 @@
             }
           },
           {
-            "trap_id": "P-01",
-            "clause_type": "Renewal Term",
-            "risk": "High",
-            "span_text": "licies in effect from time to time. Consultants shall be given written notice of any adjustments to compensation at least fourteen (14) days prior to adjustments becoming effective. 844.KEY.CURE | www.kiromic.com PAGE 7\n\nADDENDUM TRAP-A INJECTION (curated for evaluation, documented):\nRenewal Term: This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
-            "page": 4,
-            "line": 16,
-            "proposed_change": "Initial Term 12 months, renewal Term 12 months.",
-            "rationale": "Pilot must not lock in; 12m is market. renewal >12 months",
-            "rule_id": "P-01",
-            "precedent_id": "Acme",
-            "evidence": {
-              "contract_span": "licies in effect from time to time. Consultants shall be given written notice of any adjustments to compensation at least fourteen (14) days prior to adjustments becoming effective. 844.KEY.CURE | www.kiromic.com PAGE 7\n\nADDENDUM TRAP-A INJECTION (curated for evaluation, documented):\nRenewal Term: This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
-              "contract_page": 4,
-              "contract_line": 16,
-              "contract_exists": true,
-              "playbook_rule": "P-01",
-              "playbook_text": "renewal >12 months -> Initial Term 12 months, renewal Term 12 months.",
-              "commercial_instruction": "Pilot must not lock in; 12m is market.",
-              "precedent": {
-                "id": "PR-01",
-                "title": "Acme MSA 2024-03 S8.2 Renewal",
-                "text": "Renewal Term 12 months, 90 days notice. Liability capped at 12 months fees."
-              },
-              "confidence": 0.88,
-              "self_reflective": {
-                "iterations": 1,
-                "coverage_complete": true,
-                "final_query": "Renewal Term trap"
-              }
-            },
-            "verification": "PASS",
-            "reasons": [],
-            "route": "human_review",
-            "surgical": true,
-            "dual_mode": "dual-agree-pass",
-            "llm_verify": {
-              "ran": false,
-              "supported": null,
-              "confidence": null,
-              "concern": "",
-              "mock": true
-            }
-          },
-          {
             "trap_id": "P-02",
             "clause_type": "Notice Period to Terminate Renewal",
             "risk": "High",
@@ -1989,7 +1945,7 @@
           }
         ],
         "verification": {
-          "supported": 5,
+          "supported": 4,
           "unsupported": 0,
           "surgical_rate": 1.0
         }
@@ -2061,7 +2017,7 @@
       },
       {
         "contract_id": "cuad_05",
-        "trap_count": 3,
+        "trap_count": 2,
         "findings": [
           {
             "trap_id": "P-01",
@@ -2076,50 +2032,6 @@
             "precedent_id": "Acme",
             "evidence": {
               "contract_span": "ere from, if any, shall be subject to Chinese version. One copy for the Sellers, two copies for the Buyers. The Contract becomes effective after signed by both parties. THE BUYER: THE SELLER: SIGNATURE: SIGNATURE: 6\n\nSource: LOHA CO. LTD., F-1, 12/9/2019\n\nADDENDUM TRAP-A INJECTION (curated for evaluation, documented):\nRenewal Term: This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
-              "contract_page": 4,
-              "contract_line": 16,
-              "contract_exists": true,
-              "playbook_rule": "P-01",
-              "playbook_text": "renewal >12 months -> Initial Term 12 months, renewal Term 12 months.",
-              "commercial_instruction": "Pilot must not lock in; 12m is market.",
-              "precedent": {
-                "id": "PR-01",
-                "title": "Acme MSA 2024-03 S8.2 Renewal",
-                "text": "Renewal Term 12 months, 90 days notice. Liability capped at 12 months fees."
-              },
-              "confidence": 0.88,
-              "self_reflective": {
-                "iterations": 1,
-                "coverage_complete": true,
-                "final_query": "Renewal Term trap"
-              }
-            },
-            "verification": "PASS",
-            "reasons": [],
-            "route": "human_review",
-            "surgical": true,
-            "dual_mode": "dual-agree-pass",
-            "llm_verify": {
-              "ran": false,
-              "supported": null,
-              "confidence": null,
-              "concern": "",
-              "mock": true
-            }
-          },
-          {
-            "trap_id": "P-01",
-            "clause_type": "Renewal Term",
-            "risk": "High",
-            "span_text": "to Chinese version. One copy for the Sellers, two copies for the Buyers. The Contract becomes effective after signed by both parties. THE BUYER: THE SELLER: SIGNATURE: SIGNATURE: 6\n\nSource: LOHA CO. LTD., F-1, 12/9/2019\n\nADDENDUM TRAP-A INJECTION (curated for evaluation, documented):\nRenewal Term: This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
-            "page": 4,
-            "line": 16,
-            "proposed_change": "Initial Term 12 months, renewal Term 12 months.",
-            "rationale": "Pilot must not lock in; 12m is market. renewal >12 months",
-            "rule_id": "P-01",
-            "precedent_id": "Acme",
-            "evidence": {
-              "contract_span": "to Chinese version. One copy for the Sellers, two copies for the Buyers. The Contract becomes effective after signed by both parties. THE BUYER: THE SELLER: SIGNATURE: SIGNATURE: 6\n\nSource: LOHA CO. LTD., F-1, 12/9/2019\n\nADDENDUM TRAP-A INJECTION (curated for evaluation, documented):\nRenewal Term: This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
               "contract_page": 4,
               "contract_line": 16,
               "contract_exists": true,
@@ -2197,14 +2109,14 @@
           }
         ],
         "verification": {
-          "supported": 3,
+          "supported": 2,
           "unsupported": 0,
           "surgical_rate": 1.0
         }
       },
       {
         "contract_id": "cuad_06",
-        "trap_count": 3,
+        "trap_count": 2,
         "findings": [
           {
             "trap_id": "P-01",
@@ -2219,50 +2131,6 @@
             "precedent_id": "Acme",
             "evidence": {
               "contract_span": "e made aware of advertising revenue relationships to other applications, if the continued use of the primary  application is conditioned on the other applications being installed and active on the end user's computer\n\n     Google Confidential\n\n\n\n  - 40 -\n\nADDENDUM TRAP-A INJECTION (curated for evaluation, documented):\nRenewal Term: This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
-              "contract_page": 4,
-              "contract_line": 68,
-              "contract_exists": true,
-              "playbook_rule": "P-01",
-              "playbook_text": "renewal >12 months -> Initial Term 12 months, renewal Term 12 months.",
-              "commercial_instruction": "Pilot must not lock in; 12m is market.",
-              "precedent": {
-                "id": "PR-01",
-                "title": "Acme MSA 2024-03 S8.2 Renewal",
-                "text": "Renewal Term 12 months, 90 days notice. Liability capped at 12 months fees."
-              },
-              "confidence": 0.88,
-              "self_reflective": {
-                "iterations": 1,
-                "coverage_complete": true,
-                "final_query": "Renewal Term trap"
-              }
-            },
-            "verification": "PASS",
-            "reasons": [],
-            "route": "human_review",
-            "surgical": true,
-            "dual_mode": "dual-agree-pass",
-            "llm_verify": {
-              "ran": false,
-              "supported": null,
-              "confidence": null,
-              "concern": "",
-              "mock": true
-            }
-          },
-          {
-            "trap_id": "P-01",
-            "clause_type": "Renewal Term",
-            "risk": "High",
-            "span_text": "relationships to other applications, if the continued use of the primary  application is conditioned on the other applications being installed and active on the end user's computer\n\n     Google Confidential\n\n\n\n  - 40 -\n\nADDENDUM TRAP-A INJECTION (curated for evaluation, documented):\nRenewal Term: This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
-            "page": 4,
-            "line": 68,
-            "proposed_change": "Initial Term 12 months, renewal Term 12 months.",
-            "rationale": "Pilot must not lock in; 12m is market. renewal >12 months",
-            "rule_id": "P-01",
-            "precedent_id": "Acme",
-            "evidence": {
-              "contract_span": "relationships to other applications, if the continued use of the primary  application is conditioned on the other applications being installed and active on the end user's computer\n\n     Google Confidential\n\n\n\n  - 40 -\n\nADDENDUM TRAP-A INJECTION (curated for evaluation, documented):\nRenewal Term: This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
               "contract_page": 4,
               "contract_line": 68,
               "contract_exists": true,
@@ -2340,14 +2208,14 @@
           }
         ],
         "verification": {
-          "supported": 3,
+          "supported": 2,
           "unsupported": 0,
           "surgical_rate": 1.0
         }
       },
       {
         "contract_id": "cuad_07",
-        "trap_count": 4,
+        "trap_count": 3,
         "findings": [
           {
             "trap_id": "P-06",
@@ -2438,50 +2306,6 @@
             }
           },
           {
-            "trap_id": "P-01",
-            "clause_type": "Renewal Term",
-            "risk": "High",
-            "span_text": "TO A CONFIDENTIALITY REQUEST. OMISSIONS ARE DESIGNATED [***]. A COMPLETE VERSION OF THIS EXHIBIT HAS BEEN FILED SEPARATELY WITH THE SECURITIES AND EXCHANGE COMMISSION.\n\nSource: DOVA PHARMACEUTICALS INC., 10-Q, 11/8/2018\n\nADDENDUM TRAP-A INJECTION (curated for evaluation, documented):\nRenewal Term: This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
-            "page": 4,
-            "line": 30,
-            "proposed_change": "Initial Term 12 months, renewal Term 12 months.",
-            "rationale": "Pilot must not lock in; 12m is market. renewal >12 months",
-            "rule_id": "P-01",
-            "precedent_id": "Acme",
-            "evidence": {
-              "contract_span": "TO A CONFIDENTIALITY REQUEST. OMISSIONS ARE DESIGNATED [***]. A COMPLETE VERSION OF THIS EXHIBIT HAS BEEN FILED SEPARATELY WITH THE SECURITIES AND EXCHANGE COMMISSION.\n\nSource: DOVA PHARMACEUTICALS INC., 10-Q, 11/8/2018\n\nADDENDUM TRAP-A INJECTION (curated for evaluation, documented):\nRenewal Term: This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
-              "contract_page": 4,
-              "contract_line": 30,
-              "contract_exists": true,
-              "playbook_rule": "P-01",
-              "playbook_text": "renewal >12 months -> Initial Term 12 months, renewal Term 12 months.",
-              "commercial_instruction": "Pilot must not lock in; 12m is market.",
-              "precedent": {
-                "id": "PR-01",
-                "title": "Acme MSA 2024-03 S8.2 Renewal",
-                "text": "Renewal Term 12 months, 90 days notice. Liability capped at 12 months fees."
-              },
-              "confidence": 0.88,
-              "self_reflective": {
-                "iterations": 1,
-                "coverage_complete": true,
-                "final_query": "Renewal Term trap"
-              }
-            },
-            "verification": "PASS",
-            "reasons": [],
-            "route": "human_review",
-            "surgical": true,
-            "dual_mode": "dual-agree-pass",
-            "llm_verify": {
-              "ran": false,
-              "supported": null,
-              "confidence": null,
-              "concern": "",
-              "mock": true
-            }
-          },
-          {
             "trap_id": "P-02",
             "clause_type": "Notice Period to Terminate Renewal",
             "risk": "High",
@@ -2527,7 +2351,7 @@
           }
         ],
         "verification": {
-          "supported": 4,
+          "supported": 3,
           "unsupported": 0,
           "surgical_rate": 1.0
         }
@@ -2625,53 +2449,6 @@
             }
           },
           {
-            "trap_id": "P-01",
-            "clause_type": "Renewal Term",
-            "risk": "High",
-            "span_text": "President, Representative Director\n\nVeoneer Nissin Brake Systems (Zhongshan) Co., Ltd.\n\nBy: /s/ Steven M. Rodé Name: Steven M. Rodé Title: Director\n\nSignature Page to Amendment and Termination of Joint Venture Agreement\n\nADDENDUM TRAP-A INJECTION (curated for evaluation, documented):\nRenewal Term: This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
-            "page": 4,
-            "line": 26,
-            "proposed_change": "Initial Term 12 months, renewal Term 12 months.",
-            "rationale": "Pilot must not lock in; 12m is market. renewal >12 months",
-            "rule_id": "P-01",
-            "precedent_id": "Acme",
-            "evidence": {
-              "contract_span": "President, Representative Director\n\nVeoneer Nissin Brake Systems (Zhongshan) Co., Ltd.\n\nBy: /s/ Steven M. Rodé Name: Steven M. Rodé Title: Director\n\nSignature Page to Amendment and Termination of Joint Venture Agreement\n\nADDENDUM TRAP-A INJECTION (curated for evaluation, documented):\nRenewal Term: This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
-              "contract_page": 4,
-              "contract_line": 26,
-              "contract_exists": true,
-              "playbook_rule": "P-01",
-              "playbook_text": "renewal >12 months -> Initial Term 12 months, renewal Term 12 months.",
-              "commercial_instruction": "Pilot must not lock in; 12m is market.",
-              "precedent": {
-                "id": "PR-01",
-                "title": "Acme MSA 2024-03 S8.2 Renewal",
-                "text": "Renewal Term 12 months, 90 days notice. Liability capped at 12 months fees."
-              },
-              "confidence": 0.88,
-              "self_reflective": {
-                "iterations": 1,
-                "coverage_complete": true,
-                "final_query": "Renewal Term trap"
-              }
-            },
-            "verification": "REJECT",
-            "reasons": [
-              "dual-threshold disagreement: strict=REJECT (['contract_span not found (hallucinated page:4, fuzz partial_ratio <80 strict=True)']) vs lenient=PASS ([]) -- borderline finding, needs human review",
-              "hallucination risk: dual verifiers disagree -- requires human review"
-            ],
-            "route": "human_review",
-            "surgical": true,
-            "dual_mode": "dual-disagree",
-            "llm_verify": {
-              "ran": false,
-              "supported": null,
-              "confidence": null,
-              "concern": "",
-              "mock": true
-            }
-          },
-          {
             "trap_id": "P-02",
             "clause_type": "Notice Period to Terminate Renewal",
             "risk": "High",
@@ -2718,13 +2495,13 @@
         ],
         "verification": {
           "supported": 3,
-          "unsupported": 1,
+          "unsupported": 0,
           "surgical_rate": 1.0
         }
       },
       {
         "contract_id": "cuad_09",
-        "trap_count": 1,
+        "trap_count": 2,
         "findings": [
           {
             "trap_id": "P-06",
@@ -2801,14 +2578,11 @@
                 "final_query": "Cap on Liability trap"
               }
             },
-            "verification": "REJECT",
-            "reasons": [
-              "contract_span not found (hallucinated page:4, fuzz partial_ratio <65 strict=False)",
-              "contract_span not found (hallucinated page:4, fuzz partial_ratio <80 strict=True)"
-            ],
+            "verification": "PASS",
+            "reasons": [],
             "route": "human_review",
             "surgical": true,
-            "dual_mode": "dual-agree-reject",
+            "dual_mode": "dual-agree-pass",
             "llm_verify": {
               "ran": false,
               "supported": null,
@@ -2819,14 +2593,14 @@
           }
         ],
         "verification": {
-          "supported": 1,
-          "unsupported": 1,
+          "supported": 2,
+          "unsupported": 0,
           "surgical_rate": 1.0
         }
       },
       {
         "contract_id": "cuad_10",
-        "trap_count": 0,
+        "trap_count": 2,
         "findings": [
           {
             "trap_id": "P-01",
@@ -2859,61 +2633,11 @@
                 "final_query": "Renewal Term trap"
               }
             },
-            "verification": "REJECT",
-            "reasons": [
-              "contract_span not found (hallucinated page:4, fuzz partial_ratio <65 strict=False)",
-              "contract_span not found (hallucinated page:4, fuzz partial_ratio <80 strict=True)"
-            ],
+            "verification": "PASS",
+            "reasons": [],
             "route": "human_review",
             "surgical": true,
-            "dual_mode": "dual-agree-reject",
-            "llm_verify": {
-              "ran": false,
-              "supported": null,
-              "confidence": null,
-              "concern": "",
-              "mock": true
-            }
-          },
-          {
-            "trap_id": "P-01",
-            "clause_type": "Renewal Term",
-            "risk": "High",
-            "span_text": "13\n\nADDENDUM TRAP-A INJECTION (curated for evaluation, documented):\nRenewal Term: This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
-            "page": 4,
-            "line": 40,
-            "proposed_change": "Initial Term 12 months, renewal Term 12 months.",
-            "rationale": "Pilot must not lock in; 12m is market. renewal >12 months",
-            "rule_id": "P-01",
-            "precedent_id": "Acme",
-            "evidence": {
-              "contract_span": "13\n\nADDENDUM TRAP-A INJECTION (curated for evaluation, documented):\nRenewal Term: This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
-              "contract_page": 4,
-              "contract_line": 40,
-              "contract_exists": true,
-              "playbook_rule": "P-01",
-              "playbook_text": "renewal >12 months -> Initial Term 12 months, renewal Term 12 months.",
-              "commercial_instruction": "Pilot must not lock in; 12m is market.",
-              "precedent": {
-                "id": "PR-01",
-                "title": "Acme MSA 2024-03 S8.2 Renewal",
-                "text": "Renewal Term 12 months, 90 days notice. Liability capped at 12 months fees."
-              },
-              "confidence": 0.88,
-              "self_reflective": {
-                "iterations": 1,
-                "coverage_complete": true,
-                "final_query": "Renewal Term trap"
-              }
-            },
-            "verification": "REJECT",
-            "reasons": [
-              "contract_span not found (hallucinated page:4, fuzz partial_ratio <65 strict=False)",
-              "contract_span not found (hallucinated page:4, fuzz partial_ratio <80 strict=True)"
-            ],
-            "route": "human_review",
-            "surgical": true,
-            "dual_mode": "dual-agree-reject",
+            "dual_mode": "dual-agree-pass",
             "llm_verify": {
               "ran": false,
               "supported": null,
@@ -2953,14 +2677,11 @@
                 "final_query": "Notice Period to Terminate Renewal trap"
               }
             },
-            "verification": "REJECT",
-            "reasons": [
-              "contract_span not found (hallucinated page:4, fuzz partial_ratio <65 strict=False)",
-              "contract_span not found (hallucinated page:4, fuzz partial_ratio <80 strict=True)"
-            ],
+            "verification": "PASS",
+            "reasons": [],
             "route": "human_review",
             "surgical": true,
-            "dual_mode": "dual-agree-reject",
+            "dual_mode": "dual-agree-pass",
             "llm_verify": {
               "ran": false,
               "supported": null,
@@ -2971,8 +2692,8 @@
           }
         ],
         "verification": {
-          "supported": 0,
-          "unsupported": 3,
+          "supported": 2,
+          "unsupported": 0,
           "surgical_rate": 1.0
         }
       },
@@ -2998,7 +2719,7 @@
       },
       {
         "contract_id": "cuad_13",
-        "trap_count": 0,
+        "trap_count": 1,
         "findings": [
           {
             "trap_id": "P-12",
@@ -3031,14 +2752,11 @@
                 "final_query": "Cap on Liability trap"
               }
             },
-            "verification": "REJECT",
-            "reasons": [
-              "contract_span not found (hallucinated page:4, fuzz partial_ratio <65 strict=False)",
-              "contract_span not found (hallucinated page:4, fuzz partial_ratio <80 strict=True)"
-            ],
+            "verification": "PASS",
+            "reasons": [],
             "route": "human_review",
             "surgical": true,
-            "dual_mode": "dual-agree-reject",
+            "dual_mode": "dual-agree-pass",
             "llm_verify": {
               "ran": false,
               "supported": null,
@@ -3049,8 +2767,8 @@
           }
         ],
         "verification": {
-          "supported": 0,
-          "unsupported": 1,
+          "supported": 1,
+          "unsupported": 0,
           "surgical_rate": 1.0
         }
       },
@@ -3176,7 +2894,7 @@
       },
       {
         "contract_id": "cuad_17",
-        "trap_count": 2,
+        "trap_count": 3,
         "findings": [
           {
             "trap_id": "P-06",
@@ -3253,53 +2971,6 @@
                 "final_query": "Renewal Term trap"
               }
             },
-            "verification": "REJECT",
-            "reasons": [
-              "contract_span not found (hallucinated page:4, fuzz partial_ratio <65 strict=False)",
-              "contract_span not found (hallucinated page:4, fuzz partial_ratio <80 strict=True)"
-            ],
-            "route": "human_review",
-            "surgical": true,
-            "dual_mode": "dual-agree-reject",
-            "llm_verify": {
-              "ran": false,
-              "supported": null,
-              "confidence": null,
-              "concern": "",
-              "mock": true
-            }
-          },
-          {
-            "trap_id": "P-01",
-            "clause_type": "Renewal Term",
-            "risk": "High",
-            "span_text": "rule or principle that may refer the governance, construction or interpretation of this Note to the laws of another State.\n\nIN WITNESS WHEREOF, the Maker has executed this promissory note as of  .\n\n   -87-\n\n    , Maker\n\nADDENDUM TRAP-A INJECTION (curated for evaluation, documented):\nRenewal Term: This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
-            "page": 4,
-            "line": 16,
-            "proposed_change": "Initial Term 12 months, renewal Term 12 months.",
-            "rationale": "Pilot must not lock in; 12m is market. renewal >12 months",
-            "rule_id": "P-01",
-            "precedent_id": "Acme",
-            "evidence": {
-              "contract_span": "rule or principle that may refer the governance, construction or interpretation of this Note to the laws of another State.\n\nIN WITNESS WHEREOF, the Maker has executed this promissory note as of  .\n\n   -87-\n\n    , Maker\n\nADDENDUM TRAP-A INJECTION (curated for evaluation, documented):\nRenewal Term: This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
-              "contract_page": 4,
-              "contract_line": 16,
-              "contract_exists": true,
-              "playbook_rule": "P-01",
-              "playbook_text": "renewal >12 months -> Initial Term 12 months, renewal Term 12 months.",
-              "commercial_instruction": "Pilot must not lock in; 12m is market.",
-              "precedent": {
-                "id": "PR-01",
-                "title": "Acme MSA 2024-03 S8.2 Renewal",
-                "text": "Renewal Term 12 months, 90 days notice. Liability capped at 12 months fees."
-              },
-              "confidence": 0.88,
-              "self_reflective": {
-                "iterations": 1,
-                "coverage_complete": true,
-                "final_query": "Renewal Term trap"
-              }
-            },
             "verification": "PASS",
             "reasons": [],
             "route": "human_review",
@@ -3344,14 +3015,11 @@
                 "final_query": "Notice Period to Terminate Renewal trap"
               }
             },
-            "verification": "REJECT",
-            "reasons": [
-              "dual-threshold disagreement: strict=REJECT (['contract_span not found (hallucinated page:4, fuzz partial_ratio <80 strict=True)']) vs lenient=PASS ([]) -- borderline finding, needs human review",
-              "hallucination risk: dual verifiers disagree -- requires human review"
-            ],
+            "verification": "PASS",
+            "reasons": [],
             "route": "human_review",
             "surgical": true,
-            "dual_mode": "dual-disagree",
+            "dual_mode": "dual-agree-pass",
             "llm_verify": {
               "ran": false,
               "supported": null,
@@ -3362,8 +3030,8 @@
           }
         ],
         "verification": {
-          "supported": 2,
-          "unsupported": 2,
+          "supported": 3,
+          "unsupported": 0,
           "surgical_rate": 1.0
         }
       },
@@ -3543,7 +3211,7 @@
       },
       {
         "contract_id": "cuad_22",
-        "trap_count": 4,
+        "trap_count": 3,
         "findings": [
           {
             "trap_id": "P-06",
@@ -3634,50 +3302,6 @@
             }
           },
           {
-            "trap_id": "P-01",
-            "clause_type": "Renewal Term",
-            "risk": "High",
-            "span_text": "f Illinois L.L.C.\n\nBy:   /s/Joseph Marino                    By:   Jim Stump       -------------------                       -------------------------------       President\n\n                                    Page -14-\n\nADDENDUM TRAP-A INJECTION (curated for evaluation, documented):\nRenewal Term: This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
-            "page": 4,
-            "line": 14,
-            "proposed_change": "Initial Term 12 months, renewal Term 12 months.",
-            "rationale": "Pilot must not lock in; 12m is market. renewal >12 months",
-            "rule_id": "P-01",
-            "precedent_id": "Acme",
-            "evidence": {
-              "contract_span": "f Illinois L.L.C.\n\nBy:   /s/Joseph Marino                    By:   Jim Stump       -------------------                       -------------------------------       President\n\n                                    Page -14-\n\nADDENDUM TRAP-A INJECTION (curated for evaluation, documented):\nRenewal Term: This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
-              "contract_page": 4,
-              "contract_line": 14,
-              "contract_exists": true,
-              "playbook_rule": "P-01",
-              "playbook_text": "renewal >12 months -> Initial Term 12 months, renewal Term 12 months.",
-              "commercial_instruction": "Pilot must not lock in; 12m is market.",
-              "precedent": {
-                "id": "PR-01",
-                "title": "Acme MSA 2024-03 S8.2 Renewal",
-                "text": "Renewal Term 12 months, 90 days notice. Liability capped at 12 months fees."
-              },
-              "confidence": 0.88,
-              "self_reflective": {
-                "iterations": 1,
-                "coverage_complete": true,
-                "final_query": "Renewal Term trap"
-              }
-            },
-            "verification": "PASS",
-            "reasons": [],
-            "route": "human_review",
-            "surgical": true,
-            "dual_mode": "dual-agree-pass",
-            "llm_verify": {
-              "ran": false,
-              "supported": null,
-              "confidence": null,
-              "concern": "",
-              "mock": true
-            }
-          },
-          {
             "trap_id": "P-02",
             "clause_type": "Notice Period to Terminate Renewal",
             "risk": "High",
@@ -3723,7 +3347,7 @@
           }
         ],
         "verification": {
-          "supported": 4,
+          "supported": 3,
           "unsupported": 0,
           "surgical_rate": 1.0
         }
@@ -3740,7 +3364,7 @@
       },
       {
         "contract_id": "cuad_24",
-        "trap_count": 3,
+        "trap_count": 2,
         "findings": [
           {
             "trap_id": "P-01",
@@ -3755,50 +3379,6 @@
             "precedent_id": "Acme",
             "evidence": {
               "contract_span": "s/ JOHN J. LOFQUIST                By: /s/ ANNA TALERICO    -------------------------               ----------------------------- Name: John J. Lofquist                  Name:   Anna Talerico Title: President & CEO                  Title:  Vice President\n\nADDENDUM TRAP-A INJECTION (curated for evaluation, documented):\nRenewal Term: This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
-              "contract_page": 4,
-              "contract_line": 22,
-              "contract_exists": true,
-              "playbook_rule": "P-01",
-              "playbook_text": "renewal >12 months -> Initial Term 12 months, renewal Term 12 months.",
-              "commercial_instruction": "Pilot must not lock in; 12m is market.",
-              "precedent": {
-                "id": "PR-01",
-                "title": "Acme MSA 2024-03 S8.2 Renewal",
-                "text": "Renewal Term 12 months, 90 days notice. Liability capped at 12 months fees."
-              },
-              "confidence": 0.88,
-              "self_reflective": {
-                "iterations": 1,
-                "coverage_complete": true,
-                "final_query": "Renewal Term trap"
-              }
-            },
-            "verification": "PASS",
-            "reasons": [],
-            "route": "human_review",
-            "surgical": true,
-            "dual_mode": "dual-agree-pass",
-            "llm_verify": {
-              "ran": false,
-              "supported": null,
-              "confidence": null,
-              "concern": "",
-              "mock": true
-            }
-          },
-          {
-            "trap_id": "P-01",
-            "clause_type": "Renewal Term",
-            "risk": "High",
-            "span_text": "By: /s/ ANNA TALERICO    -------------------------               ----------------------------- Name: John J. Lofquist                  Name:   Anna Talerico Title: President & CEO                  Title:  Vice President\n\nADDENDUM TRAP-A INJECTION (curated for evaluation, documented):\nRenewal Term: This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
-            "page": 4,
-            "line": 22,
-            "proposed_change": "Initial Term 12 months, renewal Term 12 months.",
-            "rationale": "Pilot must not lock in; 12m is market. renewal >12 months",
-            "rule_id": "P-01",
-            "precedent_id": "Acme",
-            "evidence": {
-              "contract_span": "By: /s/ ANNA TALERICO    -------------------------               ----------------------------- Name: John J. Lofquist                  Name:   Anna Talerico Title: President & CEO                  Title:  Vice President\n\nADDENDUM TRAP-A INJECTION (curated for evaluation, documented):\nRenewal Term: This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
               "contract_page": 4,
               "contract_line": 22,
               "contract_exists": true,
@@ -3876,59 +3456,15 @@
           }
         ],
         "verification": {
-          "supported": 3,
+          "supported": 2,
           "unsupported": 0,
           "surgical_rate": 1.0
         }
       },
       {
         "contract_id": "cuad_25",
-        "trap_count": 3,
+        "trap_count": 2,
         "findings": [
-          {
-            "trap_id": "P-01",
-            "clause_type": "Renewal Term",
-            "risk": "High",
-            "span_text": "1\n\nADDENDUM TRAP-A INJECTION (curated for evaluation, documented):\nRenewal Term: This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
-            "page": 1,
-            "line": 18,
-            "proposed_change": "Initial Term 12 months, renewal Term 12 months.",
-            "rationale": "Pilot must not lock in; 12m is market. renewal >12 months",
-            "rule_id": "P-01",
-            "precedent_id": "Acme",
-            "evidence": {
-              "contract_span": "1\n\nADDENDUM TRAP-A INJECTION (curated for evaluation, documented):\nRenewal Term: This Agreement shall automatically renew for successive 24 month periods unless either party provides written notice.\nNotice Period To Terminate Renewal: Notice must be provided at least 30 days prior to renewal.",
-              "contract_page": 1,
-              "contract_line": 18,
-              "contract_exists": true,
-              "playbook_rule": "P-01",
-              "playbook_text": "renewal >12 months -> Initial Term 12 months, renewal Term 12 months.",
-              "commercial_instruction": "Pilot must not lock in; 12m is market.",
-              "precedent": {
-                "id": "PR-01",
-                "title": "Acme MSA 2024-03 S8.2 Renewal",
-                "text": "Renewal Term 12 months, 90 days notice. Liability capped at 12 months fees."
-              },
-              "confidence": 0.88,
-              "self_reflective": {
-                "iterations": 1,
-                "coverage_complete": true,
-                "final_query": "Renewal Term trap"
-              }
-            },
-            "verification": "PASS",
-            "reasons": [],
-            "route": "human_review",
-            "surgical": true,
-            "dual_mode": "dual-agree-pass",
-            "llm_verify": {
-              "ran": false,
-              "supported": null,
-              "confidence": null,
-              "concern": "",
-              "mock": true
-            }
-          },
           {
             "trap_id": "P-01",
             "clause_type": "Renewal Term",
@@ -4019,7 +3555,7 @@
           }
         ],
         "verification": {
-          "supported": 3,
+          "supported": 2,
           "unsupported": 0,
           "surgical_rate": 1.0
         }
@@ -4200,6 +3736,13 @@
             "source": "RedlineBench scenario 3"
           }
         ],
+        "per_gold": [
+          {
+            "id": "Trap-B",
+            "baseline_hit": false,
+            "advanced_hit": true
+          }
+        ],
         "baseline_hit": false,
         "advanced_hit": true
       },
@@ -4245,6 +3788,13 @@
             "conflict": "trap D requires additional commercial context",
             "supporting_spans": [],
             "source": "RedlineBench scenario 3"
+          }
+        ],
+        "per_gold": [
+          {
+            "id": "Trap-B",
+            "baseline_hit": false,
+            "advanced_hit": true
           }
         ],
         "baseline_hit": false,
@@ -4296,6 +3846,13 @@
             "source": "RedlineBench scenario 3"
           }
         ],
+        "per_gold": [
+          {
+            "id": "Trap-A",
+            "baseline_hit": true,
+            "advanced_hit": true
+          }
+        ],
         "baseline_hit": true,
         "advanced_hit": true
       },
@@ -4339,8 +3896,9 @@
             "source": "RedlineBench scenario 3"
           }
         ],
-        "baseline_hit": true,
-        "advanced_hit": true
+        "per_gold": [],
+        "baseline_hit": false,
+        "advanced_hit": false
       },
       {
         "contract_id": "cuad_04",
@@ -4382,8 +3940,9 @@
             "source": "RedlineBench scenario 3"
           }
         ],
-        "baseline_hit": true,
-        "advanced_hit": true
+        "per_gold": [],
+        "baseline_hit": false,
+        "advanced_hit": false
       },
       {
         "contract_id": "cuad_05",
@@ -4429,6 +3988,13 @@
             "conflict": "trap D requires additional commercial context",
             "supporting_spans": [],
             "source": "RedlineBench scenario 3"
+          }
+        ],
+        "per_gold": [
+          {
+            "id": "Trap-A",
+            "baseline_hit": true,
+            "advanced_hit": true
           }
         ],
         "baseline_hit": true,
@@ -4480,6 +4046,13 @@
             "source": "RedlineBench scenario 3"
           }
         ],
+        "per_gold": [
+          {
+            "id": "Trap-A",
+            "baseline_hit": true,
+            "advanced_hit": true
+          }
+        ],
         "baseline_hit": true,
         "advanced_hit": true
       },
@@ -4527,6 +4100,13 @@
             "conflict": "trap D requires additional commercial context",
             "supporting_spans": [],
             "source": "RedlineBench scenario 3"
+          }
+        ],
+        "per_gold": [
+          {
+            "id": "Trap-A",
+            "baseline_hit": true,
+            "advanced_hit": true
           }
         ],
         "baseline_hit": true,
@@ -4578,6 +4158,13 @@
             "source": "RedlineBench scenario 3"
           }
         ],
+        "per_gold": [
+          {
+            "id": "Trap-A",
+            "baseline_hit": true,
+            "advanced_hit": true
+          }
+        ],
         "baseline_hit": true,
         "advanced_hit": true
       },
@@ -4623,6 +4210,13 @@
             "conflict": "trap D requires additional commercial context",
             "supporting_spans": [],
             "source": "RedlineBench scenario 3"
+          }
+        ],
+        "per_gold": [
+          {
+            "id": "Trap-B",
+            "baseline_hit": false,
+            "advanced_hit": true
           }
         ],
         "baseline_hit": false,
@@ -4674,6 +4268,13 @@
             "source": "RedlineBench scenario 3"
           }
         ],
+        "per_gold": [
+          {
+            "id": "Trap-A",
+            "baseline_hit": true,
+            "advanced_hit": true
+          }
+        ],
         "baseline_hit": true,
         "advanced_hit": true
       },
@@ -4717,8 +4318,9 @@
             "source": "RedlineBench scenario 3"
           }
         ],
-        "baseline_hit": true,
-        "advanced_hit": true
+        "per_gold": [],
+        "baseline_hit": false,
+        "advanced_hit": false
       },
       {
         "contract_id": "cuad_12",
@@ -4760,8 +4362,9 @@
             "source": "RedlineBench scenario 3"
           }
         ],
-        "baseline_hit": true,
-        "advanced_hit": true
+        "per_gold": [],
+        "baseline_hit": false,
+        "advanced_hit": false
       },
       {
         "contract_id": "cuad_13",
@@ -4805,6 +4408,13 @@
             "conflict": "trap D requires additional commercial context",
             "supporting_spans": [],
             "source": "RedlineBench scenario 3"
+          }
+        ],
+        "per_gold": [
+          {
+            "id": "Trap-B",
+            "baseline_hit": false,
+            "advanced_hit": true
           }
         ],
         "baseline_hit": false,
@@ -4854,6 +4464,13 @@
             "source": "RedlineBench scenario 3"
           }
         ],
+        "per_gold": [
+          {
+            "id": "Trap-B",
+            "baseline_hit": false,
+            "advanced_hit": true
+          }
+        ],
         "baseline_hit": false,
         "advanced_hit": true
       },
@@ -4897,8 +4514,9 @@
             "source": "RedlineBench scenario 3"
           }
         ],
+        "per_gold": [],
         "baseline_hit": false,
-        "advanced_hit": true
+        "advanced_hit": false
       },
       {
         "contract_id": "cuad_16",
@@ -4940,8 +4558,9 @@
             "source": "RedlineBench scenario 3"
           }
         ],
+        "per_gold": [],
         "baseline_hit": false,
-        "advanced_hit": true
+        "advanced_hit": false
       },
       {
         "contract_id": "cuad_17",
@@ -4987,6 +4606,13 @@
             "conflict": "trap D requires additional commercial context",
             "supporting_spans": [],
             "source": "RedlineBench scenario 3"
+          }
+        ],
+        "per_gold": [
+          {
+            "id": "Trap-A",
+            "baseline_hit": true,
+            "advanced_hit": true
           }
         ],
         "baseline_hit": true,
@@ -5036,6 +4662,13 @@
             "source": "RedlineBench scenario 3"
           }
         ],
+        "per_gold": [
+          {
+            "id": "Trap-B",
+            "baseline_hit": false,
+            "advanced_hit": true
+          }
+        ],
         "baseline_hit": false,
         "advanced_hit": true
       },
@@ -5079,8 +4712,9 @@
             "source": "RedlineBench scenario 3"
           }
         ],
+        "per_gold": [],
         "baseline_hit": false,
-        "advanced_hit": true
+        "advanced_hit": false
       },
       {
         "contract_id": "cuad_20",
@@ -5126,6 +4760,13 @@
             "source": "RedlineBench scenario 3"
           }
         ],
+        "per_gold": [
+          {
+            "id": "Trap-B",
+            "baseline_hit": false,
+            "advanced_hit": true
+          }
+        ],
         "baseline_hit": false,
         "advanced_hit": true
       },
@@ -5169,8 +4810,9 @@
             "source": "RedlineBench scenario 3"
           }
         ],
+        "per_gold": [],
         "baseline_hit": false,
-        "advanced_hit": true
+        "advanced_hit": false
       },
       {
         "contract_id": "cuad_22",
@@ -5218,6 +4860,13 @@
             "source": "RedlineBench scenario 3"
           }
         ],
+        "per_gold": [
+          {
+            "id": "Trap-A",
+            "baseline_hit": true,
+            "advanced_hit": true
+          }
+        ],
         "baseline_hit": true,
         "advanced_hit": true
       },
@@ -5261,8 +4910,9 @@
             "source": "RedlineBench scenario 3"
           }
         ],
-        "baseline_hit": true,
-        "advanced_hit": true
+        "per_gold": [],
+        "baseline_hit": false,
+        "advanced_hit": false
       },
       {
         "contract_id": "cuad_24",
@@ -5308,6 +4958,13 @@
             "conflict": "trap D requires additional commercial context",
             "supporting_spans": [],
             "source": "RedlineBench scenario 3"
+          }
+        ],
+        "per_gold": [
+          {
+            "id": "Trap-A",
+            "baseline_hit": true,
+            "advanced_hit": true
           }
         ],
         "baseline_hit": true,
@@ -5359,6 +5016,13 @@
             "source": "RedlineBench scenario 3"
           }
         ],
+        "per_gold": [
+          {
+            "id": "Trap-A",
+            "baseline_hit": true,
+            "advanced_hit": true
+          }
+        ],
         "baseline_hit": true,
         "advanced_hit": true
       },
@@ -5402,8 +5066,9 @@
             "source": "RedlineBench scenario 3"
           }
         ],
-        "baseline_hit": true,
-        "advanced_hit": true
+        "per_gold": [],
+        "baseline_hit": false,
+        "advanced_hit": false
       },
       {
         "contract_id": "cuad_27",
@@ -5445,8 +5110,9 @@
             "source": "RedlineBench scenario 3"
           }
         ],
-        "baseline_hit": true,
-        "advanced_hit": true
+        "per_gold": [],
+        "baseline_hit": false,
+        "advanced_hit": false
       },
       {
         "contract_id": "cuad_28",
@@ -5488,8 +5154,9 @@
             "source": "RedlineBench scenario 3"
           }
         ],
-        "baseline_hit": true,
-        "advanced_hit": true
+        "per_gold": [],
+        "baseline_hit": false,
+        "advanced_hit": false
       },
       {
         "contract_id": "cuad_29",
@@ -5533,6 +5200,13 @@
             "conflict": "trap D requires additional commercial context",
             "supporting_spans": [],
             "source": "RedlineBench scenario 3"
+          }
+        ],
+        "per_gold": [
+          {
+            "id": "Trap-B",
+            "baseline_hit": false,
+            "advanced_hit": true
           }
         ],
         "baseline_hit": false,
@@ -5966,44 +5640,44 @@
       "delta": 0.444
     },
     "latency_ms": {
-      "baseline_p50": 0.9,
-      "baseline_p95": 1.5,
-      "advanced_p50": 37.8,
-      "advanced_p95": 93.2,
-      "delta_p95": 91.7,
+      "baseline_p50": 0.7,
+      "baseline_p95": 1.1,
+      "advanced_p50": 21.0,
+      "advanced_p95": 37.2,
+      "delta_p95": 36.0,
       "batch_concurrency": "ThreadPoolExecutor(4) opt-in via EVAL_CONCURRENCY=1 caps p95 batch vs sequential 0.1s linear (Sirion analogue)",
       "stage_breakdown": {
         "extract": {
-          "p50_ms": 8.46,
-          "p95_ms": 10.49
+          "p50_ms": 5.35,
+          "p95_ms": 7.38
         },
         "risk": {
-          "p50_ms": 10.22,
-          "p95_ms": 30.74
+          "p50_ms": 6.04,
+          "p95_ms": 14.25
         },
         "verify": {
-          "p50_ms": 11.39,
-          "p95_ms": 33.98
+          "p50_ms": 6.51,
+          "p95_ms": 14.99
         },
         "route": {
-          "p50_ms": 4.13,
-          "p95_ms": 6.44
+          "p50_ms": 1.92,
+          "p95_ms": 3.01
         }
       }
     },
     "secondary": {
       "evidence_supported_rate": {
-        "baseline": 0.214,
-        "advanced": 0.837
+        "baseline": 0.571,
+        "advanced": 1.0
       },
       "unsupported_rate": {
-        "baseline": 0.786,
-        "advanced": 0.163
+        "baseline": 0.429,
+        "advanced": 0.0
       },
-      "verification_catch_rate": 0.163,
+      "verification_catch_rate": 0.0,
       "over_redlining_avg_per_contract": {
         "baseline": 2.33,
-        "advanced": 1.63
+        "advanced": 1.3
       },
       "surgical_rate": {
         "baseline": 1.0,
@@ -6014,16 +5688,16 @@
         "advanced": 1.0
       },
       "evidence_supported": {
-        "baseline": 15,
-        "advanced": 41
+        "baseline": 40,
+        "advanced": 39
       },
       "unsupported": {
-        "baseline": 55,
-        "advanced": 8
+        "baseline": 30,
+        "advanced": 0
       },
       "est_human_review_min": {
-        "baseline": 5.1,
-        "advanced": 3.4,
+        "baseline": 4.5,
+        "advanced": 3.0,
         "method": "120s skim + 45s/supported finding + 90s/unsupported finding, averaged per contract -- estimate, not measured"
       }
     },
@@ -6096,6 +5770,6 @@
       "known_gaps_excluded_from_score": [],
       "failures": []
     },
-    "headline": "CUAD ground truth (real, 510 contracts): recall 15.5% -> 42.2% | precision 53.7% -> 92.7% || Trap Recall (self-graded regression suite) 56% -> 100% (+44pp) | Unsupported 78.6% -> 16.3% | Evidence-supported 21.4% -> 83.7% | LLM Judge 52 -> 44/100 (partial-live (9/16 calls reached the model, rest fell back to mock -- likely a provider quota limit hit mid-run))"
+    "headline": "CUAD ground truth (real, 510 contracts): recall 15.5% -> 42.2% | precision 53.7% -> 92.7% || Trap Recall (self-graded regression suite) 56% -> 100% (+44pp) | Unsupported 42.9% -> 0.0% | Evidence-supported 57.1% -> 100.0% | LLM Judge 52 -> 44/100 (partial-live (9/16 calls reached the model, rest fell back to mock -- likely a provider quota limit hit mid-run))"
   }
 }
